@@ -8,6 +8,7 @@
 @import "@fontsource/manrope/latin-600.css";
 @import "@fontsource/manrope/latin-700.css";
 @import "@fontsource/manrope/latin-800.css";
+@import "@xyflow/react/dist/style.css";
 
 @layer base {
   :root {
@@ -49,4 +50,21 @@
     color: #cffafe;
   }
 
+  .react-flow {
+    --xy-background-color: #000;
+    --xy-node-background-color-default: transparent;
+    --xy-node-border-default: 0;
+    --xy-edge-stroke-default: rgba(103, 232, 249, 0.45);
+    --xy-edge-stroke-width-default: 1.5;
+    --xy-controls-button-background-color-default: #000;
+    --xy-controls-button-background-color-hover-default: #050505;
+    --xy-controls-button-color-default: #cffafe;
+    --xy-controls-button-color-hover-default: #fff;
+    --xy-controls-button-border-color-default: rgba(255, 255, 255, 0.1);
+    --xy-minimap-background-color-default: rgba(0, 0, 0, 0.86);
+  }
+
+  .react-flow__node {
+    font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+  }
 }
