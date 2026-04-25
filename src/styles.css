@@ -1,0 +1,70 @@
+@import "tailwindcss";
+@import "@fontsource/space-grotesk/latin-400.css";
+@import "@fontsource/space-grotesk/latin-500.css";
+@import "@fontsource/space-grotesk/latin-600.css";
+@import "@fontsource/space-grotesk/latin-700.css";
+@import "@fontsource/manrope/latin-400.css";
+@import "@fontsource/manrope/latin-500.css";
+@import "@fontsource/manrope/latin-600.css";
+@import "@fontsource/manrope/latin-700.css";
+@import "@fontsource/manrope/latin-800.css";
+@import "@xyflow/react/dist/style.css";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-family: Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #000;
+    color: #f7f7fb;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: #000;
+  }
+
+  h1,
+  h2,
+  h3,
+  nav,
+  button {
+    font-family: "Space Grotesk", Manrope, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  code {
+    width: 100%;
+    overflow-wrap: anywhere;
+    border: 1px solid rgba(103, 232, 249, 0.16);
+    border-radius: 0.9rem;
+    background: rgba(4, 10, 24, 0.82);
+    padding: 0.6rem 0.75rem;
+    color: #cffafe;
+  }
+
+  .react-flow {
+    --xy-background-color: #000;
+    --xy-node-background-color-default: transparent;
+    --xy-node-border-default: 0;
+    --xy-edge-stroke-default: rgba(103, 232, 249, 0.45);
+    --xy-edge-stroke-width-default: 1.5;
+    --xy-controls-button-background-color-default: #000;
+    --xy-controls-button-background-color-hover-default: #050505;
+    --xy-controls-button-color-default: #cffafe;
+    --xy-controls-button-color-hover-default: #fff;
+    --xy-controls-button-border-color-default: rgba(255, 255, 255, 0.1);
+    --xy-minimap-background-color-default: rgba(0, 0, 0, 0.86);
+  }
+
+  .react-flow__node {
+    font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+  }
+}
