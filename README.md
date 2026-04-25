@@ -44,14 +44,14 @@ The included `0g-storage-memory` skill describes how to package files and upload
 ## Run locally
 
 ```bash
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 Build:
 
 ```bash
-npm run build
+bun run build
 ```
 
 ## Environment

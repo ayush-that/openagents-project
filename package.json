@@ -2,6 +2,7 @@
   "name": "clawbuilder-0g",
   "private": true,
   "version": "0.1.0",
+  "packageManager": "bun@1.3.13",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,10 +12,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/manrope": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.10",
     "@vitejs/plugin-react": "^5.0.4",
     "jszip": "^3.10.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "three": "^0.184.0",
     "typescript": "^5.9.3",
     "vite": "^7.1.10"
   },
@@ -22,6 +26,7 @@
     "@tailwindcss/vite": "^4.2.4",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
+    "@types/three": "^0.184.0",
     "tailwindcss": "^4.2.4"
   }
 }
