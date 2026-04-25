@@ -135,7 +135,11 @@ export function skillMarkdown(skillName: string, description: string): string {
     return `---\nname: 0g-storage-memory\ndescription: Publish agent packages, MEMORY.md snapshots, and run logs to 0G Storage.\nenv:\n  - OG_STORAGE_PRIVATE_KEY\n  - OG_STORAGE_RPC_URL\n  - OG_STORAGE_INDEXER\n---\n\n# 0G Storage Memory\n\nPackage these files before upload:\n\n- agent.json\n- SOUL.md\n- MEMORY.md\n- workflow.json\n- skills/**/SKILL.md\n\nUpload flow:\n\n1. Create a file/blob package.\n2. Generate its 0G Storage Merkle root.\n3. Upload through the 0G Storage indexer.\n4. Store the returned root in \`manifest.0g.json\`.\n`;
   }
 
-  return `---\nname: ${skillName}\ndescription: ${description}\n---\n\n# ${skillName}\n\n${description}\n`;
+  return `---\nname: ${toYamlString(skillName)}\ndescription: ${toYamlString(description)}\n---\n\n# ${skillName}\n\n${description}\n`;
+}
+
+function toYamlString(value: string): string {
+  return JSON.stringify(value);
 }
 
 function normalizeSkillPathSegment(value: string, fallback: string): string {
