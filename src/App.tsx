@@ -174,7 +174,8 @@ function App() {
     if (existingIndex >= 0) {
       const next = [...builderBlocks];
       const [moved] = next.splice(existingIndex, 1);
-      next.splice(targetIndex, 0, moved);
+      const adjustedIndex = targetIndex > existingIndex ? targetIndex - 1 : targetIndex;
+      next.splice(adjustedIndex, 0, moved);
       setBuilderBlocks(next);
     } else if (paletteBlock) {
       setBuilderBlocks((current) => [
@@ -282,7 +283,10 @@ function App() {
                 onDragStart={() => setDraggedBlockId(block.id)}
                 onDragEnd={() => setDraggedBlockId(null)}
                 onDragOver={(event) => event.preventDefault()}
-                onDrop={() => handleDrop(index)}
+                onDrop={(event) => {
+                  event.stopPropagation();
+                  handleDrop(index);
+                }}
               >
                 <div className="handle">
                   <GripVertical size={18} />
