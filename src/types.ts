@@ -22,6 +22,7 @@ export interface SkillPack {
   name: string;
   category: string;
   summary: string;
+  recommendedFor: string;
   source: string;
   skills: Array<{
     name: string;

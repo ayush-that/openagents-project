@@ -54,6 +54,11 @@ The builder ships curated packs that can be added before export:
 | GitOps Builder | Git & GitHub | `agent-team-orchestration`, `arc-skill-gitops`, `azure-devops` |
 | Cloud Deploy | DevOps & Cloud | `agentscale`, `arc-agent-lifecycle`, `gotify` |
 | Data Analytics | Data & Analytics | `biz-reporter`, `amazon-product-api-skill`, `aeo-analytics-free` |
+| 0G Native Runtime | Coding Agents & IDEs | `0g-compute`, `agent-config`, `agent-context`, `agent-cost-monitor`, `agent-audit-trail` |
+| Autonomous Ops | Productivity & Tasks | `adaptive-reasoning`, `agent-autopilot`, `agent-task-manager`, `async-task`, `autonomous-execution` |
+| Agent UI Control | Coding Agents & IDEs | `agent-chat-ux-v1-4-0`, `agent-dashboard`, `agent-topology-visualizer`, `figma` |
+| Memory Knowledge | Notes & PKM | `2nd-brain`, `airweave`, `markdown-converter`, `markdown-formatter` |
+| Comms Scheduler | Communication | `calendar-scheduling`, `clippy`, `gmail-last5`, `ai-daily-briefing` |
 
 Each exported `SKILL.md` includes source metadata so users can inspect the upstream ClawHub page before wiring real credentials or tool permissions.
 

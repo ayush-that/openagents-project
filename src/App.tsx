@@ -397,10 +397,22 @@ function App() {
   const [edges, setEdges, onEdgesChange] = useEdgesState<BuilderEdge>(initialEdges);
   const [draggedBlockId, setDraggedBlockId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"manifest" | "agent" | "storage">("manifest");
+  const [skillPackQuery, setSkillPackQuery] = useState("");
   const [exporting, setExporting] = useState(false);
 
   const manifest = useMemo(() => createManifest(agent), [agent]);
   const agentConfig = useMemo(() => createAgentConfig(agent), [agent]);
+  const filteredSkillPacks = useMemo(() => {
+    const query = skillPackQuery.trim().toLowerCase();
+    if (!query) return skillPacks;
+
+    return skillPacks.filter((pack) =>
+      [pack.name, pack.category, pack.summary, pack.recommendedFor, ...pack.skills.map((skill) => `${skill.name} ${skill.description}`)]
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [skillPackQuery]);
 
   function updateAgent(patch: Partial<AgentDraft>) {
     setAgent((current) => ({ ...current, ...patch }));
@@ -473,6 +485,45 @@ function App() {
         memory: current.memory.includes(pack.name)
           ? current.memory
           : `${current.memory.trimEnd()}\n- Skill pack installed: ${pack.name} (${pack.category}).\n`,
+      };
+    });
+  }
+
+  function addAllVisibleSkillPacks() {
+    setAgent((current) => {
+      const existingNames = new Set(current.skills.map((skill) => skill.name));
+      const memoryNotes: string[] = [];
+      const skillsToAdd: SkillDraft[] = [];
+
+      for (const pack of filteredSkillPacks) {
+        const packSkills = pack.skills
+          .filter((skill) => !existingNames.has(skill.name))
+          .map((skill) => ({
+            id: createSkillId(skill.name),
+            name: skill.name,
+            description: skill.description,
+            enabled: true,
+            category: pack.category,
+            sourceUrl: skill.sourceUrl,
+            packId: pack.id,
+          }));
+
+        if (packSkills.length > 0) {
+          packSkills.forEach((skill) => existingNames.add(skill.name));
+          skillsToAdd.push(...packSkills);
+          if (!current.memory.includes(pack.name)) {
+            memoryNotes.push(`- Skill pack installed: ${pack.name} (${pack.category}).`);
+          }
+        }
+      }
+
+      if (skillsToAdd.length === 0) return current;
+
+      const notes = memoryNotes.length > 0 ? `\n${memoryNotes.join("\n")}\n` : "";
+      return {
+        ...current,
+        skills: current.skills.concat(skillsToAdd),
+        memory: `${current.memory.trimEnd()}${notes}`,
       };
     });
   }
@@ -829,19 +880,34 @@ function App() {
 
       <section className="mt-4 grid gap-4 lg:grid-cols-2">
         <section className={panelClass}>
-          <div className={panelTitleClass}>
-            <span className={panelIconClass}>
-              <Squares2X2Icon className="size-[18px]" />
+          <div className={`${panelTitleClass} justify-between`}>
+            <span className="flex items-center gap-2.5">
+              <span className={panelIconClass}>
+                <Squares2X2Icon className="size-[18px]" />
+              </span>
+              Prebuilt skill packs
             </span>
-            Prebuilt skill packs
+            <button
+              className={`${buttonDepthClass} rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-xs font-black text-white`}
+              onClick={addAllVisibleSkillPacks}
+              type="button"
+            >
+              Add visible
+            </button>
           </div>
           <p className="relative z-10 mb-4 text-sm leading-6 text-slate-400">
             Curated from VoltAgent&apos;s awesome-openclaw-skills categories and exported as normal OpenClaw-compatible
             <code className="mx-1 rounded bg-white/5 px-1.5 py-0.5 text-cyan-100">SKILL.md</code>
             folders.
           </p>
+          <input
+            className={`${inputClass} relative z-10 mb-3`}
+            onChange={(event) => setSkillPackQuery(event.target.value)}
+            placeholder="Search packs, categories, skills..."
+            value={skillPackQuery}
+          />
           <div className="relative z-10 grid gap-2.5">
-            {skillPacks.map((pack) => {
+            {filteredSkillPacks.map((pack) => {
               const installed = hasSkillPack(pack.id);
               return (
                 <article className={`${glassRowClass} grid gap-3 rounded-2xl p-3.5`} key={pack.id}>
@@ -854,6 +920,7 @@ function App() {
                         </span>
                       </div>
                       <p className="m-0 text-sm leading-6 text-slate-400">{pack.summary}</p>
+                      <p className="mt-2 text-xs font-bold text-slate-500">Best for: {pack.recommendedFor}</p>
                     </div>
                     <button
                       className={`${buttonDepthClass} shrink-0 rounded-full border border-white/10 px-3 py-2 text-xs font-black ${
@@ -866,6 +933,14 @@ function App() {
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-2">
+                    <a
+                      className="rounded-full border border-white/10 bg-[#050505] px-2.5 py-1 text-[11px] font-bold text-cyan-100 transition hover:border-cyan-300/30"
+                      href={pack.source}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      source category
+                    </a>
                     {pack.skills.map((skill) => (
                       <a
                         className="rounded-full border border-white/10 bg-black px-2.5 py-1 text-[11px] font-bold text-slate-300 transition hover:border-cyan-300/30 hover:text-cyan-100"

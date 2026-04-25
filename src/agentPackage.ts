@@ -130,11 +130,31 @@ export function createAgentConfig(agent: AgentDraft) {
 
 export function skillMarkdown(skill: SkillDraft): string {
   if (skill.name === "0g-compute") {
-    return `---\nname: 0g-compute\ndescription: Route agent inference through 0G Compute's OpenAI-compatible router.\nenv:\n  - OG_API_KEY\n---\n\n# 0G Compute\n\nUse the configured OpenAI-compatible provider:\n\n- Base URL: ${ZERO_G_ROUTER_URL}\n- API key: \`env:OG_API_KEY\`\n- Auth: bearer token\n\nGenerated agents should call the normal chat-completions interface so they remain portable across FastClaw, GoClaw, and OpenClaw-style runtimes.\n`;
+    const metadata = [
+      "name: 0g-compute",
+      "description: Route agent inference through 0G Compute's OpenAI-compatible router.",
+      skill.category ? `category: ${toYamlString(skill.category)}` : "",
+      skill.sourceUrl ? `source: ${toYamlString(skill.sourceUrl)}` : "",
+      "env:",
+      "  - OG_API_KEY",
+    ].filter(Boolean);
+
+    return `---\n${metadata.join("\n")}\n---\n\n# 0G Compute\n\nUse the configured OpenAI-compatible provider:\n\n- Base URL: ${ZERO_G_ROUTER_URL}\n- API key: \`env:OG_API_KEY\`\n- Auth: bearer token\n\nGenerated agents should call the normal chat-completions interface so they remain portable across FastClaw, GoClaw, and OpenClaw-style runtimes.\n`;
   }
 
   if (skill.name === "0g-storage-memory") {
-    return `---\nname: 0g-storage-memory\ndescription: Publish agent packages, MEMORY.md snapshots, and run logs to 0G Storage.\nenv:\n  - OG_STORAGE_PRIVATE_KEY\n  - OG_STORAGE_RPC_URL\n  - OG_STORAGE_INDEXER\n---\n\n# 0G Storage Memory\n\nPackage these files before upload:\n\n- agent.json\n- SOUL.md\n- MEMORY.md\n- workflow.json\n- skills/**/SKILL.md\n\nUpload flow:\n\n1. Create a file/blob package.\n2. Generate its 0G Storage Merkle root.\n3. Upload through the 0G Storage indexer.\n4. Store the returned root in \`manifest.0g.json\`.\n`;
+    const metadata = [
+      "name: 0g-storage-memory",
+      "description: Publish agent packages, MEMORY.md snapshots, and run logs to 0G Storage.",
+      skill.category ? `category: ${toYamlString(skill.category)}` : "",
+      skill.sourceUrl ? `source: ${toYamlString(skill.sourceUrl)}` : "",
+      "env:",
+      "  - OG_STORAGE_PRIVATE_KEY",
+      "  - OG_STORAGE_RPC_URL",
+      "  - OG_STORAGE_INDEXER",
+    ].filter(Boolean);
+
+    return `---\n${metadata.join("\n")}\n---\n\n# 0G Storage Memory\n\nPackage these files before upload:\n\n- agent.json\n- SOUL.md\n- MEMORY.md\n- workflow.json\n- skills/**/SKILL.md\n\nUpload flow:\n\n1. Create a file/blob package.\n2. Generate its 0G Storage Merkle root.\n3. Upload through the 0G Storage indexer.\n4. Store the returned root in \`manifest.0g.json\`.\n`;
   }
 
   const metadata = [
