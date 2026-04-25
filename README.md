@@ -2,11 +2,9 @@
 
 Drag-and-drop no-code builder for portable OpenClaw/FastClaw-style agents that use **0G Compute** as the OpenAI-compatible inference layer and **0G Storage** as the package, memory, and run-log layer.
 
-Built for [ETHGlobal OpenAgents](https://ethglobal.com/events/openagents/) and focused on the 0G framework/tooling track.
+## Why this exists
 
-## Why this wins the track
-
-0G's track rewards framework-level work, not just one-off agents. ClawBuilder 0G is a reusable builder that other hackers can use to generate 0G-native agent packages:
+0G-backed agents should be easy to design, inspect, and move between runtimes. ClawBuilder 0G is reusable product tooling for generating 0G-native agent packages:
 
 - drag/drop builder canvas for persona, model, memory, skills, and workflows
 - 0G Compute provider preset at `https://router-api.0g.ai/v1`
@@ -105,7 +103,7 @@ OpenClaw/FastClaw-compatible files
 
 ## Scope
 
-This MVP intentionally optimizes for hackathon feasibility:
+This MVP intentionally focuses on the product core:
 
 - yes: no-code drag/drop builder
 - yes: 0G provider preset and export manifest
