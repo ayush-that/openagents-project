@@ -40,6 +40,7 @@ import {
   downloadBlob,
   starterAgent,
 } from "./agentPackage";
+import { skillPacks } from "./skillPacks";
 import type { AgentDraft, BlockKind, BuilderBlock, SkillDraft, WorkflowStep } from "./types";
 
 const palette: BuilderBlock[] = [
@@ -160,6 +161,10 @@ function createFlowEdge(source: string, target: string): BuilderEdge {
 
 function createFlowEdges(nodes: BuilderNode[]): BuilderEdge[] {
   return nodes.slice(0, -1).map((node, index) => createFlowEdge(node.id, nodes[index + 1].id));
+}
+
+function createSkillId(skillName: string) {
+  return `${slugify(skillName) || "skill"}-${crypto.randomUUID()}`;
 }
 
 function HeroScene() {
@@ -415,7 +420,7 @@ function App() {
       skills: [
         ...current.skills,
         {
-          id: crypto.randomUUID(),
+          id: createSkillId("custom-skill"),
           name: "custom-skill",
           description: "Describe the agent capability this skill should add.",
           enabled: true,
@@ -436,6 +441,40 @@ function App() {
       ...current,
       skills: current.skills.filter((skill) => skill.id !== id),
     }));
+  }
+
+  function hasSkillPack(packId: string) {
+    return agent.skills.some((skill) => skill.packId === packId);
+  }
+
+  function addSkillPack(packId: string) {
+    const pack = skillPacks.find((candidate) => candidate.id === packId);
+    if (!pack) return;
+
+    setAgent((current) => {
+      const existingNames = new Set(current.skills.map((skill) => skill.name));
+      const skillsToAdd: SkillDraft[] = pack.skills
+        .filter((skill) => !existingNames.has(skill.name))
+        .map((skill) => ({
+          id: createSkillId(skill.name),
+          name: skill.name,
+          description: skill.description,
+          enabled: true,
+          category: pack.category,
+          sourceUrl: skill.sourceUrl,
+          packId: pack.id,
+        }));
+
+      if (skillsToAdd.length === 0) return current;
+
+      return {
+        ...current,
+        skills: current.skills.concat(skillsToAdd),
+        memory: current.memory.includes(pack.name)
+          ? current.memory
+          : `${current.memory.trimEnd()}\n- Skill pack installed: ${pack.name} (${pack.category}).\n`,
+      };
+    });
   }
 
   function addWorkflowStep() {
@@ -790,6 +829,62 @@ function App() {
 
       <section className="mt-4 grid gap-4 lg:grid-cols-2">
         <section className={panelClass}>
+          <div className={panelTitleClass}>
+            <span className={panelIconClass}>
+              <Squares2X2Icon className="size-[18px]" />
+            </span>
+            Prebuilt skill packs
+          </div>
+          <p className="relative z-10 mb-4 text-sm leading-6 text-slate-400">
+            Curated from VoltAgent&apos;s awesome-openclaw-skills categories and exported as normal OpenClaw-compatible
+            <code className="mx-1 rounded bg-white/5 px-1.5 py-0.5 text-cyan-100">SKILL.md</code>
+            folders.
+          </p>
+          <div className="relative z-10 grid gap-2.5">
+            {skillPacks.map((pack) => {
+              const installed = hasSkillPack(pack.id);
+              return (
+                <article className={`${glassRowClass} grid gap-3 rounded-2xl p-3.5`} key={pack.id}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="mb-2 flex flex-wrap items-center gap-2">
+                        <h3 className="m-0 text-base font-black text-white">{pack.name}</h3>
+                        <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100">
+                          {pack.category}
+                        </span>
+                      </div>
+                      <p className="m-0 text-sm leading-6 text-slate-400">{pack.summary}</p>
+                    </div>
+                    <button
+                      className={`${buttonDepthClass} shrink-0 rounded-full border border-white/10 px-3 py-2 text-xs font-black ${
+                        installed ? "bg-cyan-300 text-slate-950" : "bg-[#050505] text-white"
+                      }`}
+                      onClick={() => addSkillPack(pack.id)}
+                      type="button"
+                    >
+                      {installed ? "Added" : `Add ${pack.skills.length}`}
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {pack.skills.map((skill) => (
+                      <a
+                        className="rounded-full border border-white/10 bg-black px-2.5 py-1 text-[11px] font-bold text-slate-300 transition hover:border-cyan-300/30 hover:text-cyan-100"
+                        href={skill.sourceUrl}
+                        key={skill.name}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        {skill.name}
+                      </a>
+                    ))}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className={panelClass}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
@@ -806,7 +901,7 @@ function App() {
           </div>
           <div className="relative z-10 grid gap-2.5">
             {agent.skills.map((skill) => (
-              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_36px]`} key={skill.id}>
+              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_36px]`} key={skill.id}>
                 <input
                   className={inputClass}
                   value={skill.name}
@@ -817,6 +912,16 @@ function App() {
                   value={skill.description}
                   onChange={(event) => updateSkill(skill.id, { description: event.target.value })}
                 />
+                {skill.category ? (
+                  <a
+                    className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100 transition hover:border-cyan-200/50"
+                    href={skill.sourceUrl}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {skill.category}
+                  </a>
+                ) : null}
                 <label className="m-0 flex items-center gap-2 whitespace-nowrap text-xs font-black uppercase tracking-[0.08em] text-slate-400">
                   <input
                     className="min-h-0 w-auto accent-cyan-300"
