@@ -201,12 +201,15 @@ function HeroScene() {
     group.add(shell);
 
     const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.38 });
+    const ringGeometries: THREE.TorusGeometry[] = [];
     for (const [index, rotation] of [
       [0, 0],
       [Math.PI / 2.7, Math.PI / 5],
       [-Math.PI / 3.2, Math.PI / 1.8],
     ].entries()) {
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(2.2 + index * 0.18, 0.01, 12, 120), ringMaterial);
+      const ringGeometry = new THREE.TorusGeometry(2.2 + index * 0.18, 0.01, 12, 120);
+      ringGeometries.push(ringGeometry);
+      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
       ring.rotation.set(rotation[0], rotation[1], index * 0.42);
       group.add(ring);
     }
@@ -266,6 +269,7 @@ function HeroScene() {
       observer.disconnect();
       renderer.dispose();
       pointsGeometry.dispose();
+      ringGeometries.forEach((geometry) => geometry.dispose());
       core.geometry.dispose();
       shell.geometry.dispose();
       core.material.dispose();
@@ -470,6 +474,7 @@ function App() {
 
   function addFlowBlock(block: BuilderBlock, position: { x: number; y: number }) {
     const canvasBlock = createCanvasBlock(block);
+    const previousNode = nodes.at(-1);
     const node: BuilderNode = {
       id: canvasBlock.id,
       type: "builderBlock",
@@ -477,13 +482,10 @@ function App() {
       data: createBuilderNodeData(canvasBlock),
     };
 
-    setNodes((currentNodes) => {
-      const previousNode = currentNodes.at(-1);
-      if (previousNode) {
-        setEdges((currentEdges) => currentEdges.concat(createFlowEdge(previousNode.id, node.id)));
-      }
-      return currentNodes.concat(node);
-    });
+    setNodes((currentNodes) => currentNodes.concat(node));
+    if (previousNode) {
+      setEdges((currentEdges) => currentEdges.concat(createFlowEdge(previousNode.id, node.id)));
+    }
   }
 
   function handleConnect(connection: Connection) {
