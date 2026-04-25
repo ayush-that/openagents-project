@@ -12,15 +12,17 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.4",
-    "vite": "^7.1.10",
-    "typescript": "^5.9.3",
+    "jszip": "^3.10.1",
+    "lucide-react": "^0.468.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "jszip": "^3.10.1",
-    "lucide-react": "^0.468.0"
+    "typescript": "^5.9.3",
+    "vite": "^7.1.10"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.2.4",
     "@types/react": "^19.1.16",
-    "@types/react-dom": "^19.1.9"
+    "@types/react-dom": "^19.1.9",
+    "tailwindcss": "^4.2.4"
   }
 }
