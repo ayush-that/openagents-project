@@ -86,6 +86,10 @@ function NucleoIcon({ name, className = "size-6" }: { name: NucleoIconName; clas
   return <img alt="" aria-hidden="true" className={`${className} object-contain`} src={`/nucleo-glass/${name}.svg`} />;
 }
 
+function BrandMark({ className = "size-10" }: { className?: string }) {
+  return <img alt="ClawBuilder 0G logo" className={`${className} object-contain`} src={logoSrc} />;
+}
+
 const kindIcons: Record<CanvasNodeKind, ReactNode> = {
   soul: <NucleoIcon className="size-[22px]" name="user" />,
   model: <NucleoIcon className="size-[22px]" name="gear" />,
@@ -116,6 +120,8 @@ type BuilderNodeData = {
 type BuilderNode = Node<BuilderNodeData, "builderBlock">;
 type BuilderEdge = Edge;
 
+const logoSrc = "/brand/clawbuilder-logo.svg";
+
 const heroStats = [
   { label: "Router", value: "0G Compute" },
   { label: "Package", value: "OpenClaw zip" },
@@ -125,20 +131,26 @@ const heroStats = [
 const proofSteps = ["SOUL.md", "MEMORY.md", "SKILL.md", "manifest.0g.json"];
 
 const panelClass =
-  "relative overflow-hidden rounded-3xl border border-white/10 bg-black p-5 shadow-[0_20px_70px_rgba(0,0,0,0.55)]";
-const panelTitleClass = "relative z-10 mb-4 flex items-center gap-2.5 font-black text-slate-50";
+  "relative overflow-hidden rounded-3xl border border-cyan-100/12 bg-[linear-gradient(145deg,rgba(15,36,48,0.96),rgba(3,8,18,0.98)_48%,rgba(24,14,45,0.94))] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)]";
+const panelTitleClass = "relative z-10 mb-4 flex items-center gap-2.5 font-black text-[#f8fdff]";
 const inputClass =
-  "w-full rounded-2xl border border-white/10 bg-black px-3 py-2.5 text-slate-50 outline-none transition focus:border-cyan-300/60 focus:ring-4 focus:ring-cyan-300/10";
-const labelClass = "relative z-10 mb-3 grid gap-2 text-xs font-black uppercase tracking-[0.08em] text-slate-400";
+  "w-full rounded-2xl border border-cyan-100/12 bg-[#020713]/90 px-3 py-2.5 text-[#f4fbff] outline-none transition placeholder:text-[#7791a3] focus:border-cyan-200/70 focus:ring-4 focus:ring-cyan-200/12";
+const labelClass = "relative z-10 mb-3 grid gap-2 text-xs font-black uppercase tracking-[0.08em] text-[#a9c4d6]";
 const glassRowClass =
-  "relative z-10 border border-white/10 bg-[#050505] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:border-cyan-300/30 hover:bg-[#080808]";
+  "relative z-10 border border-cyan-100/12 bg-[linear-gradient(145deg,rgba(11,26,36,0.86),rgba(4,9,19,0.92)_58%,rgba(16,10,30,0.82))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-cyan-200/35 hover:bg-[#091522]";
 const iconTileClass =
-  "grid place-items-center rounded-2xl border border-white/15 bg-[linear-gradient(145deg,rgba(255,255,255,0.16),rgba(103,232,249,0.07)_45%,rgba(255,255,255,0.03))] text-cyan-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.22),inset_0_-14px_24px_rgba(103,232,249,0.05),0_10px_18px_rgba(0,0,0,0.42)] backdrop-blur-md";
+  "grid place-items-center rounded-2xl border border-cyan-100/18 bg-[linear-gradient(145deg,rgba(238,252,255,0.18),rgba(103,232,249,0.12)_36%,rgba(167,139,250,0.10)_72%,rgba(255,255,255,0.04))] text-cyan-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.26),inset_0_-14px_24px_rgba(103,232,249,0.08),0_10px_18px_rgba(0,0,0,0.42)] backdrop-blur-md";
 const panelIconClass = `${iconTileClass} size-9 shrink-0`;
 const buttonIconClass = `${iconTileClass} size-7 rounded-full text-current shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_5px_0_rgba(0,0,0,0.36)]`;
 const ctaIconClass = "grid size-6 shrink-0 place-items-center rounded-full";
 const buttonDepthClass =
   "shadow-[0_6px_0_rgba(0,0,0,0.72)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(0,0,0,0.72)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,0.72)]";
+const primaryButtonClass =
+  "border border-cyan-100/70 bg-[linear-gradient(135deg,#dffcff,#72f1ff_48%,#a78bfa)] text-[#03121d] hover:brightness-110";
+const secondaryButtonClass =
+  "border border-cyan-100/14 bg-[linear-gradient(145deg,rgba(10,27,38,0.94),rgba(5,10,24,0.96)_60%,rgba(34,20,59,0.86))] text-[#f2fbff] hover:border-cyan-200/40";
+const chipClass =
+  "rounded-full border border-cyan-100/16 bg-cyan-200/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-50";
 
 function slugify(value: string) {
   return value
@@ -197,7 +209,7 @@ function createFlowEdge(source: string, target: string): BuilderEdge {
     source,
     target,
     animated: true,
-    style: { stroke: "rgba(103, 232, 249, 0.55)", strokeWidth: 1.5 },
+    style: { stroke: "rgba(125, 245, 255, 0.64)", strokeWidth: 1.75 },
   };
 }
 
@@ -262,22 +274,22 @@ function HeroScene() {
     const core = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.25, 1),
       new THREE.MeshStandardMaterial({
-        color: 0x101827,
-        emissive: 0x0e7490,
-        emissiveIntensity: 0.28,
-        metalness: 0.42,
-        roughness: 0.24,
+        color: 0x173042,
+        emissive: 0x22d3ee,
+        emissiveIntensity: 0.34,
+        metalness: 0.46,
+        roughness: 0.2,
       }),
     );
     group.add(core);
 
     const shell = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.72, 1),
-      new THREE.MeshBasicMaterial({ color: 0x67e8f9, transparent: true, opacity: 0.08, wireframe: true }),
+      new THREE.MeshBasicMaterial({ color: 0x7df5ff, transparent: true, opacity: 0.12, wireframe: true }),
     );
     group.add(shell);
 
-    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.38 });
+    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xa78bfa, transparent: true, opacity: 0.42 });
     const ringGeometries: THREE.TorusGeometry[] = [];
     for (const [index, rotation] of [
       [0, 0],
@@ -304,12 +316,12 @@ function HeroScene() {
     pointsGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     const particles = new THREE.Points(
       pointsGeometry,
-      new THREE.PointsMaterial({ color: 0x67e8f9, size: 0.025, transparent: true, opacity: 0.65 }),
+      new THREE.PointsMaterial({ color: 0xcffafe, size: 0.026, transparent: true, opacity: 0.7 }),
     );
     group.add(particles);
 
     scene.add(new THREE.AmbientLight(0xffffff, 1.4));
-    const cyanLight = new THREE.PointLight(0x67e8f9, 18, 12);
+    const cyanLight = new THREE.PointLight(0x7df5ff, 20, 12);
     cyanLight.position.set(3, 2, 4);
     scene.add(cyanLight);
     const violetLight = new THREE.PointLight(0xa78bfa, 16, 12);
@@ -363,26 +375,26 @@ function HeroScene() {
 function BuilderFlowNode({ data }: { data: BuilderNodeData }) {
   return (
     <div className={`${glassRowClass} w-[230px] rounded-[1.25rem] p-3.5`}>
-      <Handle className="!size-3 !border !border-cyan-200/70 !bg-cyan-300" position={Position.Top} type="target" />
+      <Handle className="!size-3 !border !border-cyan-50/80 !bg-cyan-200" position={Position.Top} type="target" />
       <div className="grid grid-cols-[36px_1fr] gap-3">
         <div className={`${iconTileClass} size-9`}>{kindIcons[data.kind]}</div>
         <div>
           <div className="mb-1 flex flex-wrap items-center gap-1.5">
-            <span className="inline-flex rounded-full border border-cyan-300/15 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100">
-            {kindLabels[data.kind]}
+            <span className={chipClass}>
+              {kindLabels[data.kind]}
             </span>
             {data.count ? (
-              <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-slate-300">
+              <span className="inline-flex rounded-full border border-cyan-100/12 bg-white/[0.06] px-2 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-[#d7eef8]">
                 {data.count} skills
               </span>
             ) : null}
           </div>
-          <h3 className="mb-1 text-sm font-black text-white">{data.title}</h3>
-          <p className="m-0 text-xs leading-5 text-slate-400">{data.summary}</p>
-          {data.category ? <p className="mt-2 text-[10px] font-black uppercase tracking-[0.1em] text-cyan-200">{data.category}</p> : null}
+          <h3 className="mb-1 text-sm font-black text-[#f8fdff]">{data.title}</h3>
+          <p className="m-0 text-xs leading-5 text-[#abc7d8]">{data.summary}</p>
+          {data.category ? <p className="mt-2 text-[10px] font-black uppercase tracking-[0.1em] text-cyan-50">{data.category}</p> : null}
         </div>
       </div>
-      <Handle className="!size-3 !border !border-cyan-200/70 !bg-cyan-300" position={Position.Bottom} type="source" />
+      <Handle className="!size-3 !border !border-cyan-50/80 !bg-cyan-200" position={Position.Bottom} type="source" />
     </div>
   );
 }
@@ -445,7 +457,10 @@ function BuilderFlowCanvas({
   }
 
   return (
-    <div className="relative z-10 h-[680px] overflow-hidden rounded-3xl border border-dashed border-white/15 bg-black" ref={wrapperRef}>
+    <div
+      className="relative z-10 h-[680px] overflow-hidden rounded-3xl border border-dashed border-cyan-100/16 bg-[radial-gradient(circle_at_25%_15%,rgba(103,232,249,0.10),transparent_24rem),radial-gradient(circle_at_78%_72%,rgba(167,139,250,0.12),transparent_22rem),linear-gradient(145deg,#020611,#030816_52%,#0e0a1d)]"
+      ref={wrapperRef}
+    >
       <ReactFlow
         colorMode="dark"
         connectionLineStyle={{ stroke: "rgba(103, 232, 249, 0.7)", strokeWidth: 1.5 }}
@@ -469,7 +484,7 @@ function BuilderFlowCanvas({
       >
         <Background color="rgba(103, 232, 249, 0.2)" gap={24} size={1} variant={BackgroundVariant.Dots} />
         <MiniMap
-          className="!border !border-white/10 !bg-black/80"
+          className="!border !border-cyan-100/12 !bg-[#030814]/90"
           maskColor="rgba(0, 0, 0, 0.5)"
           nodeColor="rgba(103, 232, 249, 0.5)"
           nodeStrokeColor="rgba(255, 255, 255, 0.25)"
@@ -477,10 +492,10 @@ function BuilderFlowCanvas({
           zoomable
         />
       </ReactFlow>
-      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-full border border-white/10 bg-black/75 p-1.5 shadow-[0_7px_0_rgba(0,0,0,0.58)] backdrop-blur-md">
+      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-full border border-cyan-100/14 bg-[#020713]/80 p-1.5 shadow-[0_7px_0_rgba(0,0,0,0.58)] backdrop-blur-md">
         <button
           aria-label="Zoom in"
-          className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:border-cyan-300/40"
+          className="grid size-9 place-items-center rounded-full border border-cyan-100/12 bg-white/[0.05] hover:border-cyan-200/40"
           onClick={() => void zoomIn()}
           type="button"
         >
@@ -488,7 +503,7 @@ function BuilderFlowCanvas({
         </button>
         <button
           aria-label="Zoom out"
-          className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:border-cyan-300/40"
+          className="grid size-9 place-items-center rounded-full border border-cyan-100/12 bg-white/[0.05] hover:border-cyan-200/40"
           onClick={() => void zoomOut()}
           type="button"
         >
@@ -496,7 +511,7 @@ function BuilderFlowCanvas({
         </button>
         <button
           aria-label="Fit view"
-          className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:border-cyan-300/40"
+          className="grid size-9 place-items-center rounded-full border border-cyan-100/12 bg-white/[0.05] hover:border-cyan-200/40"
           onClick={() => void fitView({ padding: 0.18 })}
           type="button"
         >
@@ -780,7 +795,7 @@ function App() {
         {
           ...connection,
           animated: true,
-          style: { stroke: "rgba(103, 232, 249, 0.65)", strokeWidth: 1.5 },
+          style: { stroke: "rgba(125, 245, 255, 0.7)", strokeWidth: 1.75 },
         },
         currentEdges,
       ),
@@ -812,52 +827,53 @@ function App() {
           };
 
   return (
-    <main className="relative mx-auto w-[min(1180px,calc(100vw-32px))] px-0 py-6 text-slate-50">
-      <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[520px] bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.12),transparent_34rem)]" />
+    <main className="relative mx-auto w-[min(1180px,calc(100vw-32px))] px-0 py-6 text-[#f4fbff]">
+      <div className="pointer-events-none fixed inset-0 -z-20 bg-[radial-gradient(circle_at_18%_0%,rgba(103,232,249,0.18),transparent_30rem),radial-gradient(circle_at_88%_10%,rgba(167,139,250,0.16),transparent_34rem),radial-gradient(circle_at_50%_100%,rgba(8,145,178,0.10),transparent_30rem),linear-gradient(180deg,#020611_0%,#00040b_42%,#03020a_100%)]" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(rgba(207,250,254,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(207,250,254,0.018)_1px,transparent_1px)] bg-[size:56px_56px] opacity-55 [mask-image:radial-gradient(circle_at_50%_0%,black,transparent_76%)]" />
 
-      <nav className="mb-10 flex items-center justify-between rounded-full border border-white/10 bg-black px-4 py-3">
+      <nav className="mb-10 flex items-center justify-between rounded-full border border-cyan-100/14 bg-[#020713]/78 px-4 py-3 shadow-[0_12px_0_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
         <div className="flex items-center gap-4">
-          <div className={`${iconTileClass} size-11 rounded-full`}>
-            <NucleoIcon className="size-7" name="sparkle" />
+          <div className={`${iconTileClass} size-12 rounded-full`}>
+            <BrandMark className="size-9" />
           </div>
-          <span className="text-base font-black tracking-[-0.02em] sm:text-lg">ClawBuilder 0G</span>
+          <span className="text-base font-black tracking-[-0.02em] text-[#f8fdff] sm:text-lg">ClawBuilder 0G</span>
         </div>
-        <div className="hidden items-center gap-7 text-sm font-extrabold text-slate-400 sm:flex">
-          <a className="transition hover:text-white" href="#builder">Builder</a>
-          <a className="transition hover:text-white" href="#config">Config</a>
-          <a className="transition hover:text-white" href="#export-preview">Export</a>
+        <div className="hidden items-center gap-7 text-sm font-extrabold text-[#b8d3e2] sm:flex">
+          <a className="transition hover:text-cyan-50" href="#builder">Builder</a>
+          <a className="transition hover:text-cyan-50" href="#config">Config</a>
+          <a className="transition hover:text-cyan-50" href="#export-preview">Export</a>
         </div>
       </nav>
 
       <section className="mb-10 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
         <div className="py-8">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-cyan-100">
-            <span className="size-2 rounded-full bg-emerald-400" />
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-100/18 bg-cyan-200/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-cyan-50">
+            <span className="size-2 rounded-full bg-cyan-200 shadow-[0_0_18px_rgba(103,232,249,0.85)]" />
             ClawBuilder 0G · no-code agent foundry
           </div>
-          <h1 className="max-w-4xl text-[clamp(44px,7vw,80px)] font-bold leading-[0.96] tracking-[-0.075em] text-white">
+          <h1 className="max-w-4xl text-[clamp(44px,7vw,80px)] font-bold leading-[0.96] tracking-[-0.075em] text-[#f8fdff]">
             Build 0G agents without touching runtime files.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#b9d2df]">
             A focused visual builder for OpenClaw/FastClaw-style agent packages. Configure persona,
             model, memory, skills, and workflow, then export a ready-to-run 0G package.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-              className={`${buttonDepthClass} inline-flex items-center justify-center gap-2.5 rounded-full border border-cyan-200/60 bg-cyan-300 px-5 py-2.5 text-sm font-black text-slate-950 hover:bg-cyan-200`}
+              className={`${buttonDepthClass} ${primaryButtonClass} inline-flex items-center justify-center gap-2.5 rounded-full px-5 py-2.5 text-sm font-black`}
               href="#builder"
             >
-              <span className={`${ctaIconClass} bg-cyan-100/55`}>
+              <span className={`${ctaIconClass} bg-white/45`}>
                 <NucleoIcon className="size-5" name="sparkle" />
               </span>
               Open builder
             </a>
             <button
-              className={`${buttonDepthClass} inline-flex items-center justify-center gap-2.5 rounded-full border border-white/12 bg-[#040404] px-5 py-2.5 text-sm font-extrabold text-slate-100 hover:border-cyan-300/40 disabled:cursor-not-allowed disabled:opacity-70`}
+              className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2.5 rounded-full px-5 py-2.5 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-70`}
               onClick={exportPackage}
               disabled={exporting}
             >
-              <span className={`${ctaIconClass} border border-cyan-200/20 bg-cyan-300/10`}>
+              <span className={`${ctaIconClass} border border-cyan-100/18 bg-cyan-200/10`}>
                 <NucleoIcon className="size-5" name="circle-arrow-down" />
               </span>
               {exporting ? "Building package..." : "Export starter package"}
@@ -866,38 +882,38 @@ function App() {
         </div>
 
         <div className={`${panelClass} p-4`}>
-          <div className="relative min-h-[330px] overflow-hidden rounded-[1.55rem] border border-cyan-300/10 bg-[radial-gradient(circle_at_50%_22%,rgba(103,232,249,0.14),transparent_42%),linear-gradient(180deg,rgba(0,0,0,1),rgba(0,0,0,0.82))]">
+          <div className="relative min-h-[330px] overflow-hidden rounded-[1.55rem] border border-cyan-100/14 bg-[radial-gradient(circle_at_50%_22%,rgba(103,232,249,0.18),transparent_42%),radial-gradient(circle_at_68%_68%,rgba(167,139,250,0.16),transparent_38%),linear-gradient(180deg,rgba(2,8,19,1),rgba(3,5,13,0.92))]">
             <HeroScene />
-            <div className="absolute left-4 top-4 rounded-full border border-cyan-300/20 bg-black/70 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.1em] text-cyan-100 backdrop-blur-md">
+            <div className="absolute left-4 top-4 rounded-full border border-cyan-100/18 bg-[#020713]/72 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.1em] text-cyan-50 backdrop-blur-md">
               0G-native export stack
             </div>
-            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-black/80 p-4 shadow-[0_18px_0_rgba(0,0,0,0.55)] backdrop-blur-md">
+            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-cyan-100/14 bg-[#020713]/82 p-4 shadow-[0_18px_0_rgba(0,0,0,0.55)] backdrop-blur-md">
               <div className="flex items-center gap-3">
                 <div className={`${iconTileClass} size-10`}>
                   <NucleoIcon className="size-7" name="cube" />
                 </div>
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Generated package</p>
-                  <h2 className="text-lg font-black tracking-[-0.03em] text-white">OpenClaw files, 0G defaults</h2>
+                  <p className="text-xs font-black uppercase tracking-[0.12em] text-[#8fb4c8]">Generated package</p>
+                  <h2 className="text-lg font-black tracking-[-0.03em] text-[#f8fdff]">OpenClaw files, 0G defaults</h2>
                 </div>
               </div>
             </div>
           </div>
           <div className="mt-4 grid gap-3">
-            <div className="rounded-2xl border border-white/10 bg-[#050505] p-4">
-              <span className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">Provider preset</span>
+            <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-4">
+              <span className="text-xs font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Provider preset</span>
               <code className="mt-2 block">{ZERO_G_ROUTER_URL}</code>
             </div>
             {heroStats.map((stat) => (
-              <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-[#050505] px-4 py-3" key={stat.label}>
-                <span className="text-sm font-bold text-slate-400">{stat.label}</span>
-                <strong className="text-sm text-white">{stat.value}</strong>
+              <div className="flex items-center justify-between rounded-2xl border border-cyan-100/12 bg-[#020713]/88 px-4 py-3" key={stat.label}>
+                <span className="text-sm font-bold text-[#abc7d8]">{stat.label}</span>
+                <strong className="text-sm text-[#f8fdff]">{stat.value}</strong>
               </div>
             ))}
           </div>
           <div className="mt-5 flex flex-wrap gap-2">
             {proofSteps.map((step) => (
-              <span className="rounded-full border border-white/10 bg-[#050505] px-3 py-1.5 text-xs font-bold text-slate-300" key={step}>
+              <span className="rounded-full border border-cyan-100/12 bg-[#020713]/88 px-3 py-1.5 text-xs font-bold text-[#d7eef8]" key={step}>
                 {step}
               </span>
             ))}
@@ -916,15 +932,15 @@ function App() {
           {agentTemplates.map((template) => (
             <article className={`${glassRowClass} grid gap-3 rounded-2xl p-4`} key={template.id}>
               <div>
-                <h3 className="m-0 text-lg font-black tracking-[-0.03em] text-white">{template.name}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">{template.description}</p>
+                <h3 className="m-0 text-lg font-black tracking-[-0.03em] text-[#f8fdff]">{template.name}</h3>
+                <p className="mt-2 text-sm leading-6 text-[#abc7d8]">{template.description}</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 {template.skillPackIds.map((packId) => {
                   const pack = skillPacks.find((candidate) => candidate.id === packId);
                   return pack ? (
                     <span
-                      className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100"
+                      className={chipClass}
                       key={packId}
                     >
                       {pack.name}
@@ -933,7 +949,7 @@ function App() {
                 })}
               </div>
               <button
-                className={`${buttonDepthClass} mt-auto rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-black text-white`}
+                className={`${buttonDepthClass} ${secondaryButtonClass} mt-auto rounded-full px-3 py-2 text-sm font-black`}
                 onClick={() => applyAgentTemplate(template)}
                 type="button"
               >
@@ -953,18 +969,18 @@ function App() {
               </span>
               <span>
                 Combo builder canvas
-                <span className="mt-1 block text-xs font-semibold text-slate-500">Drop packs onto the graph to assemble the agent&apos;s capability stack.</span>
+                <span className="mt-1 block text-xs font-semibold text-[#8fb4c8]">Drop packs onto the graph to assemble the agent&apos;s capability stack.</span>
               </span>
             </span>
-            <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-[#050505] text-center">
+            <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-cyan-100/12 bg-[#020713]/88 text-center">
               {[
                 ["packs", installedPackIds.length],
                 ["skills", canvasSkills],
                 ["steps", agent.workflow.length],
               ].map(([label, value]) => (
-                <div className="border-r border-white/10 px-3 py-2 last:border-r-0" key={label}>
-                  <div className="text-base font-black text-white">{value}</div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500">{label}</div>
+                <div className="border-r border-cyan-100/12 px-3 py-2 last:border-r-0" key={label}>
+                  <div className="text-base font-black text-[#f8fdff]">{value}</div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">{label}</div>
                 </div>
               ))}
             </div>
@@ -985,17 +1001,17 @@ function App() {
             />
           </ReactFlowProvider>
           <div className="relative z-10 mt-4 grid gap-3 md:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-[#050505] p-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500">Current agent</p>
-              <p className="mt-1 truncate text-sm font-black text-white">{agent.name}</p>
+            <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Current agent</p>
+              <p className="mt-1 truncate text-sm font-black text-[#f8fdff]">{agent.name}</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#050505] p-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500">Template packs</p>
-              <p className="mt-1 text-sm font-black text-white">{templateCount} loaded</p>
+            <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Template packs</p>
+              <p className="mt-1 text-sm font-black text-[#f8fdff]">{templateCount} loaded</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#050505] p-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500">Export target</p>
-              <p className="mt-1 truncate text-sm font-black text-white">{agent.storage.packageUri}</p>
+            <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Export target</p>
+              <p className="mt-1 truncate text-sm font-black text-[#f8fdff]">{agent.storage.packageUri}</p>
             </div>
           </div>
         </section>
@@ -1018,8 +1034,8 @@ function App() {
               >
                 <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
                 <div>
-                  <h3 className="mb-1 text-sm font-black text-white">{block.title}</h3>
-                  <p className="m-0 text-xs leading-5 text-slate-400">{block.summary}</p>
+                  <h3 className="mb-1 text-sm font-black text-[#f8fdff]">{block.title}</h3>
+                  <p className="m-0 text-xs leading-5 text-[#abc7d8]">{block.summary}</p>
                 </div>
               </article>
             ))}
@@ -1036,8 +1052,8 @@ function App() {
               <button
                 className={`${buttonDepthClass} rounded-full px-3 py-2 ${
                   activeTab === "manifest"
-                    ? "bg-cyan-300 text-slate-950"
-                    : "bg-[#050505] text-slate-400"
+                    ? "bg-cyan-200 text-[#03121d]"
+                    : "bg-[#020713]/88 text-[#abc7d8]"
                 }`}
                 onClick={() => setActiveTab("manifest")}
               >
@@ -1046,8 +1062,8 @@ function App() {
               <button
                 className={`${buttonDepthClass} rounded-full px-3 py-2 ${
                   activeTab === "agent"
-                    ? "bg-cyan-300 text-slate-950"
-                    : "bg-[#050505] text-slate-400"
+                    ? "bg-cyan-200 text-[#03121d]"
+                    : "bg-[#020713]/88 text-[#abc7d8]"
                 }`}
                 onClick={() => setActiveTab("agent")}
               >
@@ -1056,15 +1072,15 @@ function App() {
               <button
                 className={`${buttonDepthClass} rounded-full px-3 py-2 ${
                   activeTab === "storage"
-                    ? "bg-cyan-300 text-slate-950"
-                    : "bg-[#050505] text-slate-400"
+                    ? "bg-cyan-200 text-[#03121d]"
+                    : "bg-[#020713]/88 text-[#abc7d8]"
                 }`}
                 onClick={() => setActiveTab("storage")}
               >
                 0G Storage
               </button>
             </div>
-            <pre className="relative z-10 m-0 max-h-[350px] min-h-[350px] overflow-auto rounded-3xl border border-white/10 bg-black p-4 text-xs text-cyan-100">
+            <pre className="relative z-10 m-0 max-h-[350px] min-h-[350px] overflow-auto rounded-3xl border border-cyan-100/12 bg-[#020713]/92 p-4 text-xs text-cyan-50">
               {JSON.stringify(preview, null, 2)}
             </pre>
           </section>
@@ -1159,16 +1175,16 @@ function App() {
               Skill packs
             </span>
             <button
-              className={`${buttonDepthClass} rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-xs font-black text-white`}
+              className={`${buttonDepthClass} ${secondaryButtonClass} rounded-full px-3 py-2 text-xs font-black`}
               onClick={addAllVisibleSkillPacksToCanvas}
               type="button"
             >
               Add shown
             </button>
           </div>
-          <p className="relative z-10 mb-4 text-sm leading-6 text-slate-400">
+          <p className="relative z-10 mb-4 text-sm leading-6 text-[#abc7d8]">
             Curated OpenClaw-compatible packs from VoltAgent&apos;s skill catalog, exported as normal
-            <code className="mx-1 rounded bg-white/5 px-1.5 py-0.5 text-cyan-100">SKILL.md</code>
+            <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-cyan-50">SKILL.md</code>
             folders.
           </p>
           <input
@@ -1192,17 +1208,15 @@ function App() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <h3 className="m-0 text-base font-black text-white">{pack.name}</h3>
-                        <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100">
-                          {pack.category}
-                        </span>
+                        <h3 className="m-0 text-base font-black text-[#f8fdff]">{pack.name}</h3>
+                        <span className={chipClass}>{pack.category}</span>
                       </div>
-                      <p className="m-0 text-sm leading-6 text-slate-400">{pack.summary}</p>
-                      <p className="mt-2 text-xs font-bold text-slate-500">Best for: {pack.recommendedFor}</p>
+                      <p className="m-0 text-sm leading-6 text-[#abc7d8]">{pack.summary}</p>
+                      <p className="mt-2 text-xs font-bold text-[#8fb4c8]">Best for: {pack.recommendedFor}</p>
                     </div>
                     <button
-                      className={`${buttonDepthClass} shrink-0 rounded-full border border-white/10 px-3 py-2 text-xs font-black ${
-                        installed ? "bg-cyan-300 text-slate-950" : "bg-[#050505] text-white"
+                      className={`${buttonDepthClass} shrink-0 rounded-full border border-cyan-100/12 px-3 py-2 text-xs font-black ${
+                        installed ? "bg-cyan-200 text-[#03121d]" : "bg-[#020713]/88 text-[#f8fdff]"
                       }`}
                       onClick={() => addSkillPackToCanvas(pack.id)}
                       type="button"
@@ -1212,7 +1226,7 @@ function App() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <a
-                      className="rounded-full border border-white/10 bg-[#050505] px-2.5 py-1 text-[11px] font-bold text-cyan-100 transition hover:border-cyan-300/30"
+                      className="rounded-full border border-cyan-100/12 bg-[#020713]/88 px-2.5 py-1 text-[11px] font-bold text-cyan-50 transition hover:border-cyan-200/35"
                       href={pack.source}
                       rel="noreferrer"
                       target="_blank"
@@ -1221,7 +1235,7 @@ function App() {
                     </a>
                     {pack.skills.map((skill) => (
                       <a
-                        className="rounded-full border border-white/10 bg-black px-2.5 py-1 text-[11px] font-bold text-slate-300 transition hover:border-cyan-300/30 hover:text-cyan-100"
+                        className="rounded-full border border-cyan-100/12 bg-[#020713]/76 px-2.5 py-1 text-[11px] font-bold text-[#d7eef8] transition hover:border-cyan-200/35 hover:text-cyan-50"
                         href={skill.sourceUrl}
                         key={skill.name}
                         rel="noreferrer"
@@ -1245,7 +1259,7 @@ function App() {
               </span>
               Skills
             </span>
-            <button className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-extrabold text-white`} onClick={addSkill}>
+            <button className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`} onClick={addSkill}>
               <span className={buttonIconClass}>
                 <NucleoIcon className="size-5" name="circle-copy-plus" />
               </span>
@@ -1267,7 +1281,7 @@ function App() {
                 />
                 {skill.category ? (
                   <a
-                    className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100 transition hover:border-cyan-200/50"
+                    className={`${chipClass} transition hover:border-cyan-100/45`}
                     href={skill.sourceUrl}
                     rel="noreferrer"
                     target="_blank"
@@ -1275,9 +1289,9 @@ function App() {
                     {skill.category}
                   </a>
                 ) : null}
-                <label className="m-0 flex items-center gap-2 whitespace-nowrap text-xs font-black uppercase tracking-[0.08em] text-slate-400">
+                <label className="m-0 flex items-center gap-2 whitespace-nowrap text-xs font-black uppercase tracking-[0.08em] text-[#a9c4d6]">
                   <input
-                    className="min-h-0 w-auto accent-cyan-300"
+                    className="min-h-0 w-auto accent-cyan-200"
                     type="checkbox"
                     checked={skill.enabled}
                     onChange={(event) => updateSkill(skill.id, { enabled: event.target.checked })}
@@ -1304,7 +1318,7 @@ function App() {
               </span>
               Workflow
             </span>
-            <button className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-extrabold text-white`} onClick={addWorkflowStep}>
+            <button className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`} onClick={addWorkflowStep}>
               <span className={buttonIconClass}>
                 <NucleoIcon className="size-5" name="circle-copy-plus" />
               </span>
