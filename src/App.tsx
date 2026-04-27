@@ -1291,7 +1291,7 @@ function App() {
           </div>
           <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1 [scrollbar-color:rgba(103,232,249,0.45)_rgba(255,255,255,0.06)]">
             {agent.skills.map((skill) => (
-              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_36px]`} key={skill.id}>
+              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto]`} key={skill.id}>
                 <input
                   className={inputClass}
                   value={skill.name}
@@ -1321,13 +1321,6 @@ function App() {
                   />
                   enabled
                 </label>
-                <button
-                  className={`${buttonDepthClass} ${iconTileClass} size-9 rounded-full text-red-200`}
-                  onClick={() => removeSkill(skill.id)}
-                  aria-label={`Remove ${skill.name}`}
-                >
-                  <NucleoIcon className="size-5" name="tab-close" />
-                </button>
               </article>
             ))}
           </div>
