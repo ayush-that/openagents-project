@@ -131,28 +131,28 @@ const heroStats = [
 const proofSteps = ["SOUL.md", "MEMORY.md", "SKILL.md", "manifest.0g.json"];
 
 const panelClass =
-  "relative overflow-hidden rounded-3xl border border-cyan-100/12 bg-[linear-gradient(145deg,rgba(15,36,48,0.96),rgba(3,8,18,0.98)_48%,rgba(24,14,45,0.94))] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)]";
-const panelTitleClass = "relative z-10 mb-4 flex items-center gap-2.5 font-black text-[#f8fdff]";
+  "relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(12,12,12,0.98),rgba(0,0,0,0.96))] p-5 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]";
+const panelTitleClass = "relative z-10 mb-4 flex items-center gap-2.5 font-semibold text-[#fafafa]";
 const inputClass =
-  "w-full rounded-2xl border border-cyan-100/12 bg-[#020713]/90 px-3 py-2.5 text-[#f4fbff] outline-none transition placeholder:text-[#7791a3] focus:border-cyan-200/70 focus:ring-4 focus:ring-cyan-200/12";
-const labelClass = "relative z-10 mb-3 grid gap-2 text-xs font-black uppercase tracking-[0.08em] text-[#a9c4d6]";
+  "w-full rounded-2xl border border-white/10 bg-black px-3 py-2.5 text-[#fafafa] outline-none transition placeholder:text-zinc-500 focus:border-white/45 focus:ring-4 focus:ring-white/8";
+const labelClass = "relative z-10 mb-3 grid gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400";
 const glassRowClass =
-  "relative z-10 border border-cyan-100/12 bg-[linear-gradient(145deg,rgba(11,26,36,0.86),rgba(4,9,19,0.92)_58%,rgba(16,10,30,0.82))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-cyan-200/35 hover:bg-[#091522]";
+  "relative z-10 border border-white/10 bg-[linear-gradient(180deg,rgba(10,10,10,0.92),rgba(0,0,0,0.92))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-white/25 hover:bg-[#0b0b0b]";
 const iconTileClass =
-  "grid place-items-center rounded-2xl border border-cyan-100/18 bg-[linear-gradient(145deg,rgba(238,252,255,0.18),rgba(103,232,249,0.12)_36%,rgba(167,139,250,0.10)_72%,rgba(255,255,255,0.04))] text-cyan-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.26),inset_0_-14px_24px_rgba(103,232,249,0.08),0_10px_18px_rgba(0,0,0,0.42)] backdrop-blur-md";
+  "grid place-items-center rounded-2xl border border-white/12 bg-[linear-gradient(180deg,rgba(250,250,250,0.13),rgba(250,250,250,0.035))] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_8px_0_rgba(255,255,255,0.035)] backdrop-blur-md";
 const panelIconClass = `${iconTileClass} size-9 shrink-0`;
 const buttonIconClass = `${iconTileClass} size-7 rounded-full text-current shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_5px_0_rgba(0,0,0,0.36)]`;
 const ctaIconClass = "grid size-6 shrink-0 place-items-center rounded-full";
 const buttonDepthClass =
-  "shadow-[0_6px_0_rgba(0,0,0,0.72)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(0,0,0,0.72)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,0.72)]";
+  "shadow-[0_6px_0_rgba(255,255,255,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(255,255,255,0.08)] active:translate-y-1 active:shadow-[0_2px_0_rgba(255,255,255,0.08)]";
 const primaryButtonClass =
-  "border border-white/80 bg-[linear-gradient(135deg,#f6ffff,#7df7ff_50%,#c7bbff)] text-[#02101a] hover:brightness-110";
+  "border border-white bg-[#fafafa] text-black hover:bg-white";
 const heroSecondaryButtonClass =
-  "border border-cyan-100/70 bg-[linear-gradient(135deg,#f8fdff,#dffcff_52%,#d8d1ff)] text-[#02101a] hover:brightness-105";
+  "border border-white/70 bg-[#fafafa] text-black hover:bg-white";
 const secondaryButtonClass =
-  "border border-cyan-100/28 bg-[linear-gradient(145deg,rgba(18,45,59,0.96),rgba(6,17,32,0.98)_58%,rgba(40,25,70,0.92))] text-[#f8fdff] hover:border-cyan-200/60";
+  "border border-white/15 bg-black text-[#fafafa] hover:border-white/40";
 const chipClass =
-  "rounded-full border border-cyan-100/16 bg-cyan-200/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-50";
+  "rounded-full border border-white/12 bg-white/[0.055] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-100";
 
 function slugify(value: string) {
   return value
@@ -377,7 +377,7 @@ function HeroScene() {
 function BuilderFlowNode({ data }: { data: BuilderNodeData }) {
   return (
     <div className={`${glassRowClass} w-[230px] rounded-[1.25rem] p-3.5`}>
-      <Handle className="!size-3 !border !border-cyan-50/80 !bg-cyan-200" position={Position.Top} type="target" />
+      <Handle className="!size-3 !border !border-white/80 !bg-white" position={Position.Top} type="target" />
       <div className="grid grid-cols-[36px_1fr] gap-3">
         <div className={`${iconTileClass} size-9`}>{kindIcons[data.kind]}</div>
         <div>
@@ -386,17 +386,17 @@ function BuilderFlowNode({ data }: { data: BuilderNodeData }) {
               {kindLabels[data.kind]}
             </span>
             {data.count ? (
-              <span className="inline-flex rounded-full border border-cyan-100/12 bg-white/[0.06] px-2 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-[#d7eef8]">
+              <span className="inline-flex rounded-full border border-white/12 bg-white/[0.06] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-200">
                 {data.count} skills
               </span>
             ) : null}
           </div>
-          <h3 className="mb-1 text-sm font-black text-[#f8fdff]">{data.title}</h3>
-          <p className="m-0 text-xs leading-5 text-[#abc7d8]">{data.summary}</p>
-          {data.category ? <p className="mt-2 text-[10px] font-black uppercase tracking-[0.1em] text-cyan-50">{data.category}</p> : null}
+          <h3 className="mb-1 text-sm font-semibold text-[#fafafa]">{data.title}</h3>
+          <p className="m-0 text-xs leading-5 text-zinc-400">{data.summary}</p>
+          {data.category ? <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-200">{data.category}</p> : null}
         </div>
       </div>
-      <Handle className="!size-3 !border !border-cyan-50/80 !bg-cyan-200" position={Position.Bottom} type="source" />
+      <Handle className="!size-3 !border !border-white/80 !bg-white" position={Position.Bottom} type="source" />
     </div>
   );
 }
@@ -460,7 +460,7 @@ function BuilderFlowCanvas({
 
   return (
     <div
-      className="relative z-10 h-[680px] overflow-hidden rounded-3xl border border-dashed border-cyan-100/16 bg-[radial-gradient(circle_at_25%_15%,rgba(103,232,249,0.10),transparent_24rem),radial-gradient(circle_at_78%_72%,rgba(167,139,250,0.12),transparent_22rem),linear-gradient(145deg,#020611,#030816_52%,#0e0a1d)]"
+      className="relative z-10 h-[520px] overflow-hidden rounded-3xl border border-dashed border-white/14 bg-[radial-gradient(circle,rgba(255,255,255,0.10)_1px,transparent_1.2px),linear-gradient(180deg,#050505,#000)] bg-[size:18px_18px,auto]"
       ref={wrapperRef}
     >
       <ReactFlow
@@ -484,9 +484,9 @@ function BuilderFlowCanvas({
         onNodesChange={onNodesChange}
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="rgba(103, 232, 249, 0.2)" gap={24} size={1} variant={BackgroundVariant.Dots} />
+        <Background color="rgba(255, 255, 255, 0.16)" gap={24} size={1} variant={BackgroundVariant.Dots} />
         <MiniMap
-          className="!h-24 !w-32 !rounded-2xl !border !border-cyan-100/12 !bg-[#030814]/90"
+          className="max-xl:!hidden xl:!h-20 xl:!w-28 xl:!rounded-2xl xl:!border xl:!border-white/12 xl:!bg-black/90"
           maskColor="rgba(0, 0, 0, 0.5)"
           nodeColor="rgba(103, 232, 249, 0.5)"
           nodeStrokeColor="rgba(255, 255, 255, 0.25)"
@@ -494,10 +494,10 @@ function BuilderFlowCanvas({
           zoomable
         />
       </ReactFlow>
-      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-full border border-cyan-100/14 bg-[#020713]/80 p-1.5 shadow-[0_7px_0_rgba(0,0,0,0.58)] backdrop-blur-md">
+      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-full border border-white/12 bg-black/80 p-1.5 shadow-[0_7px_0_rgba(255,255,255,0.04)] backdrop-blur-md">
         <button
           aria-label="Zoom in"
-          className="grid size-9 place-items-center rounded-full border border-cyan-100/12 bg-white/[0.05] hover:border-cyan-200/40"
+          className="grid size-9 place-items-center rounded-full border border-white/12 bg-white/[0.05] hover:border-white/40"
           onClick={() => void zoomIn()}
           title="Zoom into the agent canvas."
           type="button"
@@ -506,7 +506,7 @@ function BuilderFlowCanvas({
         </button>
         <button
           aria-label="Zoom out"
-          className="grid size-9 place-items-center rounded-full border border-cyan-100/12 bg-white/[0.05] hover:border-cyan-200/40"
+          className="grid size-9 place-items-center rounded-full border border-white/12 bg-white/[0.05] hover:border-white/40"
           onClick={() => void zoomOut()}
           title="Zoom out to see more of the agent graph."
           type="button"
@@ -515,7 +515,7 @@ function BuilderFlowCanvas({
         </button>
         <button
           aria-label="Fit view"
-          className="grid size-9 place-items-center rounded-full border border-cyan-100/12 bg-white/[0.05] hover:border-cyan-200/40"
+          className="grid size-9 place-items-center rounded-full border border-white/12 bg-white/[0.05] hover:border-white/40"
           onClick={() => void fitView({ padding: 0.18 })}
           title="Fit every block and pack into view."
           type="button"
@@ -833,31 +833,31 @@ function App() {
 
   return (
     <main className="relative mx-auto w-[min(1180px,calc(100vw-32px))] px-0 py-6 text-[#f4fbff]">
-      <div className="pointer-events-none fixed inset-0 -z-20 bg-[radial-gradient(circle_at_18%_0%,rgba(103,232,249,0.18),transparent_30rem),radial-gradient(circle_at_88%_10%,rgba(167,139,250,0.16),transparent_34rem),radial-gradient(circle_at_50%_100%,rgba(8,145,178,0.10),transparent_30rem),linear-gradient(180deg,#020611_0%,#00040b_42%,#03020a_100%)]" />
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(rgba(207,250,254,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(207,250,254,0.018)_1px,transparent_1px)] bg-[size:56px_56px] opacity-55 [mask-image:radial-gradient(circle_at_50%_0%,black,transparent_76%)]" />
+      <div className="pointer-events-none fixed inset-0 -z-20 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.08),transparent_28rem),linear-gradient(180deg,#000_0%,#030303_45%,#000_100%)]" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle,rgba(255,255,255,0.13)_1px,transparent_1.2px)] bg-[size:18px_18px] opacity-30 [mask-image:radial-gradient(circle_at_50%_0%,black,transparent_78%)]" />
 
-      <nav className="mb-10 flex items-center justify-between rounded-full border border-cyan-100/14 bg-[#020713]/78 px-4 py-3 shadow-[0_12px_0_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
+      <nav className="mb-10 flex items-center justify-between rounded-full border border-white/10 bg-black/80 px-4 py-3 shadow-[0_10px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
         <div className="flex items-center gap-4">
           <BrandMark className="size-12" />
-          <span className="text-base font-black tracking-[-0.02em] text-[#f8fdff] sm:text-lg">ClawBuilder 0G</span>
+          <span className="text-base font-semibold tracking-[-0.04em] text-[#fafafa] sm:text-lg">ClawBuilder 0G</span>
         </div>
-        <div className="hidden items-center gap-7 text-sm font-extrabold text-[#b8d3e2] sm:flex">
-          <a className="transition hover:text-cyan-50" href="#builder">Builder</a>
-          <a className="transition hover:text-cyan-50" href="#config">Config</a>
-          <a className="transition hover:text-cyan-50" href="#export-preview">Export</a>
+        <div className="hidden items-center gap-7 text-sm font-semibold text-zinc-500 sm:flex">
+          <a className="transition hover:text-white" href="#builder">Builder</a>
+          <a className="transition hover:text-white" href="#config">Config</a>
+          <a className="transition hover:text-white" href="#export-preview">Export</a>
         </div>
       </nav>
 
       <section className="mb-10 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
         <div className="py-8">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-100/18 bg-cyan-200/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-cyan-50">
-            <span className="size-2 rounded-full bg-cyan-200 shadow-[0_0_18px_rgba(103,232,249,0.85)]" />
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-200">
+            <span className="size-2 rounded-full bg-white" />
             ClawBuilder 0G · no-code agent foundry
           </div>
-          <h1 className="max-w-4xl text-[clamp(44px,7vw,80px)] font-bold leading-[0.96] tracking-[-0.075em] text-[#f8fdff]">
+          <h1 className="max-w-4xl text-[clamp(40px,7vw,82px)] font-medium leading-[0.98] tracking-[-0.055em] text-[#fafafa]">
             Build 0G agents without touching runtime files.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#b9d2df]">
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-400">
             A focused visual builder for OpenClaw/FastClaw-style agent packages. Configure persona,
             model, memory, skills, and runbook, then export a ready-to-run 0G package.
           </p>
@@ -867,7 +867,7 @@ function App() {
               href="#builder"
               title="Jump to the drag-and-drop builder canvas."
             >
-              <span className={`${ctaIconClass} border border-[#02101a]/12 bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]`}>
+              <span className={`${ctaIconClass} border border-black/12 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]`}>
                 <NucleoIcon className="size-5" name="sparkle" />
               </span>
               Open builder
@@ -878,7 +878,7 @@ function App() {
               disabled={exporting}
               title="Download the current agent as an OpenClaw-style 0G package zip."
             >
-              <span className={`${ctaIconClass} border border-[#02101a]/12 bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]`}>
+              <span className={`${ctaIconClass} border border-black/12 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]`}>
                 <NucleoIcon className="size-5" name="circle-arrow-down" />
               </span>
               {exporting ? "Building package..." : "Export starter package"}
@@ -887,38 +887,38 @@ function App() {
         </div>
 
         <div className={`${panelClass} p-4`}>
-          <div className="relative min-h-[330px] overflow-hidden rounded-[1.55rem] border border-cyan-100/14 bg-[radial-gradient(circle_at_50%_22%,rgba(103,232,249,0.18),transparent_42%),radial-gradient(circle_at_68%_68%,rgba(167,139,250,0.16),transparent_38%),linear-gradient(180deg,rgba(2,8,19,1),rgba(3,5,13,0.92))]">
+          <div className="relative min-h-[330px] overflow-hidden rounded-[1.55rem] border border-white/10 bg-[radial-gradient(circle,rgba(255,255,255,0.10)_1px,transparent_1.2px),linear-gradient(180deg,#050505,#000)] bg-[size:18px_18px,auto]">
             <HeroScene />
-            <div className="absolute left-4 top-4 rounded-full border border-cyan-100/18 bg-[#020713]/72 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.1em] text-cyan-50 backdrop-blur-md">
+            <div className="absolute left-4 top-4 rounded-full border border-white/12 bg-black/72 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-200 backdrop-blur-md">
               0G-native export stack
             </div>
-            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-cyan-100/14 bg-[#020713]/82 p-4 shadow-[0_18px_0_rgba(0,0,0,0.55)] backdrop-blur-md">
+            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/12 bg-black/82 p-4 shadow-[0_12px_0_rgba(255,255,255,0.035)] backdrop-blur-md">
               <div className="flex items-center gap-3">
                 <div className={`${iconTileClass} size-10`}>
                   <NucleoIcon className="size-7" name="cube" />
                 </div>
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.12em] text-[#8fb4c8]">Generated package</p>
-                  <h2 className="text-lg font-black tracking-[-0.03em] text-[#f8fdff]">OpenClaw files, 0G defaults</h2>
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Generated package</p>
+                  <h2 className="text-lg font-semibold tracking-[-0.04em] text-[#fafafa]">OpenClaw files, 0G defaults</h2>
                 </div>
               </div>
             </div>
           </div>
           <div className="mt-4 grid gap-3">
-            <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-4">
-              <span className="text-xs font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Provider preset</span>
+            <div className="rounded-2xl border border-white/10 bg-black p-4">
+              <span className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-500">Provider preset</span>
               <code className="mt-2 block">{ZERO_G_ROUTER_URL}</code>
             </div>
             {heroStats.map((stat) => (
-              <div className="flex items-center justify-between rounded-2xl border border-cyan-100/12 bg-[#020713]/88 px-4 py-3" key={stat.label}>
-                <span className="text-sm font-bold text-[#abc7d8]">{stat.label}</span>
-                <strong className="text-sm text-[#f8fdff]">{stat.value}</strong>
+              <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black px-4 py-3" key={stat.label}>
+                <span className="text-sm font-medium text-zinc-500">{stat.label}</span>
+                <strong className="text-sm font-semibold text-[#fafafa]">{stat.value}</strong>
               </div>
             ))}
           </div>
           <div className="mt-5 flex flex-wrap gap-2">
             {proofSteps.map((step) => (
-              <span className="rounded-full border border-cyan-100/12 bg-[#020713]/88 px-3 py-1.5 text-xs font-bold text-[#d7eef8]" key={step}>
+              <span className="rounded-full border border-white/10 bg-black px-3 py-1.5 text-xs font-medium text-zinc-200" key={step}>
                 {step}
               </span>
             ))}
@@ -937,8 +937,8 @@ function App() {
           {agentTemplates.map((template) => (
             <article className={`${glassRowClass} grid gap-3 rounded-2xl p-4`} key={template.id}>
               <div>
-                <h3 className="m-0 text-lg font-black tracking-[-0.03em] text-[#f8fdff]">{template.name}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#abc7d8]">{template.description}</p>
+                <h3 className="m-0 text-lg font-semibold tracking-[-0.04em] text-[#fafafa]">{template.name}</h3>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">{template.description}</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 {template.skillPackIds.map((packId) => {
@@ -967,7 +967,7 @@ function App() {
       </section>
 
       <section className="grid items-start gap-4 xl:grid-cols-[minmax(560px,1fr)_360px]">
-        <section className={`${panelClass} min-h-[760px]`} id="builder">
+        <section className={panelClass} id="builder">
           <div className={`${panelTitleClass} items-start justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
@@ -975,20 +975,20 @@ function App() {
               </span>
               <span>
                 Combo builder canvas
-                <span className="mt-1 block text-xs font-semibold text-[#8fb4c8]">
+                <span className="mt-1 block text-xs font-medium text-zinc-500">
                   Drop packs onto the graph; runbook nodes define the ordered steps the agent follows.
                 </span>
               </span>
             </span>
-            <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-cyan-100/12 bg-[#020713]/88 text-center">
+            <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-black text-center">
               {[
                 ["packs", installedPackIds.length],
                 ["skills", canvasSkills],
                 ["steps", agent.workflow.length],
               ].map(([label, value]) => (
-                <div className="border-r border-cyan-100/12 px-3 py-2 last:border-r-0" key={label}>
-                  <div className="text-base font-black text-[#f8fdff]">{value}</div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">{label}</div>
+                <div className="border-r border-white/10 px-3 py-2 last:border-r-0" key={label}>
+                  <div className="text-base font-semibold text-[#fafafa]">{value}</div>
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{label}</div>
                 </div>
               ))}
             </div>
@@ -1009,17 +1009,17 @@ function App() {
             />
           </ReactFlowProvider>
           <div className="relative z-10 mt-4 grid gap-3 md:grid-cols-3">
-            <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Current agent</p>
-              <p className="mt-1 truncate text-sm font-black text-[#f8fdff]" title="The exported agent package name.">{agent.name}</p>
+            <div className="rounded-2xl border border-white/10 bg-black p-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Current agent</p>
+              <p className="mt-1 truncate text-sm font-semibold text-[#fafafa]" title="The exported agent package name.">{agent.name}</p>
             </div>
-            <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Template packs</p>
-              <p className="mt-1 text-sm font-black text-[#f8fdff]" title="Unique prebuilt skill packs currently installed.">{templateCount} loaded</p>
+            <div className="rounded-2xl border border-white/10 bg-black p-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Template packs</p>
+              <p className="mt-1 text-sm font-semibold text-[#fafafa]" title="Unique prebuilt skill packs currently installed.">{templateCount} loaded</p>
             </div>
-            <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Export target</p>
-              <p className="mt-1 truncate text-sm font-black text-[#f8fdff]" title="0G Storage package URI template written into manifest.0g.json.">{agent.storage.packageUri}</p>
+            <div className="rounded-2xl border border-white/10 bg-black p-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Export target</p>
+              <p className="mt-1 truncate text-sm font-semibold text-[#fafafa]" title="0G Storage package URI template written into manifest.0g.json.">{agent.storage.packageUri}</p>
             </div>
           </div>
         </section>
@@ -1047,8 +1047,8 @@ function App() {
               >
                 <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
                 <div>
-                  <h3 className="mb-1 text-sm font-black text-[#f8fdff]">{block.title}</h3>
-                  <p className="m-0 text-xs leading-5 text-[#abc7d8]">{block.summary}</p>
+                  <h3 className="mb-1 text-sm font-semibold text-[#fafafa]">{block.title}</h3>
+                  <p className="m-0 text-xs leading-5 text-zinc-400">{block.summary}</p>
                 </div>
               </article>
             ))}
@@ -1065,8 +1065,8 @@ function App() {
               <button
                 className={`${buttonDepthClass} rounded-full px-3 py-2 ${
                   activeTab === "manifest"
-                    ? "bg-cyan-200 text-[#03121d]"
-                    : "bg-[#020713]/88 text-[#abc7d8]"
+                    ? "bg-white text-black"
+                    : "bg-black text-zinc-500"
                 }`}
                 onClick={() => setActiveTab("manifest")}
                 title="Show manifest.0g.json provider, storage, skill, and runbook metadata."
@@ -1076,8 +1076,8 @@ function App() {
               <button
                 className={`${buttonDepthClass} rounded-full px-3 py-2 ${
                   activeTab === "agent"
-                    ? "bg-cyan-200 text-[#03121d]"
-                    : "bg-[#020713]/88 text-[#abc7d8]"
+                    ? "bg-white text-black"
+                    : "bg-black text-zinc-500"
                 }`}
                 onClick={() => setActiveTab("agent")}
                 title="Show the portable agent runtime configuration."
@@ -1087,8 +1087,8 @@ function App() {
               <button
                 className={`${buttonDepthClass} rounded-full px-3 py-2 ${
                   activeTab === "storage"
-                    ? "bg-cyan-200 text-[#03121d]"
-                    : "bg-[#020713]/88 text-[#abc7d8]"
+                    ? "bg-white text-black"
+                    : "bg-black text-zinc-500"
                 }`}
                 onClick={() => setActiveTab("storage")}
                 title="Show the 0G Storage package, memory, and log URI targets."
@@ -1096,7 +1096,7 @@ function App() {
                 0G Storage
               </button>
             </div>
-            <pre className="relative z-10 m-0 max-h-[350px] min-h-[350px] overflow-auto rounded-3xl border border-cyan-100/12 bg-[#020713]/92 p-4 text-xs text-cyan-50">
+            <pre className="relative z-10 m-0 max-h-[350px] min-h-[350px] overflow-auto rounded-3xl border border-white/10 bg-black p-4 text-xs text-zinc-100">
               {JSON.stringify(preview, null, 2)}
             </pre>
           </section>
@@ -1182,7 +1182,7 @@ function App() {
       </section>
 
       <section className="mt-4 grid items-start gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(560px,1.1fr)]">
-        <section className={`${panelClass} flex h-[760px] flex-col`}>
+        <section className={`${panelClass} flex flex-col xl:max-h-[680px] xl:min-h-[420px]`}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
@@ -1199,9 +1199,9 @@ function App() {
               Add shown
             </button>
           </div>
-          <p className="relative z-10 mb-4 text-sm leading-6 text-[#abc7d8]">
+          <p className="relative z-10 mb-4 text-sm leading-6 text-zinc-400">
             Curated OpenClaw-compatible packs from VoltAgent&apos;s skill catalog, exported as normal
-            <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-cyan-50">SKILL.md</code>
+            <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">SKILL.md</code>
             folders.
           </p>
           <input
@@ -1210,7 +1210,7 @@ function App() {
             placeholder="Search packs, categories, skills..."
             value={skillPackQuery}
           />
-          <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1 [scrollbar-color:rgba(103,232,249,0.45)_rgba(255,255,255,0.06)]">
+          <div className="relative z-10 grid content-start gap-2.5 overflow-y-auto pr-1 xl:flex-1 [scrollbar-color:rgba(255,255,255,0.38)_rgba(255,255,255,0.06)]">
             {filteredSkillPacks.map((pack) => {
               const installed = hasSkillPack(pack.id);
               const installedCount = pack.skills.filter((skill) => agent.skills.some((agentSkill) => agentSkill.name === skill.name)).length;
@@ -1226,15 +1226,15 @@ function App() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <h3 className="m-0 text-base font-black text-[#f8fdff]">{pack.name}</h3>
+                        <h3 className="m-0 text-base font-semibold text-[#fafafa]">{pack.name}</h3>
                         <span className={chipClass}>{pack.category}</span>
                       </div>
-                      <p className="m-0 text-sm leading-6 text-[#abc7d8]">{pack.summary}</p>
-                      <p className="mt-2 text-xs font-bold text-[#8fb4c8]">Best for: {pack.recommendedFor}</p>
+                      <p className="m-0 text-sm leading-6 text-zinc-400">{pack.summary}</p>
+                      <p className="mt-2 text-xs font-medium text-zinc-500">Best for: {pack.recommendedFor}</p>
                     </div>
                     <button
-                      className={`${buttonDepthClass} shrink-0 rounded-full border border-cyan-100/12 px-3 py-2 text-xs font-black ${
-                        installed ? "bg-cyan-200 text-[#03121d]" : "bg-[#020713]/88 text-[#f8fdff]"
+                      className={`${buttonDepthClass} shrink-0 rounded-full border border-white/12 px-3 py-2 text-xs font-semibold ${
+                        installed ? "bg-white text-black" : "bg-black text-[#fafafa]"
                       }`}
                       onClick={() => addSkillPackToCanvas(pack.id)}
                       title={installed ? `${installedCount} of ${pack.skills.length} skills already added.` : `Add ${pack.skills.length} skills from ${pack.name}.`}
@@ -1245,7 +1245,7 @@ function App() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <a
-                      className="rounded-full border border-cyan-100/12 bg-[#020713]/88 px-2.5 py-1 text-[11px] font-bold text-cyan-50 transition hover:border-cyan-200/35"
+                      className="rounded-full border border-white/12 bg-black px-2.5 py-1 text-[11px] font-medium text-zinc-100 transition hover:border-white/35"
                       href={pack.source}
                       rel="noreferrer"
                       target="_blank"
@@ -1254,7 +1254,7 @@ function App() {
                     </a>
                     {pack.skills.map((skill) => (
                       <a
-                        className="rounded-full border border-cyan-100/12 bg-[#020713]/76 px-2.5 py-1 text-[11px] font-bold text-[#d7eef8] transition hover:border-cyan-200/35 hover:text-cyan-50"
+                        className="rounded-full border border-white/12 bg-black px-2.5 py-1 text-[11px] font-medium text-zinc-300 transition hover:border-white/35 hover:text-white"
                         href={skill.sourceUrl}
                         key={skill.name}
                         rel="noreferrer"
@@ -1270,7 +1270,7 @@ function App() {
           </div>
         </section>
 
-        <section className={`${panelClass} flex h-[760px] flex-col`}>
+        <section className={`${panelClass} flex flex-col xl:max-h-[680px] xl:min-h-[420px]`}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
@@ -1289,9 +1289,9 @@ function App() {
               Add
             </button>
           </div>
-          <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1 [scrollbar-color:rgba(103,232,249,0.45)_rgba(255,255,255,0.06)]">
+          <div className="relative z-10 grid content-start gap-2.5 overflow-y-auto pr-1 xl:flex-1 [scrollbar-color:rgba(255,255,255,0.38)_rgba(255,255,255,0.06)]">
             {agent.skills.map((skill) => (
-              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto]`} key={skill.id}>
+              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_auto]`} key={skill.id}>
                 <input
                   className={inputClass}
                   value={skill.name}
@@ -1304,7 +1304,7 @@ function App() {
                 />
                 {skill.category ? (
                   <a
-                    className={`${chipClass} transition hover:border-cyan-100/45`}
+                    className={`${chipClass} transition hover:border-white/35`}
                     href={skill.sourceUrl}
                     rel="noreferrer"
                     target="_blank"
@@ -1312,15 +1312,24 @@ function App() {
                     {skill.category}
                   </a>
                 ) : null}
-                <label className="m-0 flex items-center gap-2 whitespace-nowrap text-xs font-black uppercase tracking-[0.08em] text-[#a9c4d6]">
+                <label className="m-0 flex items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400">
                   <input
-                    className="min-h-0 w-auto accent-cyan-200"
+                    className="min-h-0 w-auto accent-white"
                     type="checkbox"
                     checked={skill.enabled}
                     onChange={(event) => updateSkill(skill.id, { enabled: event.target.checked })}
                   />
                   enabled
                 </label>
+                <button
+                  aria-label={`Remove ${skill.name}`}
+                  className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-400 transition hover:border-red-200/35 hover:text-red-100"
+                  onClick={() => removeSkill(skill.id)}
+                  title={`Remove ${skill.name}`}
+                  type="button"
+                >
+                  Remove
+                </button>
               </article>
             ))}
           </div>
@@ -1345,9 +1354,9 @@ function App() {
               Add
             </button>
           </div>
-          <p className="relative z-10 mb-4 text-sm leading-6 text-[#abc7d8]">
+          <p className="relative z-10 mb-4 text-sm leading-6 text-zinc-400">
             Runbook steps are the agent&apos;s ordered execution plan, exported as
-            <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-cyan-50">workflow.json</code>
+            <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">workflow.json</code>
             so runtimes know what to do first, next, and last.
           </p>
           <div className="relative z-10 grid gap-2.5">

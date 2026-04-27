@@ -12,8 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource/manrope": "^5.2.8",
-    "@fontsource/space-grotesk": "^5.2.10",
+    "@fontsource/geist-mono": "^5.2.7",
     "@vitejs/plugin-react": "^5.0.4",
     "@xyflow/react": "^12.10.2",
     "jszip": "^3.10.1",
