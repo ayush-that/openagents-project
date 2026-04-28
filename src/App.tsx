@@ -901,9 +901,9 @@ function App() {
               <code className="mt-2 block">{ZERO_G_ROUTER_URL}</code>
             </div>
             {heroStats.map((stat) => (
-              <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black px-4 py-3" key={stat.label}>
-                <span className="text-sm font-medium text-zinc-500">{stat.label}</span>
-                <strong className="text-sm font-semibold text-[#fafafa]">{stat.value}</strong>
+              <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black px-4 py-4" key={stat.label}>
+                <span className="text-base font-medium text-zinc-400">{stat.label}</span>
+                <strong className="text-base font-semibold text-[#fafafa]">{stat.value}</strong>
               </div>
             ))}
           </div>

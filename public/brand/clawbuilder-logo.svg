@@ -27,8 +27,6 @@
       <feBlend in="SourceGraphic"/>
     </filter>
   </defs>
-  <rect width="128" height="128" rx="32" fill="#020713"/>
-  <circle cx="64" cy="64" r="46" fill="#081221" stroke="#cffafe" stroke-opacity=".16"/>
   <circle cx="64" cy="64" r="31" fill="url(#coreGlow)" filter="url(#softGlow)"/>
   <path d="M38 31c14 2 27 11 33 25-11-4-24-1-32 8-4-10-5-22-1-33Z" fill="url(#clawGlass)" opacity=".88" stroke="url(#glassEdge)" stroke-width="2.5"/>
   <path d="M31 52c16-2 31 3 42 14-13 1-25 9-31 21-8-8-13-20-11-35Z" fill="url(#clawGlass)" opacity=".74" stroke="url(#glassEdge)" stroke-width="2.5"/>
