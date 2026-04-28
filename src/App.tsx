@@ -3,7 +3,6 @@ import {
   Background,
   BackgroundVariant,
   Handle,
-  MiniMap,
   Position,
   ReactFlow,
   ReactFlowProvider,
@@ -35,31 +34,31 @@ const palette: BuilderBlock[] = [
     id: "palette-soul",
     kind: "soul",
     title: "SOUL.md",
-    summary: "Agent identity, tone, goals, and operating principles.",
+    summary: "Identity, tone, goals, operating rules.",
   },
   {
     id: "palette-model",
     kind: "model",
     title: "0G Compute model",
-    summary: "OpenAI-compatible route through the 0G router.",
+    summary: "OpenAI-compatible 0G router target.",
   },
   {
     id: "palette-memory",
     kind: "memory",
     title: "MEMORY.md",
-    summary: "Long-term memory file mapped to 0G Storage.",
+    summary: "Durable memory mapped to 0G Storage.",
   },
   {
     id: "palette-skill",
     kind: "skill",
     title: "SKILL.md",
-    summary: "OpenClaw/FastClaw-compatible capability module.",
+    summary: "OpenClaw/FastClaw capability module.",
   },
   {
     id: "palette-workflow",
     kind: "workflow",
     title: "Runbook step",
-    summary: "Ordered instructions the exported agent follows every run.",
+    summary: "Ordered execution step for every run.",
   },
 ];
 
@@ -391,8 +390,8 @@ function BuilderFlowNode({ data }: { data: BuilderNodeData }) {
               </span>
             ) : null}
           </div>
-          <h3 className="mb-1 text-sm font-semibold text-[#fafafa]">{data.title}</h3>
-          <p className="m-0 text-xs leading-5 text-zinc-400">{data.summary}</p>
+          <h3 className="mb-1 text-lg leading-none tracking-[-0.045em] text-[#fafafa]">{data.title}</h3>
+          <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">{data.summary}</p>
           {data.category ? <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-200">{data.category}</p> : null}
         </div>
       </div>
@@ -485,14 +484,6 @@ function BuilderFlowCanvas({
         proOptions={{ hideAttribution: true }}
       >
         <Background color="rgba(255, 255, 255, 0.16)" gap={24} size={1} variant={BackgroundVariant.Dots} />
-        <MiniMap
-          className="max-xl:!hidden xl:!h-20 xl:!w-28 xl:!rounded-2xl xl:!border xl:!border-white/12 xl:!bg-black/90"
-          maskColor="rgba(0, 0, 0, 0.5)"
-          nodeColor="rgba(103, 232, 249, 0.5)"
-          nodeStrokeColor="rgba(255, 255, 255, 0.25)"
-          pannable
-          zoomable
-        />
       </ReactFlow>
       <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-full border border-white/12 bg-black/80 p-1.5 shadow-[0_7px_0_rgba(255,255,255,0.04)] backdrop-blur-md">
         <button
@@ -839,7 +830,7 @@ function App() {
       <nav className="mb-10 flex items-center justify-between rounded-full border border-white/10 bg-black/80 px-4 py-3 shadow-[0_10px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
         <div className="flex items-center gap-4">
           <BrandMark className="size-12" />
-          <span className="text-base font-semibold tracking-[-0.04em] text-[#fafafa] sm:text-lg">ClawBuilder 0G</span>
+          <span className="text-base font-semibold tracking-[-0.03em] text-[#fafafa] sm:text-lg">ClawBuilder 0G</span>
         </div>
         <div className="hidden items-center gap-7 text-sm font-semibold text-zinc-500 sm:flex">
           <a className="transition hover:text-white" href="#builder">Builder</a>
@@ -852,14 +843,14 @@ function App() {
         <div className="py-8">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-200">
             <span className="size-2 rounded-full bg-white" />
-            ClawBuilder 0G · no-code agent foundry
+            ClawBuilder 0G · agent foundry
           </div>
-          <h1 className="max-w-4xl text-[clamp(40px,7vw,82px)] font-medium leading-[0.98] tracking-[-0.055em] text-[#fafafa]">
-            Build 0G agents without touching runtime files.
+          <h1 className="display-font max-w-4xl text-[clamp(44px,7.4vw,92px)] leading-[0.9] tracking-[-0.08em] text-[#fafafa]">
+            Build 0G agents without runtime work.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-400">
-            A focused visual builder for OpenClaw/FastClaw-style agent packages. Configure persona,
-            model, memory, skills, and runbook, then export a ready-to-run 0G package.
+          <p className="mt-6 max-w-2xl text-base font-medium leading-7 tracking-[-0.025em] text-zinc-300 sm:text-lg">
+            Compose persona, model, memory, skills, and runbook on one canvas. Export a clean
+            OpenClaw/FastClaw package with 0G Compute and Storage wired in.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
@@ -899,7 +890,7 @@ function App() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Generated package</p>
-                  <h2 className="text-lg font-semibold tracking-[-0.04em] text-[#fafafa]">OpenClaw files, 0G defaults</h2>
+                  <h2 className="display-font text-2xl leading-none tracking-[-0.055em] text-[#fafafa]">OpenClaw files. 0G defaults.</h2>
                 </div>
               </div>
             </div>
@@ -931,14 +922,14 @@ function App() {
           <span className={panelIconClass}>
             <NucleoIcon className="size-6" name="cube" />
           </span>
-          One-click agent templates
+          Agent templates
         </div>
         <div className="relative z-10 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {agentTemplates.map((template) => (
             <article className={`${glassRowClass} grid gap-3 rounded-2xl p-4`} key={template.id}>
               <div>
-                <h3 className="m-0 text-lg font-semibold tracking-[-0.04em] text-[#fafafa]">{template.name}</h3>
-                <p className="mt-2 text-sm leading-6 text-zinc-400">{template.description}</p>
+                <h3 className="m-0 text-2xl leading-none tracking-[-0.055em] text-[#fafafa]">{template.name}</h3>
+                <p className="mt-2 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">{template.description}</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 {template.skillPackIds.map((packId) => {
@@ -974,9 +965,9 @@ function App() {
                 <NucleoIcon className="size-6" name="magic-wand-sparkle" />
               </span>
               <span>
-                Combo builder canvas
-                <span className="mt-1 block text-xs font-medium text-zinc-500">
-                  Drop packs onto the graph; runbook nodes define the ordered steps the agent follows.
+                Agent combo canvas
+                <span className="mt-1 block text-xs font-medium tracking-[-0.015em] text-zinc-400">
+                  Drop packs, tune the stack, export the runtime files.
                 </span>
               </span>
             </span>
@@ -1047,8 +1038,8 @@ function App() {
               >
                 <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
                 <div>
-                  <h3 className="mb-1 text-sm font-semibold text-[#fafafa]">{block.title}</h3>
-                  <p className="m-0 text-xs leading-5 text-zinc-400">{block.summary}</p>
+                  <h3 className="mb-1 text-lg leading-none tracking-[-0.045em] text-[#fafafa]">{block.title}</h3>
+                  <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">{block.summary}</p>
                 </div>
               </article>
             ))}
@@ -1199,8 +1190,8 @@ function App() {
               Add shown
             </button>
           </div>
-          <p className="relative z-10 mb-4 text-sm leading-6 text-zinc-400">
-            Curated OpenClaw-compatible packs from VoltAgent&apos;s skill catalog, exported as normal
+          <p className="relative z-10 mb-4 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">
+            Curated packs from VoltAgent&apos;s OpenClaw catalog. Exported as standard
             <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">SKILL.md</code>
             folders.
           </p>
@@ -1226,11 +1217,11 @@ function App() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <h3 className="m-0 text-base font-semibold text-[#fafafa]">{pack.name}</h3>
+                        <h3 className="m-0 text-xl leading-none tracking-[-0.05em] text-[#fafafa]">{pack.name}</h3>
                         <span className={chipClass}>{pack.category}</span>
                       </div>
-                      <p className="m-0 text-sm leading-6 text-zinc-400">{pack.summary}</p>
-                      <p className="mt-2 text-xs font-medium text-zinc-500">Best for: {pack.recommendedFor}</p>
+                      <p className="m-0 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">{pack.summary}</p>
+                      <p className="mt-2 text-xs font-medium tracking-[-0.015em] text-zinc-500">Best for {pack.recommendedFor}</p>
                     </div>
                     <button
                       className={`${buttonDepthClass} shrink-0 rounded-full border border-white/12 px-3 py-2 text-xs font-semibold ${
@@ -1354,10 +1345,10 @@ function App() {
               Add
             </button>
           </div>
-          <p className="relative z-10 mb-4 text-sm leading-6 text-zinc-400">
-            Runbook steps are the agent&apos;s ordered execution plan, exported as
+          <p className="relative z-10 mb-4 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">
+            Runbook steps define the exact execution order. Exported as
             <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">workflow.json</code>
-            so runtimes know what to do first, next, and last.
+            for runtime replay.
           </p>
           <div className="relative z-10 grid gap-2.5">
             {agent.workflow.map((step, index) => (
