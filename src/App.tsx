@@ -390,7 +390,7 @@ function BuilderFlowNode({ data }: { data: BuilderNodeData }) {
               </span>
             ) : null}
           </div>
-          <h3 className="mb-1 text-lg leading-none tracking-[-0.045em] text-[#fafafa]">{data.title}</h3>
+          <h3 className="mb-1 text-lg leading-none text-[#fafafa]">{data.title}</h3>
           <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">{data.summary}</p>
           {data.category ? <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-200">{data.category}</p> : null}
         </div>
@@ -845,7 +845,7 @@ function App() {
             <span className="size-2 rounded-full bg-white" />
             ClawBuilder 0G · agent foundry
           </div>
-          <h1 className="display-font max-w-4xl text-[clamp(44px,7.4vw,92px)] leading-[0.9] tracking-[-0.08em] text-[#fafafa]">
+          <h1 className="display-font max-w-4xl text-[clamp(44px,7.4vw,92px)] leading-[0.9] text-[#fafafa]">
             Build 0G agents without runtime work.
           </h1>
           <p className="mt-6 max-w-2xl text-base font-medium leading-7 tracking-[-0.025em] text-zinc-300 sm:text-lg">
@@ -890,7 +890,7 @@ function App() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Generated package</p>
-                  <h2 className="display-font text-2xl leading-none tracking-[-0.055em] text-[#fafafa]">OpenClaw files. 0G defaults.</h2>
+                  <h2 className="display-font text-2xl leading-none text-[#fafafa]">OpenClaw files. 0G defaults.</h2>
                 </div>
               </div>
             </div>
@@ -928,7 +928,7 @@ function App() {
           {agentTemplates.map((template) => (
             <article className={`${glassRowClass} grid gap-3 rounded-2xl p-4`} key={template.id}>
               <div>
-                <h3 className="m-0 text-2xl leading-none tracking-[-0.055em] text-[#fafafa]">{template.name}</h3>
+                <h3 className="m-0 text-2xl leading-none text-[#fafafa]">{template.name}</h3>
                 <p className="mt-2 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">{template.description}</p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -1038,7 +1038,7 @@ function App() {
               >
                 <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
                 <div>
-                  <h3 className="mb-1 text-lg leading-none tracking-[-0.045em] text-[#fafafa]">{block.title}</h3>
+                  <h3 className="mb-1 text-lg leading-none text-[#fafafa]">{block.title}</h3>
                   <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">{block.summary}</p>
                 </div>
               </article>
@@ -1217,7 +1217,7 @@ function App() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <h3 className="m-0 text-xl leading-none tracking-[-0.05em] text-[#fafafa]">{pack.name}</h3>
+                        <h3 className="m-0 text-xl leading-none text-[#fafafa]">{pack.name}</h3>
                         <span className={chipClass}>{pack.category}</span>
                       </div>
                       <p className="m-0 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">{pack.summary}</p>
