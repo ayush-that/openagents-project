@@ -101,6 +101,10 @@ Required placeholders:
 - `OG_STORAGE_RPC_URL` — default `https://evmrpc-testnet.0g.ai`
 - `OG_STORAGE_INDEXER` — default `https://indexer-storage-testnet-turbo.0g.ai`
 
+## Hackathon transparency
+
+See [HACKATHON_TRANSPARENCY.md](./HACKATHON_TRANSPARENCY.md) for fresh-work notes, reused libraries/assets, AI-assistance attribution, and the demo video checklist.
+
 ## Exported agent package
 
 Click **Export agent package** in the UI. The zip contains:
