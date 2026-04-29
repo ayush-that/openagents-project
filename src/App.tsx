@@ -141,7 +141,7 @@ const iconTileClass =
   "grid place-items-center rounded-2xl border border-white/12 bg-[linear-gradient(180deg,rgba(250,250,250,0.13),rgba(250,250,250,0.035))] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_8px_0_rgba(255,255,255,0.035)] backdrop-blur-md";
 const panelIconClass = `${iconTileClass} size-9 shrink-0`;
 const buttonIconClass = `${iconTileClass} size-7 rounded-full text-current shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_5px_0_rgba(0,0,0,0.36)]`;
-const ctaIconClass = "grid size-6 shrink-0 place-items-center rounded-full";
+const ctaIconClass = "grid size-6 shrink-0 place-items-center";
 const buttonDepthClass =
   "shadow-[0_6px_0_rgba(255,255,255,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(255,255,255,0.08)] active:translate-y-1 active:shadow-[0_2px_0_rgba(255,255,255,0.08)]";
 const primaryButtonClass =
@@ -909,7 +909,7 @@ function App() {
               href="#builder"
               title="Jump to the drag-and-drop builder canvas."
             >
-              <span className={`${ctaIconClass} border border-black/12 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]`}>
+              <span className={ctaIconClass}>
                 <NucleoIcon className="size-5" name="sparkle" />
               </span>
               Open builder
@@ -920,7 +920,7 @@ function App() {
               disabled={exporting}
               title="Download the current agent as an OpenClaw-style 0G package zip."
             >
-              <span className={`${ctaIconClass} border border-black/12 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]`}>
+              <span className={ctaIconClass}>
                 <NucleoIcon className="size-5" name="circle-arrow-down" />
               </span>
               {exporting ? "Building package..." : "Export starter package"}
