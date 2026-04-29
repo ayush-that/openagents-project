@@ -279,11 +279,6 @@ const tesseractEdges = Array.from({ length: tesseractVertices.length }, (_, inde
     .filter(([source, target]) => source < target),
 ).flat();
 
-const asciiMark = String.raw`CB0G::AGENT
-┌─SOUL─────┐
-│ MODEL 0G │──SKILL
-└─MEMORY───┘`;
-
 function HeroScene() {
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -1435,16 +1430,13 @@ function App() {
         </section>
       </section>
       <footer className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-black px-5 py-6 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
-        <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+        <div>
           <div>
             <p className="mono-font mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">A product by ClawBuilder</p>
             <h2 className="display-font text-[clamp(48px,12vw,150px)] leading-[0.78] tracking-[-0.01em] text-[#fafafa]">
               ClawBuilder 0G
             </h2>
           </div>
-          <pre className="mono-font m-0 w-full max-w-[320px] whitespace-pre rounded-3xl border border-white/10 bg-white/[0.035] p-4 text-[11px] leading-5 text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] md:text-right">
-            {asciiMark}
-          </pre>
         </div>
         <div className="mono-font mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
           <span>© 2026 ClawBuilder 0G</span>
