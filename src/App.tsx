@@ -1223,14 +1223,14 @@ function App() {
         </section>
       </section>
 
-      <section className="mt-4 grid items-start gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(560px,1.1fr)]">
-        <section className={`${panelClass} flex flex-col xl:max-h-[680px] xl:min-h-[420px]`}>
+      <section className="mt-4 grid items-start gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+        <section className={`${panelClass} flex flex-col xl:h-[680px] xl:min-h-0`}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
                 <NucleoIcon className="size-6" name="grid" />
               </span>
-              Skill packs
+              Skill Book
             </span>
             <button
               className={`${buttonDepthClass} ${secondaryButtonClass} rounded-full px-3 py-2 text-xs font-black`}
@@ -1312,122 +1312,124 @@ function App() {
           </div>
         </section>
 
-        <section className={`${panelClass} flex flex-col xl:max-h-[680px] xl:min-h-[420px]`}>
-          <div className={`${panelTitleClass} justify-between`}>
-            <span className="flex items-center gap-2.5">
-              <span className={panelIconClass}>
-                <NucleoIcon className="size-6" name="hammer" />
+        <div className="grid gap-4 xl:h-[680px] xl:min-h-0 xl:grid-rows-2">
+          <section className={`${panelClass} flex min-h-0 flex-col`}>
+            <div className={`${panelTitleClass} justify-between`}>
+              <span className="flex items-center gap-2.5">
+                <span className={panelIconClass}>
+                  <NucleoIcon className="size-6" name="hammer" />
+                </span>
+                Skills
               </span>
-              Skills
-            </span>
-            <button
-              className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`}
-              onClick={addSkill}
-              title="Add one custom SKILL.md capability to the exported package."
-            >
-              <span className={buttonIconClass}>
-                <NucleoIcon className="size-5" name="circle-copy-plus" />
-              </span>
-              Add
-            </button>
-          </div>
-          <div className="relative z-10 grid content-start gap-2.5 overflow-y-auto pr-1 xl:flex-1">
-            {agent.skills.map((skill) => (
-              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_auto]`} key={skill.id}>
-                <input
-                  className={inputClass}
-                  value={skill.name}
-                  onChange={(event) => updateSkill(skill.id, { name: event.target.value })}
-                />
-                <input
-                  className={inputClass}
-                  value={skill.description}
-                  onChange={(event) => updateSkill(skill.id, { description: event.target.value })}
-                />
-                {skill.category ? (
-                  <a
-                    className={`${chipClass} transition hover:border-white/35`}
-                    href={skill.sourceUrl}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {skill.category}
-                  </a>
-                ) : null}
-                <label className="mono-font m-0 flex items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400">
-                  <input
-                    className="min-h-0 w-auto accent-white"
-                    type="checkbox"
-                    checked={skill.enabled}
-                    onChange={(event) => updateSkill(skill.id, { enabled: event.target.checked })}
-                  />
-                  enabled
-                </label>
-                <button
-                  aria-label={`Remove ${skill.name}`}
-                  className="mono-font rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-400 transition hover:border-red-200/35 hover:text-red-100"
-                  onClick={() => removeSkill(skill.id)}
-                  title={`Remove ${skill.name}`}
-                  type="button"
-                >
-                  Remove
-                </button>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={panelClass}>
-          <div className={`${panelTitleClass} justify-between`}>
-            <span className="flex items-center gap-2.5">
-              <span className={panelIconClass}>
-                <NucleoIcon className="size-6" name="tasks" />
-              </span>
-              Runbook
-            </span>
-            <button
-              className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`}
-              onClick={addWorkflowStep}
-              title="Add one ordered execution step to workflow.json."
-            >
-              <span className={buttonIconClass}>
-                <NucleoIcon className="size-5" name="circle-copy-plus" />
-              </span>
-              Add
-            </button>
-          </div>
-          <p className="relative z-10 mb-4 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">
-            Runbook steps define the exact execution order. Exported as
-            <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">workflow.json</code>
-            for runtime replay.
-          </p>
-          <div className="relative z-10 grid gap-2.5">
-            {agent.workflow.map((step, index) => (
-              <article
-                className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[34px_160px_1fr_36px]`}
-                key={step.id}
-                title="This row becomes one ordered workflow.json runbook step."
+              <button
+                className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`}
+                onClick={addSkill}
+                title="Add one custom SKILL.md capability to the exported package."
               >
-                <span className={`${iconTileClass} size-[34px]`}>{index + 1}</span>
-                <input className={inputClass} title="Short runbook step name." value={step.title} onChange={(event) => updateWorkflowStep(step.id, { title: event.target.value })} />
-                <textarea
-                  className={inputClass}
-                  title="Instruction the agent follows during this runbook step."
-                  value={step.instruction}
-                  onChange={(event) => updateWorkflowStep(step.id, { instruction: event.target.value })}
-                  rows={2}
-                />
-                <button
-                  className={`${buttonDepthClass} ${iconTileClass} size-9 rounded-full text-red-200`}
-                  onClick={() => removeWorkflowStep(step.id)}
-                  aria-label={`Remove ${step.title}`}
+                <span className={buttonIconClass}>
+                  <NucleoIcon className="size-5" name="circle-copy-plus" />
+                </span>
+                Add
+              </button>
+            </div>
+            <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1">
+              {agent.skills.map((skill) => (
+                <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_auto]`} key={skill.id}>
+                  <input
+                    className={inputClass}
+                    value={skill.name}
+                    onChange={(event) => updateSkill(skill.id, { name: event.target.value })}
+                  />
+                  <input
+                    className={inputClass}
+                    value={skill.description}
+                    onChange={(event) => updateSkill(skill.id, { description: event.target.value })}
+                  />
+                  {skill.category ? (
+                    <a
+                      className={`${chipClass} transition hover:border-white/35`}
+                      href={skill.sourceUrl}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {skill.category}
+                    </a>
+                  ) : null}
+                  <label className="mono-font m-0 flex items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400">
+                    <input
+                      className="min-h-0 w-auto accent-white"
+                      type="checkbox"
+                      checked={skill.enabled}
+                      onChange={(event) => updateSkill(skill.id, { enabled: event.target.checked })}
+                    />
+                    enabled
+                  </label>
+                  <button
+                    aria-label={`Remove ${skill.name}`}
+                    className="mono-font rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-400 transition hover:border-red-200/35 hover:text-red-100"
+                    onClick={() => removeSkill(skill.id)}
+                    title={`Remove ${skill.name}`}
+                    type="button"
+                  >
+                    Remove
+                  </button>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className={`${panelClass} flex min-h-0 flex-col`}>
+            <div className={`${panelTitleClass} justify-between`}>
+              <span className="flex items-center gap-2.5">
+                <span className={panelIconClass}>
+                  <NucleoIcon className="size-6" name="tasks" />
+                </span>
+                Runbook
+              </span>
+              <button
+                className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`}
+                onClick={addWorkflowStep}
+                title="Add one ordered execution step to workflow.json."
+              >
+                <span className={buttonIconClass}>
+                  <NucleoIcon className="size-5" name="circle-copy-plus" />
+                </span>
+                Add
+              </button>
+            </div>
+            <p className="relative z-10 mb-4 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">
+              Runbook steps define the exact execution order. Exported as
+              <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">workflow.json</code>
+              for runtime replay.
+            </p>
+            <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1">
+              {agent.workflow.map((step, index) => (
+                <article
+                  className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[34px_160px_1fr_36px]`}
+                  key={step.id}
+                  title="This row becomes one ordered workflow.json runbook step."
                 >
-                  <NucleoIcon className="size-5" name="tab-close" />
-                </button>
-              </article>
-            ))}
-          </div>
-        </section>
+                  <span className={`${iconTileClass} size-[34px]`}>{index + 1}</span>
+                  <input className={inputClass} title="Short runbook step name." value={step.title} onChange={(event) => updateWorkflowStep(step.id, { title: event.target.value })} />
+                  <textarea
+                    className={inputClass}
+                    title="Instruction the agent follows during this runbook step."
+                    value={step.instruction}
+                    onChange={(event) => updateWorkflowStep(step.id, { instruction: event.target.value })}
+                    rows={2}
+                  />
+                  <button
+                    className={`${buttonDepthClass} ${iconTileClass} size-9 rounded-full text-red-200`}
+                    onClick={() => removeWorkflowStep(step.id)}
+                    aria-label={`Remove ${step.title}`}
+                  >
+                    <NucleoIcon className="size-5" name="tab-close" />
+                  </button>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
       </section>
       <footer className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-black px-5 py-6 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
         <div>
