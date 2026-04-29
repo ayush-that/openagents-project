@@ -152,6 +152,8 @@ const secondaryButtonClass =
   "border border-white/15 bg-black text-[#fafafa] hover:border-white/40";
 const chipClass =
   "mono-font rounded-full border border-white/12 bg-white/[0.055] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-100";
+const flowEdgeStroke = "rgba(250, 250, 250, 0.58)";
+const flowEdgeActiveStroke = "rgba(250, 250, 250, 0.72)";
 
 function slugify(value: string) {
   return value
@@ -210,7 +212,7 @@ function createFlowEdge(source: string, target: string): BuilderEdge {
     source,
     target,
     animated: true,
-    style: { stroke: "rgba(125, 245, 255, 0.64)", strokeWidth: 1.75 },
+    style: { stroke: flowEdgeStroke, strokeWidth: 1.75 },
   };
 }
 
@@ -518,10 +520,10 @@ function BuilderFlowCanvas({
     >
       <ReactFlow
         colorMode="dark"
-        connectionLineStyle={{ stroke: "rgba(103, 232, 249, 0.7)", strokeWidth: 1.5 }}
+        connectionLineStyle={{ stroke: flowEdgeActiveStroke, strokeWidth: 1.5 }}
         defaultEdgeOptions={{
           animated: true,
-          style: { stroke: "rgba(103, 232, 249, 0.55)", strokeWidth: 1.5 },
+          style: { stroke: flowEdgeStroke, strokeWidth: 1.5 },
         }}
         edges={edges}
         fitView
@@ -845,7 +847,7 @@ function App() {
         {
           ...connection,
           animated: true,
-          style: { stroke: "rgba(125, 245, 255, 0.7)", strokeWidth: 1.75 },
+          style: { stroke: flowEdgeActiveStroke, strokeWidth: 1.75 },
         },
         currentEdges,
       ),
