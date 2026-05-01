@@ -75,6 +75,6 @@ Generated agents always declare an OpenAI-compatible provider pointed at `https:
 
 The Vite dev server does not need any of these.
 
-## Hackathon scope
+## Scope
 
-Per `docs/product-plan.md` and `HACKATHON_TRANSPARENCY.md`: the MVP is the visual builder + export. Live agent execution, hosted multi-tenant runtime, and arbitrary graph runtime are **explicitly out of scope** — don't add them unless asked.
+Per `docs/product-plan.md`: the MVP is the visual builder + export. Live agent execution, hosted multi-tenant runtime, and arbitrary graph runtime are **explicitly out of scope** — don't add them unless asked.
