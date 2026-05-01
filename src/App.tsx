@@ -279,8 +279,8 @@ function HeroScene() {
     const mountElement: HTMLDivElement = currentMount;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.set(0, 0.08, 6.5);
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.set(0, 0.08, 8.2);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -303,7 +303,7 @@ function HeroScene() {
       shadowGeometry,
       new THREE.LineBasicMaterial({ color: 0x71717a, transparent: true, opacity: 0.24 }),
     );
-    shadow.scale.setScalar(1.14);
+    shadow.scale.setScalar(1.08);
     scene.add(shadow);
 
     const vertexGeometry = new THREE.BufferGeometry();
@@ -318,7 +318,7 @@ function HeroScene() {
     const pointsGeometry = new THREE.BufferGeometry();
     const positions = new Float32Array(96 * 3);
     for (let i = 0; i < 96; i += 1) {
-      const radius = 3 + Math.random() * 1.4;
+      const radius = 2.6 + Math.random() * 1.1;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
@@ -347,7 +347,7 @@ function HeroScene() {
       z = zwZ;
       w = zwW;
       const depth = 2.8 / (3.8 - w);
-      return new THREE.Vector3(x * depth * 1.42, y * depth * 1.42, z * depth * 1.42);
+      return new THREE.Vector3(x * depth * 1.12, y * depth * 1.12, z * depth * 1.12);
     }
 
     function updateTesseract(angle: number) {
@@ -919,7 +919,7 @@ function App() {
           </div>
         </div>
 
-        <div className="relative min-h-[380px] overflow-visible">
+        <div className="relative min-h-[340px] overflow-hidden sm:min-h-[380px]">
           <HeroScene />
         </div>
       </section>
