@@ -1,5 +1,5 @@
 {
-  "schema": "clawbuilder.0g.agent.v1",
+  "schema": "tessra.0g.agent.v1",
   "name": "0G Research Scout",
   "description": "A portable OpenClaw-style agent that researches a topic, reasons through 0G Compute, and persists memory/log artifacts to 0G Storage.",
   "provider": {

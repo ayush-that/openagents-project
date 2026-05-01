@@ -1,21 +1,21 @@
 @import "tailwindcss";
-@import "@fontsource/space-grotesk/latin-400.css";
-@import "@fontsource/space-grotesk/latin-500.css";
-@import "@fontsource/space-grotesk/latin-600.css";
-@import "@fontsource/space-grotesk/latin-700.css";
-@import "@fontsource/manrope/latin-400.css";
-@import "@fontsource/manrope/latin-500.css";
-@import "@fontsource/manrope/latin-600.css";
-@import "@fontsource/manrope/latin-700.css";
-@import "@fontsource/manrope/latin-800.css";
+@import "@fontsource/instrument-serif/latin-400.css";
+@import "@fontsource/geist/latin-400.css";
+@import "@fontsource/geist/latin-500.css";
+@import "@fontsource/geist/latin-600.css";
+@import "@fontsource/geist/latin-700.css";
+@import "@fontsource/geist/latin-800.css";
+@import "@fontsource/geist-mono/latin-400.css";
+@import "@fontsource/geist-mono/latin-600.css";
+@import "@fontsource/geist-mono/latin-700.css";
 @import "@xyflow/react/dist/style.css";
 
 @layer base {
   :root {
     color-scheme: dark;
-    font-family: Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: #000;
-    color: #f7f7fb;
+    color: #fafafa;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -25,15 +25,55 @@
     min-width: 320px;
     min-height: 100vh;
     overflow-x: hidden;
-    background: #000;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(250, 250, 250, 0.07), transparent 28rem),
+      linear-gradient(180deg, #000 0%, #020202 48%, #000 100%);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(250, 250, 250, 0.42) rgba(250, 250, 250, 0.055);
+  }
+
+  *::-webkit-scrollbar {
+    width: 0.55rem;
+    height: 0.55rem;
+  }
+
+  *::-webkit-scrollbar-track {
+    border: 1px solid rgba(250, 250, 250, 0.08);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.74);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border: 1px solid rgba(250, 250, 250, 0.18);
+    border-radius: 999px;
+    background:
+      linear-gradient(180deg, rgba(250, 250, 250, 0.72), rgba(250, 250, 250, 0.3)),
+      #18181b;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(250, 250, 250, 0.42)),
+      #27272a;
   }
 
   h1,
   h2,
-  h3,
+  h3 {
+    font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
+    font-weight: 400;
+  }
+
   nav,
-  button {
-    font-family: "Space Grotesk", Manrope, ui-sans-serif, system-ui, sans-serif;
+  button,
+  input,
+  textarea,
+  select {
+    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
   button {
@@ -43,28 +83,46 @@
   code {
     width: 100%;
     overflow-wrap: anywhere;
-    border: 1px solid rgba(103, 232, 249, 0.16);
-    border-radius: 0.9rem;
-    background: rgba(4, 10, 24, 0.82);
+    border: 1px solid rgba(250, 250, 250, 0.14);
+    border-radius: 0.75rem;
+    background: rgba(8, 8, 8, 0.92);
     padding: 0.6rem 0.75rem;
-    color: #cffafe;
+    color: #fafafa;
+    font-family: "Geist Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  }
+
+  pre {
+    font-family: "Geist Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   }
 
   .react-flow {
     --xy-background-color: #000;
     --xy-node-background-color-default: transparent;
     --xy-node-border-default: 0;
-    --xy-edge-stroke-default: rgba(103, 232, 249, 0.45);
+    --xy-edge-stroke-default: rgba(250, 250, 250, 0.34);
     --xy-edge-stroke-width-default: 1.5;
-    --xy-controls-button-background-color-default: #000;
-    --xy-controls-button-background-color-hover-default: #050505;
-    --xy-controls-button-color-default: #cffafe;
+    --xy-controls-button-background-color-default: #050505;
+    --xy-controls-button-background-color-hover-default: #111;
+    --xy-controls-button-color-default: #fafafa;
     --xy-controls-button-color-hover-default: #fff;
-    --xy-controls-button-border-color-default: rgba(255, 255, 255, 0.1);
-    --xy-minimap-background-color-default: rgba(0, 0, 0, 0.86);
+    --xy-controls-button-border-color-default: rgba(250, 250, 250, 0.16);
+    --xy-minimap-background-color-default: rgba(5, 5, 5, 0.9);
   }
 
   .react-flow__node {
-    font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .display-font {
+    font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
+    font-weight: 400;
+  }
+
+  .body-font {
+    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .mono-font {
+    font-family: "Geist Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   }
 }
