@@ -886,16 +886,11 @@ function App() {
 
       <section className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
         <div className="py-8">
-          <div className="mono-font mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-200">
-            <span className="size-2 rounded-full bg-white" />
-            Tessra · 0G agent foundry
-          </div>
           <h1 className="display-font max-w-4xl text-[clamp(44px,7.4vw,92px)] leading-[0.9] text-[#fafafa]">
-            Build 0G agents without runtime work.
+            Design agents that are ready to run.
           </h1>
           <p className="mt-6 max-w-2xl text-base font-medium leading-7 tracking-[-0.025em] text-zinc-300 sm:text-lg">
-            Compose persona, model, memory, skills, and runbook on one canvas. Export a clean
-            OpenClaw/FastClaw package with 0G Compute and Storage wired in.
+            Compose persona, model, memory, skills, and runbook on one canvas. Export a clean runtime package with compute, storage, and workflow files wired in.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
