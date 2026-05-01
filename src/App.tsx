@@ -530,7 +530,7 @@ function BuilderFlowCanvas({
       >
         <Background color="rgba(255, 255, 255, 0.16)" gap={24} size={1} variant={BackgroundVariant.Dots} />
       </ReactFlow>
-      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-full border border-white/12 bg-black/80 p-1.5 shadow-[0_7px_0_rgba(255,255,255,0.04)] backdrop-blur-md">
+      <div className="absolute bottom-4 left-4 z-20 flex flex-col items-center gap-2 rounded-full border border-white/12 bg-black/80 p-1.5 shadow-[0_7px_0_rgba(255,255,255,0.04)] backdrop-blur-md">
         <button
           aria-label="Zoom in"
           className="grid size-9 place-items-center rounded-full border border-white/12 bg-white/[0.05] hover:border-white/40"
