@@ -4,7 +4,7 @@ This document is included for ETHGlobal-style review requirements: show what was
 
 ## Fresh work during the event
 
-ClawBuilder 0G was built in this repository during the hackathon window. The git history shows incremental work rather than one large final commit, including:
+Axiom was built in this repository during the hackathon window. The git history shows incremental work rather than one large final commit, including:
 
 - initial Vite/React/Bun app scaffold
 - 0G agent package documentation
@@ -39,6 +39,12 @@ No plaintext API keys or wallet secrets are committed. `.env` files are ignored,
 ## Current product scope
 
 The app currently builds and exports portable OpenClaw/FastClaw-style agent packages with 0G Compute and 0G Storage defaults. It does not yet host a production multi-tenant runtime or execute arbitrary live agent graphs by itself.
+
+## Partner prize positioning
+
+Target track: **0G — Best Agent Framework, Tooling & Core Extensions**.
+
+Axiom is a framework/tooling submission: a visual assembly layer for generating portable OpenClaw/FastClaw-style agent packages with 0G Compute provider config, 0G Storage URI manifests, curated skill packs, and runbook export. This aligns with the track's no-code/low-code visual agent builder prompt and avoids presenting the project as a single agent with 0G added afterward.
 
 ## Demo video checklist
 
