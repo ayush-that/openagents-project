@@ -4,7 +4,7 @@ This document is included for ETHGlobal-style review requirements: show what was
 
 ## Fresh work during the event
 
-Axiom was built in this repository during the hackathon window. The git history shows incremental work rather than one large final commit, including:
+Tessra was built in this repository during the hackathon window. The git history shows incremental work rather than one large final commit, including:
 
 - initial Vite/React/Bun app scaffold
 - 0G agent package documentation
@@ -44,7 +44,7 @@ The app currently builds and exports portable OpenClaw/FastClaw-style agent pack
 
 Target track: **0G — Best Agent Framework, Tooling & Core Extensions**.
 
-Axiom is a framework/tooling submission: a visual assembly layer for generating portable OpenClaw/FastClaw-style agent packages with 0G Compute provider config, 0G Storage URI manifests, curated skill packs, and runbook export. This aligns with the track's no-code/low-code visual agent builder prompt and avoids presenting the project as a single agent with 0G added afterward.
+Tessra is a framework/tooling submission: a visual assembly layer for generating portable OpenClaw/FastClaw-style agent packages with 0G Compute provider config, 0G Storage URI manifests, curated skill packs, and runbook export. This aligns with the track's no-code/low-code visual agent builder prompt and avoids presenting the project as a single agent with 0G added afterward.
 
 ## Demo video checklist
 

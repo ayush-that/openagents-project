@@ -85,7 +85,7 @@ function NucleoIcon({ name, className = "size-6" }: { name: NucleoIconName; clas
 }
 
 function BrandMark({ className = "size-10" }: { className?: string }) {
-  return <img alt="Axiom logo" className={`${className} object-contain`} src={logoSrc} />;
+  return <img alt="Tessra logo" className={`${className} object-contain`} src={logoSrc} />;
 }
 
 const kindIcons: Record<CanvasNodeKind, ReactNode> = {
@@ -118,7 +118,7 @@ type BuilderNodeData = {
 type BuilderNode = Node<BuilderNodeData, "builderBlock">;
 type BuilderEdge = Edge;
 
-const logoSrc = "/brand/clawbuilder-logo.svg";
+const logoSrc = "/brand/tessra-logo.svg";
 
 const panelClass =
   "relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(12,12,12,0.98),rgba(0,0,0,0.96))] p-5 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]";
@@ -481,8 +481,8 @@ function BuilderFlowCanvas({
 
   function handleDrop(event: ReactDragEvent<HTMLDivElement>) {
     event.preventDefault();
-    const droppedBlockId = event.dataTransfer.getData("application/x-clawbuilder-block") || draggedBlockId;
-    const droppedPackId = event.dataTransfer.getData("application/x-clawbuilder-pack") || draggedPackId;
+    const droppedBlockId = event.dataTransfer.getData("application/x-tessra-block") || draggedBlockId;
+    const droppedPackId = event.dataTransfer.getData("application/x-tessra-pack") || draggedPackId;
     const paletteBlock = palette.find((block) => block.id === droppedBlockId);
     const position = screenToFlowPosition({
       x: event.clientX,
@@ -800,13 +800,13 @@ function App() {
   }
 
   function handleDragStart(event: ReactDragEvent<HTMLElement>, blockId: string) {
-    event.dataTransfer.setData("application/x-clawbuilder-block", blockId);
+    event.dataTransfer.setData("application/x-tessra-block", blockId);
     event.dataTransfer.effectAllowed = "copyMove";
     setDraggedBlockId(blockId);
   }
 
   function handlePackDragStart(event: ReactDragEvent<HTMLElement>, packId: string) {
-    event.dataTransfer.setData("application/x-clawbuilder-pack", packId);
+    event.dataTransfer.setData("application/x-tessra-pack", packId);
     event.dataTransfer.effectAllowed = "copy";
     setDraggedPackId(packId);
   }
@@ -847,7 +847,7 @@ function App() {
     setExporting(true);
     try {
       const blob = await buildAgentZip(agent);
-      downloadBlob(blob, `${slugify(agent.name) || "axiom-agent"}.zip`);
+      downloadBlob(blob, `${slugify(agent.name) || "tessra-agent"}.zip`);
     } finally {
       setExporting(false);
     }
@@ -875,7 +875,7 @@ function App() {
       <nav className="flex items-center justify-between rounded-full border border-white/10 bg-black/80 px-4 py-3 shadow-[0_10px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
         <div className="flex items-center gap-4">
           <BrandMark className="size-12" />
-          <span className="text-base font-semibold tracking-[-0.03em] text-[#fafafa] sm:text-lg">Axiom</span>
+          <span className="text-base font-semibold tracking-[-0.03em] text-[#fafafa] sm:text-lg">Tessra</span>
         </div>
         <div className="hidden items-center gap-7 text-sm font-semibold text-zinc-500 sm:flex">
           <a className="transition hover:text-white" href="#builder">Builder</a>
@@ -888,7 +888,7 @@ function App() {
         <div className="py-8">
           <div className="mono-font mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-200">
             <span className="size-2 rounded-full bg-white" />
-            Axiom · 0G agent foundry
+            Tessra · 0G agent foundry
           </div>
           <h1 className="display-font max-w-4xl text-[clamp(44px,7.4vw,92px)] leading-[0.9] text-[#fafafa]">
             Build 0G agents without runtime work.
@@ -1395,14 +1395,14 @@ function App() {
       <footer className="overflow-hidden rounded-[2rem] border border-white/10 bg-black px-5 py-6 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
         <div>
           <div>
-            <p className="mono-font mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">Agent infrastructure by Axiom</p>
+            <p className="mono-font mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">Agent infrastructure by Tessra</p>
             <h2 className="display-font text-[clamp(48px,12vw,150px)] leading-[0.78] tracking-[-0.01em] text-[#fafafa]">
-              Axiom
+              Tessra
             </h2>
           </div>
         </div>
         <div className="mono-font mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
-          <span>© 2026 Axiom</span>
+          <span>© 2026 Tessra</span>
           <span>No-code agents · OpenClaw export · 0G ready</span>
         </div>
       </footer>

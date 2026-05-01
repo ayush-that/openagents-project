@@ -68,7 +68,7 @@ export interface AgentDraft {
 }
 
 export interface AgentManifest {
-  schema: "axiom.0g.agent.v1";
+  schema: "tessra.0g.agent.v1";
   name: string;
   description: string;
   provider: {
