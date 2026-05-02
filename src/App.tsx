@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { type DragEvent as ReactDragEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import {
   ZERO_G_ROUTER_URL,
@@ -213,7 +213,11 @@ const labelClass = "relative z-10 mb-3 grid gap-2 text-xs font-black uppercase t
 const glassRowClass =
   "relative z-10 border border-white/10 bg-[#050505] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:border-cyan-300/30 hover:bg-[#080808]";
 const iconTileClass =
-  "grid place-items-center rounded-2xl border border-cyan-300/10 bg-cyan-300/10 text-cyan-100";
+  "grid place-items-center rounded-2xl border border-white/15 bg-[linear-gradient(145deg,rgba(255,255,255,0.16),rgba(103,232,249,0.07)_45%,rgba(255,255,255,0.03))] text-cyan-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.22),inset_0_-14px_24px_rgba(103,232,249,0.05),0_10px_18px_rgba(0,0,0,0.42)] backdrop-blur-md";
+const panelIconClass = `${iconTileClass} size-9 shrink-0`;
+const buttonIconClass = `${iconTileClass} size-7 rounded-full text-current shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_5px_0_rgba(0,0,0,0.36)]`;
+const buttonDepthClass =
+  "shadow-[0_6px_0_rgba(0,0,0,0.72)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(0,0,0,0.72)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,0.72)]";
 
 function slugify(value: string) {
   return value
@@ -221,6 +225,10 @@ function slugify(value: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 48);
+}
+
+function createCanvasBlock(block: BuilderBlock): BuilderBlock {
+  return { ...block, id: `canvas-${block.kind}-${crypto.randomUUID()}` };
 }
 
 function HeroScene() {
@@ -342,13 +350,7 @@ function HeroScene() {
 
 function App() {
   const [agent, setAgent] = useState<AgentDraft>(starterAgent);
-  const [builderBlocks, setBuilderBlocks] = useState<BuilderBlock[]>([
-    palette[0],
-    palette[1],
-    palette[2],
-    palette[3],
-    palette[4],
-  ]);
+  const [builderBlocks, setBuilderBlocks] = useState<BuilderBlock[]>(() => palette.map(createCanvasBlock));
   const [draggedBlockId, setDraggedBlockId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"manifest" | "agent" | "storage">("manifest");
   const [exporting, setExporting] = useState(false);
@@ -425,10 +427,19 @@ function App() {
     }));
   }
 
-  function handleDrop(targetIndex: number) {
-    if (!draggedBlockId) return;
-    const existingIndex = builderBlocks.findIndex((block) => block.id === draggedBlockId);
-    const paletteBlock = palette.find((block) => block.id === draggedBlockId);
+  function handleDragStart(event: ReactDragEvent<HTMLElement>, blockId: string) {
+    event.dataTransfer.setData("application/x-clawbuilder-block", blockId);
+    event.dataTransfer.effectAllowed = "copyMove";
+    setDraggedBlockId(blockId);
+  }
+
+  function handleDrop(targetIndex: number, event?: ReactDragEvent<HTMLElement>) {
+    event?.preventDefault();
+    const droppedBlockId = event?.dataTransfer.getData("application/x-clawbuilder-block") || draggedBlockId;
+    if (!droppedBlockId) return;
+
+    const existingIndex = builderBlocks.findIndex((block) => block.id === droppedBlockId);
+    const paletteBlock = palette.find((block) => block.id === droppedBlockId);
 
     if (existingIndex >= 0) {
       const next = [...builderBlocks];
@@ -439,7 +450,7 @@ function App() {
     } else if (paletteBlock) {
       setBuilderBlocks((current) => [
         ...current.slice(0, targetIndex),
-        { ...paletteBlock, id: `${paletteBlock.kind}-${crypto.randomUUID()}` },
+        createCanvasBlock(paletteBlock),
         ...current.slice(targetIndex),
       ]);
     }
@@ -477,7 +488,7 @@ function App() {
 
       <nav className="mb-10 flex items-center justify-between rounded-full border border-white/10 bg-black px-4 py-3">
         <div className="flex items-center gap-3">
-          <div className="grid size-9 place-items-center rounded-full border border-cyan-300/20 bg-cyan-300/10 text-cyan-100">
+          <div className={`${iconTileClass} size-9 rounded-full`}>
             <BuilderGlyphIcon size={18} />
           </div>
           <span className="text-sm font-black tracking-[-0.02em]">ClawBuilder 0G</span>
@@ -504,18 +515,22 @@ function App() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200"
+              className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-black text-slate-950 hover:bg-cyan-200`}
               href="#builder"
             >
-              <BuilderGlyphIcon size={18} />
+              <span className={buttonIconClass}>
+                <BuilderGlyphIcon size={14} />
+              </span>
               Open builder
             </a>
             <button
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-5 py-3 text-sm font-bold text-slate-100 transition hover:-translate-y-0.5 hover:border-cyan-300/40 disabled:cursor-not-allowed disabled:opacity-70"
+              className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-5 py-3 text-sm font-bold text-slate-100 hover:border-cyan-300/40 disabled:cursor-not-allowed disabled:opacity-70`}
               onClick={exportPackage}
               disabled={exporting}
             >
-              <ExportCapsuleIcon size={18} />
+              <span className={buttonIconClass}>
+                <ExportCapsuleIcon size={14} />
+              </span>
               {exporting ? "Building package..." : "Export starter package"}
             </button>
           </div>
@@ -527,9 +542,9 @@ function App() {
             <div className="absolute left-4 top-4 rounded-full border border-cyan-300/20 bg-black/70 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.1em] text-cyan-100 backdrop-blur-md">
               0G-native export stack
             </div>
-            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-black/80 p-4 shadow-2xl backdrop-blur-md">
+            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-black/80 p-4 shadow-[0_18px_0_rgba(0,0,0,0.55)] backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className="grid size-10 place-items-center rounded-2xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-100">
+                <div className={`${iconTileClass} size-10`}>
                   <PackageSealIcon size={20} />
                 </div>
                 <div>
@@ -564,7 +579,9 @@ function App() {
       <section className="grid items-start gap-4 xl:grid-cols-[260px_minmax(420px,1fr)_390px]">
         <aside className={`${panelClass} xl:sticky xl:top-4`}>
           <div className={panelTitleClass}>
-            <SkillSocketIcon size={18} />
+            <span className={panelIconClass}>
+              <SkillSocketIcon size={18} />
+            </span>
             Drag blocks
           </div>
           {palette.map((block) => (
@@ -572,7 +589,7 @@ function App() {
               className={`${glassRowClass} mt-2.5 grid cursor-grab grid-cols-[40px_1fr] gap-3 rounded-[1.25rem] p-3.5 first:mt-0`}
               draggable
               key={block.id}
-              onDragStart={() => setDraggedBlockId(block.id)}
+              onDragStart={(event) => handleDragStart(event, block.id)}
               onDragEnd={() => setDraggedBlockId(null)}
             >
               <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
@@ -586,25 +603,27 @@ function App() {
 
         <section className={panelClass} id="builder">
           <div className={panelTitleClass}>
-            <BuilderGlyphIcon size={18} />
+            <span className={panelIconClass}>
+              <BuilderGlyphIcon size={18} />
+            </span>
             Agent builder canvas
           </div>
           <div
             className="relative z-10 min-h-[520px] rounded-3xl border border-dashed border-white/15 bg-black p-2.5"
             onDragOver={(event) => event.preventDefault()}
-            onDrop={() => handleDrop(builderBlocks.length)}
+            onDrop={(event) => handleDrop(builderBlocks.length, event)}
           >
             {builderBlocks.map((block, index) => (
               <article
                 className={`${glassRowClass} mt-2.5 grid cursor-grab items-center gap-3 rounded-[1.25rem] p-4 first:mt-0 md:grid-cols-[34px_110px_1fr]`}
                 draggable
                 key={block.id}
-                onDragStart={() => setDraggedBlockId(block.id)}
+                onDragStart={(event) => handleDragStart(event, block.id)}
                 onDragEnd={() => setDraggedBlockId(null)}
                 onDragOver={(event) => event.preventDefault()}
                 onDrop={(event) => {
                   event.stopPropagation();
-                  handleDrop(index);
+                  handleDrop(index, event);
                 }}
               >
                 <div className={`${iconTileClass} size-[34px]`}>
@@ -624,12 +643,14 @@ function App() {
 
         <section className={`${panelClass} xl:sticky xl:top-4`} id="export-preview">
           <div className={panelTitleClass}>
-            <PackageSealIcon size={18} />
+            <span className={panelIconClass}>
+              <PackageSealIcon size={18} />
+            </span>
             Live export preview
           </div>
           <div className="relative z-10 mb-3 flex gap-2">
             <button
-              className={`rounded-full px-3 py-2 transition hover:-translate-y-0.5 ${
+              className={`${buttonDepthClass} rounded-full px-3 py-2 ${
                 activeTab === "manifest"
                   ? "bg-cyan-300 text-slate-950"
                   : "bg-[#050505] text-slate-400"
@@ -639,7 +660,7 @@ function App() {
               manifest.0g.json
             </button>
             <button
-              className={`rounded-full px-3 py-2 transition hover:-translate-y-0.5 ${
+              className={`${buttonDepthClass} rounded-full px-3 py-2 ${
                 activeTab === "agent"
                   ? "bg-cyan-300 text-slate-950"
                   : "bg-[#050505] text-slate-400"
@@ -649,7 +670,7 @@ function App() {
               agent.json
             </button>
             <button
-              className={`rounded-full px-3 py-2 transition hover:-translate-y-0.5 ${
+              className={`${buttonDepthClass} rounded-full px-3 py-2 ${
                 activeTab === "storage"
                   ? "bg-cyan-300 text-slate-950"
                   : "bg-[#050505] text-slate-400"
@@ -668,7 +689,9 @@ function App() {
       <section className="mt-4 grid gap-4 lg:grid-cols-3" id="config">
         <section className={panelClass}>
           <div className={panelTitleClass}>
-            <SoulSigilIcon size={18} />
+            <span className={panelIconClass}>
+              <SoulSigilIcon size={18} />
+            </span>
             Identity
           </div>
           <label className={labelClass}>
@@ -687,7 +710,9 @@ function App() {
 
         <section className={panelClass}>
           <div className={panelTitleClass}>
-            <ComputeOrbitIcon size={18} />
+            <span className={panelIconClass}>
+              <ComputeOrbitIcon size={18} />
+            </span>
             0G Compute
           </div>
           <label className={labelClass}>
@@ -715,7 +740,9 @@ function App() {
 
         <section className={panelClass}>
           <div className={panelTitleClass}>
-            <StorageShardIcon size={18} />
+            <span className={panelIconClass}>
+              <StorageShardIcon size={18} />
+            </span>
             0G Storage memory
           </div>
           <label className={labelClass}>
@@ -741,11 +768,15 @@ function App() {
         <section className={panelClass}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
-              <SkillSocketIcon size={18} />
+              <span className={panelIconClass}>
+                <SkillSocketIcon size={18} />
+              </span>
               Skills
             </span>
-            <button className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-cyan-500/30 to-violet-500/25 px-3 py-2 text-sm font-extrabold text-white transition hover:-translate-y-0.5" onClick={addSkill}>
-              <AddNodeIcon size={16} />
+            <button className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-extrabold text-white`} onClick={addSkill}>
+              <span className={buttonIconClass}>
+                <AddNodeIcon size={13} />
+              </span>
               Add
             </button>
           </div>
@@ -772,7 +803,7 @@ function App() {
                   enabled
                 </label>
                 <button
-                  className="grid size-9 place-items-center rounded-full bg-red-500/15 text-red-200 transition hover:-translate-y-0.5"
+                  className={`${buttonDepthClass} ${iconTileClass} size-9 rounded-full text-red-200`}
                   onClick={() => removeSkill(skill.id)}
                   aria-label={`Remove ${skill.name}`}
                 >
@@ -786,11 +817,15 @@ function App() {
         <section className={panelClass}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
-              <WorkflowRailIcon size={18} />
+              <span className={panelIconClass}>
+                <WorkflowRailIcon size={18} />
+              </span>
               Workflow
             </span>
-            <button className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-cyan-500/30 to-violet-500/25 px-3 py-2 text-sm font-extrabold text-white transition hover:-translate-y-0.5" onClick={addWorkflowStep}>
-              <AddNodeIcon size={16} />
+            <button className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-extrabold text-white`} onClick={addWorkflowStep}>
+              <span className={buttonIconClass}>
+                <AddNodeIcon size={13} />
+              </span>
               Add
             </button>
           </div>
@@ -806,7 +841,7 @@ function App() {
                   rows={2}
                 />
                 <button
-                  className="grid size-9 place-items-center rounded-full bg-red-500/15 text-red-200 transition hover:-translate-y-0.5"
+                  className={`${buttonDepthClass} ${iconTileClass} size-9 rounded-full text-red-200`}
                   onClick={() => removeWorkflowStep(step.id)}
                   aria-label={`Remove ${step.title}`}
                 >
