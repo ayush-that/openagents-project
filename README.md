@@ -36,12 +36,12 @@ skills/
 
 ## Templates
 
-| Template | Use case |
-| --- | --- |
-| Research Scout | Market, paper, competitor, and technical-doc research |
-| Secure Web Operator | Browser automation with prompt-injection screening |
-| Founder Autopilot | Briefs, reminders, async ops, and execution loops |
-| Shipyard Engineer | Software delivery, PRs, deploys, audits, and release notes |
+| Template            | Use case                                                   |
+| ------------------- | ---------------------------------------------------------- |
+| Research Scout      | Market, paper, competitor, and technical-doc research      |
+| Secure Web Operator | Browser automation with prompt-injection screening         |
+| Founder Autopilot   | Briefs, reminders, async ops, and execution loops          |
+| Shipyard Engineer   | Software delivery, PRs, deploys, audits, and release notes |
 
 ## Skill packs
 
