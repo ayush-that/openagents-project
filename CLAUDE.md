@@ -80,4 +80,4 @@ The Vite dev server does not need any of these.
 
 ## Scope
 
-Per `docs/product-plan.md`: the MVP is the visual builder + export. Live agent execution, hosted multi-tenant runtime, and arbitrary graph runtime are **explicitly out of scope** — don't add them unless asked.
+The MVP is the visual builder + export. Live agent execution, hosted multi-tenant runtime, and arbitrary graph runtime are **explicitly out of scope** — don't add them unless asked.
