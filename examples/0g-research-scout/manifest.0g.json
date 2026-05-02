@@ -1,0 +1,40 @@
+{
+  "schema": "clawbuilder.0g.agent.v1",
+  "name": "0G Research Scout",
+  "description": "A portable OpenClaw-style agent that researches a topic, reasons through 0G Compute, and persists memory/log artifacts to 0G Storage.",
+  "provider": {
+    "name": "0g",
+    "apiBase": "https://router-api.0g.ai/v1",
+    "apiType": "openai-chat",
+    "authType": "bearer-token",
+    "apiKeyEnv": "OG_API_KEY",
+    "models": [
+      {
+        "id": "openai/gpt-oss-20b",
+        "name": "openai/gpt-oss-20b",
+        "input": ["text"],
+        "contextWindow": 128000,
+        "maxTokens": 8192
+      }
+    ]
+  },
+  "files": ["agent.json", "SOUL.md", "MEMORY.md", "workflow.json"],
+  "skills": [
+    {
+      "name": "0g-compute",
+      "description": "Route OpenAI-compatible chat completions through the 0G Compute router.",
+      "path": "skills/0g-compute/SKILL.md"
+    },
+    {
+      "name": "0g-storage-memory",
+      "description": "Package agent files, memory, and run logs for upload to 0G Storage.",
+      "path": "skills/0g-storage-memory/SKILL.md"
+    }
+  ],
+  "storage": {
+    "network": "0g-storage",
+    "packageUri": "0g://package/{rootHash}",
+    "memoryUri": "0g://memory/{agentId}/MEMORY.md",
+    "logUri": "0g://logs/{agentId}/{sessionId}.jsonl"
+  }
+}
