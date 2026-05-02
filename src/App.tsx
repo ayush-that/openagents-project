@@ -40,8 +40,9 @@ import {
   downloadBlob,
   starterAgent,
 } from "./agentPackage";
+import { agentTemplates } from "./agentTemplates";
 import { skillPacks } from "./skillPacks";
-import type { AgentDraft, BlockKind, BuilderBlock, SkillDraft, WorkflowStep } from "./types";
+import type { AgentDraft, AgentTemplate, BlockKind, BuilderBlock, SkillDraft, WorkflowStep } from "./types";
 
 const palette: BuilderBlock[] = [
   {
@@ -165,6 +166,32 @@ function createFlowEdges(nodes: BuilderNode[]): BuilderEdge[] {
 
 function createSkillId(skillName: string) {
   return `${slugify(skillName) || "skill"}-${crypto.randomUUID()}`;
+}
+
+function createSkillsFromPacks(packIds: string[], existingSkills: SkillDraft[] = []): SkillDraft[] {
+  const existingNames = new Set(existingSkills.map((skill) => skill.name));
+  const skills: SkillDraft[] = [];
+
+  for (const packId of packIds) {
+    const pack = skillPacks.find((candidate) => candidate.id === packId);
+    if (!pack) continue;
+
+    for (const skill of pack.skills) {
+      if (existingNames.has(skill.name)) continue;
+      existingNames.add(skill.name);
+      skills.push({
+        id: createSkillId(skill.name),
+        name: skill.name,
+        description: skill.description,
+        enabled: true,
+        category: pack.category,
+        sourceUrl: skill.sourceUrl,
+        packId: pack.id,
+      });
+    }
+  }
+
+  return skills;
 }
 
 function HeroScene() {
@@ -464,18 +491,7 @@ function App() {
     if (!pack) return;
 
     setAgent((current) => {
-      const existingNames = new Set(current.skills.map((skill) => skill.name));
-      const skillsToAdd: SkillDraft[] = pack.skills
-        .filter((skill) => !existingNames.has(skill.name))
-        .map((skill) => ({
-          id: createSkillId(skill.name),
-          name: skill.name,
-          description: skill.description,
-          enabled: true,
-          category: pack.category,
-          sourceUrl: skill.sourceUrl,
-          packId: pack.id,
-        }));
+      const skillsToAdd = createSkillsFromPacks([pack.id], current.skills);
 
       if (skillsToAdd.length === 0) return current;
 
@@ -491,29 +507,13 @@ function App() {
 
   function addAllVisibleSkillPacks() {
     setAgent((current) => {
-      const existingNames = new Set(current.skills.map((skill) => skill.name));
+      const visiblePackIds = filteredSkillPacks.map((pack) => pack.id);
       const memoryNotes: string[] = [];
-      const skillsToAdd: SkillDraft[] = [];
+      const skillsToAdd = createSkillsFromPacks(visiblePackIds, current.skills);
 
       for (const pack of filteredSkillPacks) {
-        const packSkills = pack.skills
-          .filter((skill) => !existingNames.has(skill.name))
-          .map((skill) => ({
-            id: createSkillId(skill.name),
-            name: skill.name,
-            description: skill.description,
-            enabled: true,
-            category: pack.category,
-            sourceUrl: skill.sourceUrl,
-            packId: pack.id,
-          }));
-
-        if (packSkills.length > 0) {
-          packSkills.forEach((skill) => existingNames.add(skill.name));
-          skillsToAdd.push(...packSkills);
-          if (!current.memory.includes(pack.name)) {
-            memoryNotes.push(`- Skill pack installed: ${pack.name} (${pack.category}).`);
-          }
+        if (!current.memory.includes(pack.name) && skillsToAdd.some((skill) => skill.packId === pack.id)) {
+          memoryNotes.push(`- Skill pack installed: ${pack.name} (${pack.category}).`);
         }
       }
 
@@ -525,6 +525,35 @@ function App() {
         skills: current.skills.concat(skillsToAdd),
         memory: `${current.memory.trimEnd()}${notes}`,
       };
+    });
+  }
+
+  function applyAgentTemplate(template: AgentTemplate) {
+    const baseSkills = starterAgent.skills.map((skill) => ({
+      ...skill,
+      id: createSkillId(skill.name),
+    }));
+    const templateSkills = createSkillsFromPacks(template.skillPackIds, baseSkills);
+
+    setAgent({
+      ...starterAgent,
+      name: template.name,
+      description: template.description,
+      soul: template.soul,
+      memory: `${template.memory.trimEnd()}\n${template.skillPackIds
+        .map((packId) => {
+          const pack = skillPacks.find((candidate) => candidate.id === packId);
+          return pack ? `- Template pack: ${pack.name} (${pack.category}).` : "";
+        })
+        .filter(Boolean)
+        .join("\n")}\n`,
+      skills: baseSkills.concat(templateSkills),
+      workflow: template.workflow.map((step) => ({ ...step, id: `${slugify(step.title) || "step"}-${crypto.randomUUID()}` })),
+      storage: {
+        packageUri: `0g://package/${slugify(template.name) || "agent"}/{rootHash}`,
+        memoryUri: `0g://memory/${slugify(template.name) || "agent"}/MEMORY.md`,
+        logUri: `0g://logs/${slugify(template.name) || "agent"}/{sessionId}.jsonl`,
+      },
     });
   }
 
@@ -706,6 +735,45 @@ function App() {
               </span>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className={`${panelClass} mb-4`} id="templates">
+        <div className={panelTitleClass}>
+          <span className={panelIconClass}>
+            <CubeTransparentIcon className="size-[18px]" />
+          </span>
+          One-click agent templates
+        </div>
+        <div className="relative z-10 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {agentTemplates.map((template) => (
+            <article className={`${glassRowClass} grid gap-3 rounded-2xl p-4`} key={template.id}>
+              <div>
+                <h3 className="m-0 text-lg font-black tracking-[-0.03em] text-white">{template.name}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">{template.description}</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {template.skillPackIds.map((packId) => {
+                  const pack = skillPacks.find((candidate) => candidate.id === packId);
+                  return pack ? (
+                    <span
+                      className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100"
+                      key={packId}
+                    >
+                      {pack.name}
+                    </span>
+                  ) : null;
+                })}
+              </div>
+              <button
+                className={`${buttonDepthClass} mt-auto rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-black text-white`}
+                onClick={() => applyAgentTemplate(template)}
+                type="button"
+              >
+                Load template
+              </button>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -909,6 +977,7 @@ function App() {
           <div className="relative z-10 grid gap-2.5">
             {filteredSkillPacks.map((pack) => {
               const installed = hasSkillPack(pack.id);
+              const installedCount = pack.skills.filter((skill) => agent.skills.some((agentSkill) => agentSkill.name === skill.name)).length;
               return (
                 <article className={`${glassRowClass} grid gap-3 rounded-2xl p-3.5`} key={pack.id}>
                   <div className="flex items-start justify-between gap-3">
@@ -929,7 +998,7 @@ function App() {
                       onClick={() => addSkillPack(pack.id)}
                       type="button"
                     >
-                      {installed ? "Added" : `Add ${pack.skills.length}`}
+                      {installed ? `${installedCount}/${pack.skills.length} added` : `Add ${pack.skills.length}`}
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-2">

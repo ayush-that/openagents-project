@@ -37,6 +37,16 @@ export interface WorkflowStep {
   instruction: string;
 }
 
+export interface AgentTemplate {
+  id: string;
+  name: string;
+  description: string;
+  soul: string;
+  memory: string;
+  skillPackIds: string[];
+  workflow: WorkflowStep[];
+}
+
 export interface AgentDraft {
   name: string;
   description: string;

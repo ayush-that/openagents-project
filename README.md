@@ -62,6 +62,17 @@ The builder ships curated packs that can be added before export:
 
 Each exported `SKILL.md` includes source metadata so users can inspect the upstream ClawHub page before wiring real credentials or tool permissions.
 
+## One-click templates
+
+Templates load a complete agent profile, workflow, storage URI pattern, and bundled skill packs:
+
+| Template | Purpose | Packs |
+| --- | --- | --- |
+| 0G Research Scout | market, paper, competitor, and technical-doc research | Research Intel, Memory Knowledge, 0G Native Runtime |
+| Secure Web Operator | browser automation with prompt-injection screening | Web Operator, Agent Security, 0G Native Runtime |
+| Founder Autopilot | async personal ops, briefs, reminders, and execution loops | Autonomous Ops, Comms Scheduler, Memory Knowledge, 0G Native Runtime |
+| Shipyard Engineer | software delivery, PRs, deploys, audits, and release notes | GitOps Builder, Cloud Deploy, Agent Security, Agent UI Control, 0G Native Runtime |
+
 ## Run locally
 
 ```bash
