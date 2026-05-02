@@ -12,6 +12,22 @@ export interface SkillDraft {
   name: string;
   description: string;
   enabled: boolean;
+  category?: string;
+  sourceUrl?: string;
+  packId?: string;
+}
+
+export interface SkillPack {
+  id: string;
+  name: string;
+  category: string;
+  summary: string;
+  source: string;
+  skills: Array<{
+    name: string;
+    description: string;
+    sourceUrl: string;
+  }>;
 }
 
 export interface WorkflowStep {
@@ -63,6 +79,8 @@ export interface AgentManifest {
     name: string;
     description: string;
     path: string;
+    category?: string;
+    sourceUrl?: string;
   }>;
   workflow: WorkflowStep[];
   storage: {
