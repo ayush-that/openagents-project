@@ -1,4 +1,36 @@
 import { type DragEvent as ReactDragEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ArrowDownTrayIcon,
+  CircleStackIcon,
+  CpuChipIcon,
+  CubeTransparentIcon,
+  PlusIcon,
+  QueueListIcon,
+  SparklesIcon,
+  Squares2X2Icon,
+  TrashIcon,
+  UserCircleIcon,
+  WrenchScrewdriverIcon,
+} from "@heroicons/react/24/outline";
+import {
+  Background,
+  BackgroundVariant,
+  Controls,
+  Handle,
+  MiniMap,
+  Position,
+  ReactFlow,
+  ReactFlowProvider,
+  addEdge,
+  useEdgesState,
+  useNodesState,
+  useReactFlow,
+  type Connection,
+  type Edge,
+  type Node,
+  type OnEdgesChange,
+  type OnNodesChange,
+} from "@xyflow/react";
 import * as THREE from "three";
 import {
   ZERO_G_ROUTER_URL,
@@ -9,143 +41,6 @@ import {
   starterAgent,
 } from "./agentPackage";
 import type { AgentDraft, BlockKind, BuilderBlock, SkillDraft, WorkflowStep } from "./types";
-
-type IconProps = {
-  size?: number;
-  className?: string;
-};
-
-function IconSvg({ size = 18, className = "", children }: IconProps & { children: ReactNode }) {
-  return (
-    <svg
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      height={size}
-      viewBox="0 0 24 24"
-      width={size}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {children}
-    </svg>
-  );
-}
-
-function SoulSigilIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M12 3.4 18.8 7.3v7.8L12 20.9l-6.8-5.8V7.3L12 3.4Z" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M8.3 10.2c1.8-2.4 5.6-2.4 7.4 0M9.1 14.2c1.5 1.4 4.3 1.4 5.8 0" stroke="currentColor" strokeLinecap="round" strokeWidth="1.7" />
-      <path d="M12 8.4v7.2" stroke="currentColor" strokeLinecap="round" strokeWidth="1.4" />
-    </IconSvg>
-  );
-}
-
-function ComputeOrbitIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M4.3 12c2.1-5.8 13.3-5.8 15.4 0-2.1 5.8-13.3 5.8-15.4 0Z" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M12 4.2c5.8 2.1 5.8 13.5 0 15.6-5.8-2.1-5.8-13.5 0-15.6Z" stroke="currentColor" strokeWidth="1.7" />
-      <circle cx="18.6" cy="8.1" fill="currentColor" r="1.2" />
-    </IconSvg>
-  );
-}
-
-function StorageShardIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M12 3.1 20 7.5v9L12 20.9 4 16.5v-9l8-4.4Z" stroke="currentColor" strokeWidth="1.7" />
-      <path d="m4.5 7.7 7.5 4.2 7.5-4.2M12 11.9v8.3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
-      <path d="m8.2 5.5 7.6 4.3" stroke="currentColor" strokeLinecap="round" strokeWidth="1.25" />
-    </IconSvg>
-  );
-}
-
-function SkillSocketIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M7.2 6.8h4.1v4.1H7.2zM12.7 6.8h4.1v4.1h-4.1zM7.2 12.3h4.1v4.1H7.2zM12.7 12.3h4.1v4.1h-4.1z" stroke="currentColor" strokeWidth="1.55" />
-      <path d="M4 12h3.2M16.8 12H20M12 4v2.8M12 16.4V20" stroke="currentColor" strokeLinecap="round" strokeWidth="1.55" />
-    </IconSvg>
-  );
-}
-
-function WorkflowRailIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M6 7.2h5.2c2.2 0 4 1.8 4 4s-1.8 4-4 4H8.8" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
-      <circle cx="6" cy="7.2" r="2.2" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="18" cy="11.2" r="2.2" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="6" cy="15.2" r="2.2" stroke="currentColor" strokeWidth="1.6" />
-    </IconSvg>
-  );
-}
-
-function ExportCapsuleIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M5.2 13.1v4.6c0 1.1.9 2 2 2h9.6c1.1 0 2-.9 2-2v-4.6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
-      <path d="M12 3.8v10.1M8.2 10.1l3.8 3.8 3.8-3.8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
-      <path d="M7.4 6.2h9.2" stroke="currentColor" strokeLinecap="round" strokeWidth="1.2" />
-    </IconSvg>
-  );
-}
-
-function BuilderGlyphIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M4.8 17.8 15.9 6.7l1.4 1.4L6.2 19.2H4.8v-1.4Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.7" />
-      <path d="M15.2 3.8 20.2 8.8M5.5 5.7h3.2M7.1 4.1v3.2M17.2 15.9h2.8M18.6 14.5v2.8" stroke="currentColor" strokeLinecap="round" strokeWidth="1.6" />
-    </IconSvg>
-  );
-}
-
-function PackageSealIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M12 2.9 19.6 7v8.8L12 21.1l-7.6-5.3V7L12 2.9Z" stroke="currentColor" strokeWidth="1.7" />
-      <path d="m8.2 12.2 2.5 2.5 5-5.2" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.9" />
-      <path d="m4.9 7.3 7.1 4.1 7.1-4.1" stroke="currentColor" strokeLinecap="round" strokeWidth="1.3" />
-    </IconSvg>
-  );
-}
-
-function DragHandleIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M8.2 5.2h7.6M8.2 12h7.6M8.2 18.8h7.6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.9" />
-      <path d="m6.2 7.1 2-1.9-2-1.9M17.8 3.3l-2 1.9 2 1.9M6.2 20.7l2-1.9-2-1.9M17.8 16.9l-2 1.9 2 1.9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.35" />
-    </IconSvg>
-  );
-}
-
-function AddNodeIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
-      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.35" />
-    </IconSvg>
-  );
-}
-
-function RemoveNodeIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="M7.2 7.2 16.8 16.8M16.8 7.2 7.2 16.8" stroke="currentColor" strokeLinecap="round" strokeWidth="1.9" />
-      <path d="M4.8 6.8 12 2.9l7.2 3.9v10.4L12 21.1l-7.2-3.9V6.8Z" stroke="currentColor" strokeWidth="1.35" />
-    </IconSvg>
-  );
-}
-
-function ProofSparkIcon(props: IconProps) {
-  return (
-    <IconSvg {...props}>
-      <path d="m12 3.3 1.5 5.2 5.2 1.5-5.2 1.5-1.5 5.2-1.5-5.2-5.2-1.5 5.2-1.5L12 3.3Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.7" />
-      <path d="m18.6 15.4.6 2.1 2.1.6-2.1.6-.6 2.1-.6-2.1-2.1-.6 2.1-.6.6-2.1Z" fill="currentColor" />
-    </IconSvg>
-  );
-}
 
 const palette: BuilderBlock[] = [
   {
@@ -181,11 +76,11 @@ const palette: BuilderBlock[] = [
 ];
 
 const kindIcons: Record<BlockKind, ReactNode> = {
-  soul: <SoulSigilIcon size={18} />,
-  model: <ComputeOrbitIcon size={18} />,
-  memory: <StorageShardIcon size={18} />,
-  skill: <SkillSocketIcon size={18} />,
-  workflow: <WorkflowRailIcon size={18} />,
+  soul: <UserCircleIcon className="size-[18px]" />,
+  model: <CpuChipIcon className="size-[18px]" />,
+  memory: <CircleStackIcon className="size-[18px]" />,
+  skill: <WrenchScrewdriverIcon className="size-[18px]" />,
+  workflow: <QueueListIcon className="size-[18px]" />,
 };
 
 const kindLabels: Record<BlockKind, string> = {
@@ -195,6 +90,10 @@ const kindLabels: Record<BlockKind, string> = {
   skill: "Skill",
   workflow: "Workflow",
 };
+
+type BuilderNodeData = BuilderBlock & Record<string, unknown>;
+type BuilderNode = Node<BuilderNodeData, "builderBlock">;
+type BuilderEdge = Edge;
 
 const heroStats = [
   { label: "Router", value: "0G Compute" },
@@ -229,6 +128,38 @@ function slugify(value: string) {
 
 function createCanvasBlock(block: BuilderBlock): BuilderBlock {
   return { ...block, id: `canvas-${block.kind}-${crypto.randomUUID()}` };
+}
+
+function createBuilderNodeData(block: BuilderBlock): BuilderNodeData {
+  return {
+    id: block.id,
+    kind: block.kind,
+    title: block.title,
+    summary: block.summary,
+  };
+}
+
+function createFlowNode(block: BuilderBlock, index: number): BuilderNode {
+  return {
+    id: block.id,
+    type: "builderBlock",
+    position: { x: 72 + (index % 2) * 280, y: 40 + index * 132 },
+    data: createBuilderNodeData(block),
+  };
+}
+
+function createFlowEdge(source: string, target: string): BuilderEdge {
+  return {
+    id: `${source}->${target}`,
+    source,
+    target,
+    animated: true,
+    style: { stroke: "rgba(103, 232, 249, 0.55)", strokeWidth: 1.5 },
+  };
+}
+
+function createFlowEdges(nodes: BuilderNode[]): BuilderEdge[] {
+  return nodes.slice(0, -1).map((node, index) => createFlowEdge(node.id, nodes[index + 1].id));
 }
 
 function HeroScene() {
@@ -348,9 +279,113 @@ function HeroScene() {
   return <div aria-hidden="true" className="absolute inset-0" ref={mountRef} />;
 }
 
+function BuilderFlowNode({ data }: { data: BuilderNodeData }) {
+  return (
+    <div className={`${glassRowClass} w-[230px] rounded-[1.25rem] p-3.5`}>
+      <Handle className="!size-3 !border !border-cyan-200/70 !bg-cyan-300" position={Position.Top} type="target" />
+      <div className="grid grid-cols-[36px_1fr] gap-3">
+        <div className={`${iconTileClass} size-9`}>{kindIcons[data.kind]}</div>
+        <div>
+          <div className="mb-1 inline-flex rounded-full border border-cyan-300/15 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100">
+            {kindLabels[data.kind]}
+          </div>
+          <h3 className="mb-1 text-sm font-black text-white">{data.title}</h3>
+          <p className="m-0 text-xs leading-5 text-slate-400">{data.summary}</p>
+        </div>
+      </div>
+      <Handle className="!size-3 !border !border-cyan-200/70 !bg-cyan-300" position={Position.Bottom} type="source" />
+    </div>
+  );
+}
+
+const nodeTypes = {
+  builderBlock: BuilderFlowNode,
+};
+
+type BuilderFlowCanvasProps = {
+  nodes: BuilderNode[];
+  edges: BuilderEdge[];
+  onNodesChange: OnNodesChange<BuilderNode>;
+  onEdgesChange: OnEdgesChange<BuilderEdge>;
+  onConnect: (connection: Connection) => void;
+  onPaletteDrop: (block: BuilderBlock, position: { x: number; y: number }) => void;
+  draggedBlockId: string | null;
+  setDraggedBlockId: (value: string | null) => void;
+};
+
+function BuilderFlowCanvas({
+  nodes,
+  edges,
+  onNodesChange,
+  onEdgesChange,
+  onConnect,
+  onPaletteDrop,
+  draggedBlockId,
+  setDraggedBlockId,
+}: BuilderFlowCanvasProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const { screenToFlowPosition } = useReactFlow();
+
+  function handleDrop(event: ReactDragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    const droppedBlockId = event.dataTransfer.getData("application/x-clawbuilder-block") || draggedBlockId;
+    const paletteBlock = palette.find((block) => block.id === droppedBlockId);
+    if (!paletteBlock) return;
+
+    onPaletteDrop(
+      paletteBlock,
+      screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      }),
+    );
+    setDraggedBlockId(null);
+  }
+
+  return (
+    <div className="relative z-10 h-[560px] overflow-hidden rounded-3xl border border-dashed border-white/15 bg-black" ref={wrapperRef}>
+      <ReactFlow
+        colorMode="dark"
+        connectionLineStyle={{ stroke: "rgba(103, 232, 249, 0.7)", strokeWidth: 1.5 }}
+        defaultEdgeOptions={{
+          animated: true,
+          style: { stroke: "rgba(103, 232, 249, 0.55)", strokeWidth: 1.5 },
+        }}
+        edges={edges}
+        fitView
+        nodeTypes={nodeTypes}
+        nodes={nodes}
+        onConnect={onConnect}
+        onDragOver={(event) => {
+          event.preventDefault();
+          event.dataTransfer.dropEffect = "copy";
+        }}
+        onDrop={handleDrop}
+        onEdgesChange={onEdgesChange}
+        onNodesChange={onNodesChange}
+        proOptions={{ hideAttribution: true }}
+      >
+        <Background color="rgba(103, 232, 249, 0.2)" gap={24} size={1} variant={BackgroundVariant.Dots} />
+        <MiniMap
+          className="!border !border-white/10 !bg-black/80"
+          maskColor="rgba(0, 0, 0, 0.5)"
+          nodeColor="rgba(103, 232, 249, 0.5)"
+          nodeStrokeColor="rgba(255, 255, 255, 0.25)"
+          pannable
+          zoomable
+        />
+        <Controls className="!border !border-white/10 !bg-black/80 !shadow-[0_8px_0_rgba(0,0,0,0.55)] [&_button]:!border-white/10 [&_button]:!bg-black [&_button]:!text-cyan-100" />
+      </ReactFlow>
+    </div>
+  );
+}
+
 function App() {
   const [agent, setAgent] = useState<AgentDraft>(starterAgent);
-  const [builderBlocks, setBuilderBlocks] = useState<BuilderBlock[]>(() => palette.map(createCanvasBlock));
+  const initialNodes = useMemo(() => palette.map((block, index) => createFlowNode(createCanvasBlock(block), index)), []);
+  const initialEdges = useMemo(() => createFlowEdges(initialNodes), [initialNodes]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<BuilderNode>(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<BuilderEdge>(initialEdges);
   const [draggedBlockId, setDraggedBlockId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"manifest" | "agent" | "storage">("manifest");
   const [exporting, setExporting] = useState(false);
@@ -433,29 +468,35 @@ function App() {
     setDraggedBlockId(blockId);
   }
 
-  function handleDrop(targetIndex: number, event?: ReactDragEvent<HTMLElement>) {
-    event?.preventDefault();
-    const droppedBlockId = event?.dataTransfer.getData("application/x-clawbuilder-block") || draggedBlockId;
-    if (!droppedBlockId) return;
+  function addFlowBlock(block: BuilderBlock, position: { x: number; y: number }) {
+    const canvasBlock = createCanvasBlock(block);
+    const node: BuilderNode = {
+      id: canvasBlock.id,
+      type: "builderBlock",
+      position,
+      data: createBuilderNodeData(canvasBlock),
+    };
 
-    const existingIndex = builderBlocks.findIndex((block) => block.id === droppedBlockId);
-    const paletteBlock = palette.find((block) => block.id === droppedBlockId);
+    setNodes((currentNodes) => {
+      const previousNode = currentNodes.at(-1);
+      if (previousNode) {
+        setEdges((currentEdges) => currentEdges.concat(createFlowEdge(previousNode.id, node.id)));
+      }
+      return currentNodes.concat(node);
+    });
+  }
 
-    if (existingIndex >= 0) {
-      const next = [...builderBlocks];
-      const [moved] = next.splice(existingIndex, 1);
-      const adjustedIndex = targetIndex > existingIndex ? targetIndex - 1 : targetIndex;
-      next.splice(adjustedIndex, 0, moved);
-      setBuilderBlocks(next);
-    } else if (paletteBlock) {
-      setBuilderBlocks((current) => [
-        ...current.slice(0, targetIndex),
-        createCanvasBlock(paletteBlock),
-        ...current.slice(targetIndex),
-      ]);
-    }
-
-    setDraggedBlockId(null);
+  function handleConnect(connection: Connection) {
+    setEdges((currentEdges) =>
+      addEdge(
+        {
+          ...connection,
+          animated: true,
+          style: { stroke: "rgba(103, 232, 249, 0.65)", strokeWidth: 1.5 },
+        },
+        currentEdges,
+      ),
+    );
   }
 
   async function exportPackage() {
@@ -489,7 +530,7 @@ function App() {
       <nav className="mb-10 flex items-center justify-between rounded-full border border-white/10 bg-black px-4 py-3">
         <div className="flex items-center gap-3">
           <div className={`${iconTileClass} size-9 rounded-full`}>
-            <BuilderGlyphIcon size={18} />
+            <SparklesIcon className="size-[18px]" />
           </div>
           <span className="text-sm font-black tracking-[-0.02em]">ClawBuilder 0G</span>
         </div>
@@ -519,7 +560,7 @@ function App() {
               href="#builder"
             >
               <span className={buttonIconClass}>
-                <BuilderGlyphIcon size={14} />
+                <SparklesIcon className="size-[14px]" />
               </span>
               Open builder
             </a>
@@ -529,7 +570,7 @@ function App() {
               disabled={exporting}
             >
               <span className={buttonIconClass}>
-                <ExportCapsuleIcon size={14} />
+                <ArrowDownTrayIcon className="size-[14px]" />
               </span>
               {exporting ? "Building package..." : "Export starter package"}
             </button>
@@ -545,7 +586,7 @@ function App() {
             <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-black/80 p-4 shadow-[0_18px_0_rgba(0,0,0,0.55)] backdrop-blur-md">
               <div className="flex items-center gap-3">
                 <div className={`${iconTileClass} size-10`}>
-                  <PackageSealIcon size={20} />
+                  <CubeTransparentIcon className="size-5" />
                 </div>
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Generated package</p>
@@ -580,7 +621,7 @@ function App() {
         <aside className={`${panelClass} xl:sticky xl:top-4`}>
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
-              <SkillSocketIcon size={18} />
+              <Squares2X2Icon className="size-[18px]" />
             </span>
             Drag blocks
           </div>
@@ -604,47 +645,28 @@ function App() {
         <section className={panelClass} id="builder">
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
-              <BuilderGlyphIcon size={18} />
+              <SparklesIcon className="size-[18px]" />
             </span>
-            Agent builder canvas
+            React Flow agent canvas
           </div>
-          <div
-            className="relative z-10 min-h-[520px] rounded-3xl border border-dashed border-white/15 bg-black p-2.5"
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={(event) => handleDrop(builderBlocks.length, event)}
-          >
-            {builderBlocks.map((block, index) => (
-              <article
-                className={`${glassRowClass} mt-2.5 grid cursor-grab items-center gap-3 rounded-[1.25rem] p-4 first:mt-0 md:grid-cols-[34px_110px_1fr]`}
-                draggable
-                key={block.id}
-                onDragStart={(event) => handleDragStart(event, block.id)}
-                onDragEnd={() => setDraggedBlockId(null)}
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.stopPropagation();
-                  handleDrop(index, event);
-                }}
-              >
-                <div className={`${iconTileClass} size-[34px]`}>
-                  <DragHandleIcon size={18} />
-                </div>
-                <div className="inline-flex justify-center rounded-full border border-cyan-300/15 bg-cyan-300/10 px-2.5 py-1.5 text-xs font-black uppercase text-cyan-100">
-                  {kindLabels[block.kind]}
-                </div>
-                <div>
-                  <h3 className="mb-1 text-sm font-black text-white">{block.title}</h3>
-                  <p className="m-0 text-xs leading-5 text-slate-400">{block.summary}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+          <ReactFlowProvider>
+            <BuilderFlowCanvas
+              draggedBlockId={draggedBlockId}
+              edges={edges}
+              nodes={nodes}
+              onConnect={handleConnect}
+              onEdgesChange={onEdgesChange}
+              onNodesChange={onNodesChange}
+              onPaletteDrop={addFlowBlock}
+              setDraggedBlockId={setDraggedBlockId}
+            />
+          </ReactFlowProvider>
         </section>
 
         <section className={`${panelClass} xl:sticky xl:top-4`} id="export-preview">
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
-              <PackageSealIcon size={18} />
+              <CubeTransparentIcon className="size-[18px]" />
             </span>
             Live export preview
           </div>
@@ -690,7 +712,7 @@ function App() {
         <section className={panelClass}>
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
-              <SoulSigilIcon size={18} />
+              <UserCircleIcon className="size-[18px]" />
             </span>
             Identity
           </div>
@@ -711,7 +733,7 @@ function App() {
         <section className={panelClass}>
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
-              <ComputeOrbitIcon size={18} />
+              <CpuChipIcon className="size-[18px]" />
             </span>
             0G Compute
           </div>
@@ -741,7 +763,7 @@ function App() {
         <section className={panelClass}>
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
-              <StorageShardIcon size={18} />
+              <CircleStackIcon className="size-[18px]" />
             </span>
             0G Storage memory
           </div>
@@ -769,13 +791,13 @@ function App() {
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
-                <SkillSocketIcon size={18} />
+                <WrenchScrewdriverIcon className="size-[18px]" />
               </span>
               Skills
             </span>
             <button className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-extrabold text-white`} onClick={addSkill}>
               <span className={buttonIconClass}>
-                <AddNodeIcon size={13} />
+                <PlusIcon className="size-[13px]" />
               </span>
               Add
             </button>
@@ -807,7 +829,7 @@ function App() {
                   onClick={() => removeSkill(skill.id)}
                   aria-label={`Remove ${skill.name}`}
                 >
-                  <RemoveNodeIcon size={16} />
+                  <TrashIcon className="size-4" />
                 </button>
               </article>
             ))}
@@ -818,13 +840,13 @@ function App() {
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
-                <WorkflowRailIcon size={18} />
+                <QueueListIcon className="size-[18px]" />
               </span>
               Workflow
             </span>
             <button className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-extrabold text-white`} onClick={addWorkflowStep}>
               <span className={buttonIconClass}>
-                <AddNodeIcon size={13} />
+                <PlusIcon className="size-[13px]" />
               </span>
               Add
             </button>
@@ -845,7 +867,7 @@ function App() {
                   onClick={() => removeWorkflowStep(step.id)}
                   aria-label={`Remove ${step.title}`}
                 >
-                  <RemoveNodeIcon size={16} />
+                  <TrashIcon className="size-4" />
                 </button>
               </article>
             ))}
