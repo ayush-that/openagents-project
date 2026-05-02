@@ -1,4 +1,4 @@
-# Hackathon Plan
+# Product Plan
 
 ## Locked direction
 
@@ -40,6 +40,6 @@ GoClaw is useful as a compatibility reference, but its no-code UI and agent CRUD
 7. Export zip.
 8. Show generated `agent.json`, `SOUL.md`, `MEMORY.md`, and `SKILL.md` files.
 
-## Judging story
+## Product story
 
 This is not "just an agent." It is reusable framework tooling that lets other developers build 0G-backed agents faster.

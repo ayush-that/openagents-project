@@ -1,20 +1,5 @@
 import { type ReactNode, useMemo, useState } from "react";
 import {
-  ArrowDownToLine,
-  Brain,
-  Boxes,
-  Database,
-  GripVertical,
-  Layers3,
-  Network,
-  PackageCheck,
-  Plus,
-  Route,
-  Sparkles,
-  Trash2,
-  Wand2,
-} from "lucide-react";
-import {
   ZERO_G_ROUTER_URL,
   buildAgentZip,
   createAgentConfig,
@@ -23,6 +8,143 @@ import {
   starterAgent,
 } from "./agentPackage";
 import type { AgentDraft, BlockKind, BuilderBlock, SkillDraft, WorkflowStep } from "./types";
+
+type IconProps = {
+  size?: number;
+  className?: string;
+};
+
+function IconSvg({ size = 18, className = "", children }: IconProps & { children: ReactNode }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {children}
+    </svg>
+  );
+}
+
+function SoulSigilIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M12 3.4 18.8 7.3v7.8L12 20.9l-6.8-5.8V7.3L12 3.4Z" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M8.3 10.2c1.8-2.4 5.6-2.4 7.4 0M9.1 14.2c1.5 1.4 4.3 1.4 5.8 0" stroke="currentColor" strokeLinecap="round" strokeWidth="1.7" />
+      <path d="M12 8.4v7.2" stroke="currentColor" strokeLinecap="round" strokeWidth="1.4" />
+    </IconSvg>
+  );
+}
+
+function ComputeOrbitIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M4.3 12c2.1-5.8 13.3-5.8 15.4 0-2.1 5.8-13.3 5.8-15.4 0Z" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M12 4.2c5.8 2.1 5.8 13.5 0 15.6-5.8-2.1-5.8-13.5 0-15.6Z" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="18.6" cy="8.1" fill="currentColor" r="1.2" />
+    </IconSvg>
+  );
+}
+
+function StorageShardIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M12 3.1 20 7.5v9L12 20.9 4 16.5v-9l8-4.4Z" stroke="currentColor" strokeWidth="1.7" />
+      <path d="m4.5 7.7 7.5 4.2 7.5-4.2M12 11.9v8.3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
+      <path d="m8.2 5.5 7.6 4.3" stroke="currentColor" strokeLinecap="round" strokeWidth="1.25" />
+    </IconSvg>
+  );
+}
+
+function SkillSocketIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M7.2 6.8h4.1v4.1H7.2zM12.7 6.8h4.1v4.1h-4.1zM7.2 12.3h4.1v4.1H7.2zM12.7 12.3h4.1v4.1h-4.1z" stroke="currentColor" strokeWidth="1.55" />
+      <path d="M4 12h3.2M16.8 12H20M12 4v2.8M12 16.4V20" stroke="currentColor" strokeLinecap="round" strokeWidth="1.55" />
+    </IconSvg>
+  );
+}
+
+function WorkflowRailIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M6 7.2h5.2c2.2 0 4 1.8 4 4s-1.8 4-4 4H8.8" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+      <circle cx="6" cy="7.2" r="2.2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="18" cy="11.2" r="2.2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="6" cy="15.2" r="2.2" stroke="currentColor" strokeWidth="1.6" />
+    </IconSvg>
+  );
+}
+
+function ExportCapsuleIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M5.2 13.1v4.6c0 1.1.9 2 2 2h9.6c1.1 0 2-.9 2-2v-4.6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+      <path d="M12 3.8v10.1M8.2 10.1l3.8 3.8 3.8-3.8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+      <path d="M7.4 6.2h9.2" stroke="currentColor" strokeLinecap="round" strokeWidth="1.2" />
+    </IconSvg>
+  );
+}
+
+function BuilderGlyphIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M4.8 17.8 15.9 6.7l1.4 1.4L6.2 19.2H4.8v-1.4Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.7" />
+      <path d="M15.2 3.8 20.2 8.8M5.5 5.7h3.2M7.1 4.1v3.2M17.2 15.9h2.8M18.6 14.5v2.8" stroke="currentColor" strokeLinecap="round" strokeWidth="1.6" />
+    </IconSvg>
+  );
+}
+
+function PackageSealIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M12 2.9 19.6 7v8.8L12 21.1l-7.6-5.3V7L12 2.9Z" stroke="currentColor" strokeWidth="1.7" />
+      <path d="m8.2 12.2 2.5 2.5 5-5.2" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.9" />
+      <path d="m4.9 7.3 7.1 4.1 7.1-4.1" stroke="currentColor" strokeLinecap="round" strokeWidth="1.3" />
+    </IconSvg>
+  );
+}
+
+function DragHandleIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M8.2 5.2h7.6M8.2 12h7.6M8.2 18.8h7.6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.9" />
+      <path d="m6.2 7.1 2-1.9-2-1.9M17.8 3.3l-2 1.9 2 1.9M6.2 20.7l2-1.9-2-1.9M17.8 16.9l-2 1.9 2 1.9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.35" />
+    </IconSvg>
+  );
+}
+
+function AddNodeIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.35" />
+    </IconSvg>
+  );
+}
+
+function RemoveNodeIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="M7.2 7.2 16.8 16.8M16.8 7.2 7.2 16.8" stroke="currentColor" strokeLinecap="round" strokeWidth="1.9" />
+      <path d="M4.8 6.8 12 2.9l7.2 3.9v10.4L12 21.1l-7.2-3.9V6.8Z" stroke="currentColor" strokeWidth="1.35" />
+    </IconSvg>
+  );
+}
+
+function ProofSparkIcon(props: IconProps) {
+  return (
+    <IconSvg {...props}>
+      <path d="m12 3.3 1.5 5.2 5.2 1.5-5.2 1.5-1.5 5.2-1.5-5.2-5.2-1.5 5.2-1.5L12 3.3Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.7" />
+      <path d="m18.6 15.4.6 2.1 2.1.6-2.1.6-.6 2.1-.6-2.1-2.1-.6 2.1-.6.6-2.1Z" fill="currentColor" />
+    </IconSvg>
+  );
+}
 
 const palette: BuilderBlock[] = [
   {
@@ -58,11 +180,11 @@ const palette: BuilderBlock[] = [
 ];
 
 const kindIcons: Record<BlockKind, ReactNode> = {
-  soul: <Brain size={18} />,
-  model: <Network size={18} />,
-  memory: <Database size={18} />,
-  skill: <Boxes size={18} />,
-  workflow: <Route size={18} />,
+  soul: <SoulSigilIcon size={18} />,
+  model: <ComputeOrbitIcon size={18} />,
+  memory: <StorageShardIcon size={18} />,
+  skill: <SkillSocketIcon size={18} />,
+  workflow: <WorkflowRailIcon size={18} />,
 };
 
 const kindLabels: Record<BlockKind, string> = {
@@ -241,7 +363,7 @@ function App() {
         <div className={`${panelClass} min-h-[480px] p-8 md:p-11`}>
           <div className="relative z-10 flex w-fit items-center gap-2.5 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs font-black uppercase tracking-[0.08em] text-cyan-100 shadow-[0_0_34px_rgba(0,245,255,0.12)]">
             <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_18px_#34d399]" />
-            ETHGlobal OpenAgents · 0G Track · Agent Factory
+            ClawBuilder 0G · no-code agent foundry
           </div>
           <h1 className="relative z-10 my-5 max-w-5xl text-[clamp(46px,7vw,104px)] font-black leading-[0.88] tracking-[-0.085em]">
             Drag, drop, and export <span>0G-native OpenClaw agents.</span>
@@ -265,14 +387,14 @@ function App() {
               onClick={exportPackage}
               disabled={exporting}
             >
-              <ArrowDownToLine size={18} />
+              <ExportCapsuleIcon size={18} />
               {exporting ? "Building package..." : "Export agent package"}
             </button>
             <a
               className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-5 py-3.5 font-bold text-blue-100 no-underline transition hover:-translate-y-0.5"
               href="#builder"
             >
-              <Wand2 size={18} />
+              <BuilderGlyphIcon size={18} />
               Customize builder
             </a>
           </div>
@@ -284,10 +406,10 @@ function App() {
           >
             <span className="absolute size-[146px] rounded-full border border-cyan-300/25" />
             <span className="absolute h-[84px] w-[190px] rotate-[-24deg] rounded-full border border-violet-300/30" />
-            <PackageCheck size={34} />
+            <PackageSealIcon size={34} />
           </div>
           <div className="relative z-10 flex items-center gap-2 text-sm font-black text-slate-50">
-            <Sparkles size={16} />
+            <ProofSparkIcon size={16} />
             0G-native export stack
           </div>
           <div className="relative z-10 grid gap-2 rounded-3xl border border-cyan-300/15 bg-cyan-300/[0.055] p-3.5">
@@ -307,7 +429,7 @@ function App() {
       <section className="grid items-start gap-4 xl:grid-cols-[280px_minmax(440px,1fr)_450px]">
         <aside className={`${panelClass} xl:sticky xl:top-4`}>
           <div className={panelTitleClass}>
-            <Layers3 size={18} />
+            <SkillSocketIcon size={18} />
             Drag blocks
           </div>
           {palette.map((block) => (
@@ -329,7 +451,7 @@ function App() {
 
         <section className={panelClass} id="builder">
           <div className={panelTitleClass}>
-            <Wand2 size={18} />
+            <BuilderGlyphIcon size={18} />
             Agent builder canvas
           </div>
           <div
@@ -351,7 +473,7 @@ function App() {
                 }}
               >
                 <div className={`${iconTileClass} size-[34px]`}>
-                  <GripVertical size={18} />
+                  <DragHandleIcon size={18} />
                 </div>
                 <div className="inline-flex justify-center rounded-full border border-violet-200/20 bg-gradient-to-br from-violet-500/25 to-cyan-500/10 px-2.5 py-1.5 text-xs font-black uppercase text-violet-100">
                   {kindLabels[block.kind]}
@@ -367,7 +489,7 @@ function App() {
 
         <section className={`${panelClass} xl:sticky xl:top-4`}>
           <div className={panelTitleClass}>
-            <PackageCheck size={18} />
+            <PackageSealIcon size={18} />
             Live export preview
           </div>
           <div className="relative z-10 mb-3 flex gap-2">
@@ -411,7 +533,7 @@ function App() {
       <section className="mt-4 grid gap-4 lg:grid-cols-3">
         <section className={panelClass}>
           <div className={panelTitleClass}>
-            <Brain size={18} />
+            <SoulSigilIcon size={18} />
             Identity
           </div>
           <label className={labelClass}>
@@ -430,7 +552,7 @@ function App() {
 
         <section className={panelClass}>
           <div className={panelTitleClass}>
-            <Network size={18} />
+            <ComputeOrbitIcon size={18} />
             0G Compute
           </div>
           <label className={labelClass}>
@@ -458,7 +580,7 @@ function App() {
 
         <section className={panelClass}>
           <div className={panelTitleClass}>
-            <Database size={18} />
+            <StorageShardIcon size={18} />
             0G Storage memory
           </div>
           <label className={labelClass}>
@@ -484,11 +606,11 @@ function App() {
         <section className={panelClass}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
-              <Boxes size={18} />
+              <SkillSocketIcon size={18} />
               Skills
             </span>
             <button className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-cyan-500/30 to-violet-500/25 px-3 py-2 text-sm font-extrabold text-white transition hover:-translate-y-0.5" onClick={addSkill}>
-              <Plus size={16} />
+              <AddNodeIcon size={16} />
               Add
             </button>
           </div>
@@ -519,7 +641,7 @@ function App() {
                   onClick={() => removeSkill(skill.id)}
                   aria-label={`Remove ${skill.name}`}
                 >
-                  <Trash2 size={16} />
+                  <RemoveNodeIcon size={16} />
                 </button>
               </article>
             ))}
@@ -529,11 +651,11 @@ function App() {
         <section className={panelClass}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
-              <Route size={18} />
+              <WorkflowRailIcon size={18} />
               Workflow
             </span>
             <button className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-cyan-500/30 to-violet-500/25 px-3 py-2 text-sm font-extrabold text-white transition hover:-translate-y-0.5" onClick={addWorkflowStep}>
-              <Plus size={16} />
+              <AddNodeIcon size={16} />
               Add
             </button>
           </div>
@@ -553,7 +675,7 @@ function App() {
                   onClick={() => removeWorkflowStep(step.id)}
                   aria-label={`Remove ${step.title}`}
                 >
-                  <Trash2 size={16} />
+                  <RemoveNodeIcon size={16} />
                 </button>
               </article>
             ))}
