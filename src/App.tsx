@@ -1,4 +1,5 @@
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import * as THREE from "three";
 import {
   ZERO_G_ROUTER_URL,
   buildAgentZip,
@@ -204,15 +205,15 @@ const heroStats = [
 const proofSteps = ["SOUL.md", "MEMORY.md", "SKILL.md", "manifest.0g.json"];
 
 const panelClass =
-  "relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 shadow-[0_28px_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_12%_0%,rgba(34,211,238,0.14),transparent_28%),radial-gradient(circle_at_100%_0%,rgba(168,85,247,0.14),transparent_28%)]";
+  "relative overflow-hidden rounded-3xl border border-white/10 bg-black p-5 shadow-[0_20px_70px_rgba(0,0,0,0.55)]";
 const panelTitleClass = "relative z-10 mb-4 flex items-center gap-2.5 font-black text-slate-50";
 const inputClass =
-  "w-full rounded-2xl border border-white/10 bg-slate-950/75 px-3 py-2.5 text-slate-50 outline-none transition focus:border-cyan-300/60 focus:ring-4 focus:ring-cyan-300/10";
+  "w-full rounded-2xl border border-white/10 bg-black px-3 py-2.5 text-slate-50 outline-none transition focus:border-cyan-300/60 focus:ring-4 focus:ring-cyan-300/10";
 const labelClass = "relative z-10 mb-3 grid gap-2 text-xs font-black uppercase tracking-[0.08em] text-slate-400";
 const glassRowClass =
-  "relative z-10 border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.025] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition hover:border-cyan-300/30 hover:from-cyan-300/10 hover:to-violet-400/10";
+  "relative z-10 border border-white/10 bg-[#050505] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:border-cyan-300/30 hover:bg-[#080808]";
 const iconTileClass =
-  "grid place-items-center rounded-2xl bg-gradient-to-br from-cyan-400/20 to-violet-500/20 text-cyan-100 shadow-[inset_0_0_18px_rgba(34,211,238,0.08)]";
+  "grid place-items-center rounded-2xl border border-cyan-300/10 bg-cyan-300/10 text-cyan-100";
 
 function slugify(value: string) {
   return value
@@ -220,6 +221,123 @@ function slugify(value: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 48);
+}
+
+function HeroScene() {
+  const mountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const currentMount = mountRef.current;
+    if (!currentMount) return;
+    const mountElement: HTMLDivElement = currentMount;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(0, 0.1, 7);
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+    mountElement.append(renderer.domElement);
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const core = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.25, 1),
+      new THREE.MeshStandardMaterial({
+        color: 0x101827,
+        emissive: 0x0e7490,
+        emissiveIntensity: 0.28,
+        metalness: 0.42,
+        roughness: 0.24,
+      }),
+    );
+    group.add(core);
+
+    const shell = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.72, 1),
+      new THREE.MeshBasicMaterial({ color: 0x67e8f9, transparent: true, opacity: 0.08, wireframe: true }),
+    );
+    group.add(shell);
+
+    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.38 });
+    for (const [index, rotation] of [
+      [0, 0],
+      [Math.PI / 2.7, Math.PI / 5],
+      [-Math.PI / 3.2, Math.PI / 1.8],
+    ].entries()) {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(2.2 + index * 0.18, 0.01, 12, 120), ringMaterial);
+      ring.rotation.set(rotation[0], rotation[1], index * 0.42);
+      group.add(ring);
+    }
+
+    const pointsGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(140 * 3);
+    for (let i = 0; i < 140; i += 1) {
+      const radius = 2.8 + Math.random() * 1.7;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = radius * Math.cos(phi);
+    }
+    pointsGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    const particles = new THREE.Points(
+      pointsGeometry,
+      new THREE.PointsMaterial({ color: 0x67e8f9, size: 0.025, transparent: true, opacity: 0.65 }),
+    );
+    group.add(particles);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 1.4));
+    const cyanLight = new THREE.PointLight(0x67e8f9, 18, 12);
+    cyanLight.position.set(3, 2, 4);
+    scene.add(cyanLight);
+    const violetLight = new THREE.PointLight(0xa78bfa, 16, 12);
+    violetLight.position.set(-3, -2, 3);
+    scene.add(violetLight);
+
+    let frame = 0;
+    let animationId = 0;
+
+    function resize() {
+      const { clientWidth, clientHeight } = mountElement;
+      renderer.setSize(clientWidth, clientHeight, false);
+      camera.aspect = clientWidth / Math.max(clientHeight, 1);
+      camera.updateProjectionMatrix();
+    }
+
+    function animate() {
+      frame += 0.01;
+      group.rotation.y = frame * 0.55;
+      group.rotation.x = Math.sin(frame * 0.7) * 0.18;
+      shell.rotation.y = -frame * 0.85;
+      particles.rotation.y = frame * 0.16;
+      renderer.render(scene, camera);
+      animationId = window.requestAnimationFrame(animate);
+    }
+
+    const observer = new ResizeObserver(resize);
+    observer.observe(mountElement);
+    resize();
+    animate();
+
+    return () => {
+      window.cancelAnimationFrame(animationId);
+      observer.disconnect();
+      renderer.dispose();
+      pointsGeometry.dispose();
+      core.geometry.dispose();
+      shell.geometry.dispose();
+      core.material.dispose();
+      shell.material.dispose();
+      ringMaterial.dispose();
+      particles.material.dispose();
+      mountElement.removeChild(renderer.domElement);
+    };
+  }, []);
+
+  return <div aria-hidden="true" className="absolute inset-0" ref={mountRef} />;
 }
 
 function App() {
@@ -354,71 +472,88 @@ function App() {
           };
 
   return (
-    <main className="relative mx-auto w-[min(1500px,calc(100vw-32px))] px-0 py-8 text-slate-50">
-      <div className="pointer-events-none fixed -left-40 -top-44 -z-10 size-[560px] rounded-full bg-[radial-gradient(circle,rgba(0,245,255,0.48),rgba(0,245,255,0.05)_58%,transparent_72%)] opacity-50 blur-3xl" />
-      <div className="pointer-events-none fixed -right-48 bottom-[6%] -z-10 size-[560px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.52),rgba(244,63,94,0.08)_54%,transparent_72%)] opacity-50 blur-3xl" />
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(circle_at_top,black,transparent_68%)]" />
+    <main className="relative mx-auto w-[min(1180px,calc(100vw-32px))] px-0 py-6 text-slate-50">
+      <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[520px] bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.12),transparent_34rem)]" />
 
-      <section className="mb-5 grid items-stretch gap-5 xl:grid-cols-[minmax(0,1.18fr)_minmax(360px,0.58fr)]">
-        <div className={`${panelClass} min-h-[480px] p-8 md:p-11`}>
-          <div className="relative z-10 flex w-fit items-center gap-2.5 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs font-black uppercase tracking-[0.08em] text-cyan-100 shadow-[0_0_34px_rgba(0,245,255,0.12)]">
-            <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_18px_#34d399]" />
+      <nav className="mb-10 flex items-center justify-between rounded-full border border-white/10 bg-black px-4 py-3">
+        <div className="flex items-center gap-3">
+          <div className="grid size-9 place-items-center rounded-full border border-cyan-300/20 bg-cyan-300/10 text-cyan-100">
+            <BuilderGlyphIcon size={18} />
+          </div>
+          <span className="text-sm font-black tracking-[-0.02em]">ClawBuilder 0G</span>
+        </div>
+        <div className="hidden items-center gap-5 text-xs font-bold text-slate-400 sm:flex">
+          <a className="transition hover:text-white" href="#builder">Builder</a>
+          <a className="transition hover:text-white" href="#config">Config</a>
+          <a className="transition hover:text-white" href="#export-preview">Export</a>
+        </div>
+      </nav>
+
+      <section className="mb-10 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
+        <div className="py-8">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-cyan-100">
+            <span className="size-2 rounded-full bg-emerald-400" />
             ClawBuilder 0G · no-code agent foundry
           </div>
-          <h1 className="relative z-10 my-5 max-w-5xl text-[clamp(46px,7vw,104px)] font-black leading-[0.88] tracking-[-0.085em]">
-            Drag, drop, and export <span>0G-native OpenClaw agents.</span>
+          <h1 className="max-w-4xl text-[clamp(44px,7vw,80px)] font-bold leading-[0.96] tracking-[-0.075em] text-white">
+            Build 0G agents without touching runtime files.
           </h1>
-          <p className="relative z-10 max-w-3xl text-lg leading-8 text-slate-300">
-            ClawBuilder 0G is a FastClaw-style no-code builder for portable agents with
-            <strong> 0G Compute</strong> as the OpenAI-compatible brain and
-            <strong> 0G Storage</strong> as the package, memory, and run-log layer.
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+            A focused visual builder for OpenClaw/FastClaw-style agent packages. Configure persona,
+            model, memory, skills, and workflow, then export a ready-to-run 0G package.
           </p>
-          <div className="relative z-10 mt-7 grid max-w-3xl gap-2.5 md:grid-cols-3" aria-label="Builder capabilities">
-            {heroStats.map((stat) => (
-              <div className="rounded-3xl border border-white/10 bg-white/[0.055] p-3.5" key={stat.label}>
-                <span className="block text-[11px] font-black uppercase tracking-[0.08em] text-slate-400">{stat.label}</span>
-                <strong className="mt-1.5 block text-sm text-white">{stat.value}</strong>
-              </div>
-            ))}
-          </div>
-          <div className="relative z-10 mt-7 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200"
+              href="#builder"
+            >
+              <BuilderGlyphIcon size={18} />
+              Open builder
+            </a>
             <button
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-violet-500 via-cyan-500 to-cyan-300 px-5 py-3.5 font-black text-white shadow-[0_16px_38px_rgba(6,182,212,0.25),inset_0_0_0_1px_rgba(255,255,255,0.18)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-5 py-3 text-sm font-bold text-slate-100 transition hover:-translate-y-0.5 hover:border-cyan-300/40 disabled:cursor-not-allowed disabled:opacity-70"
               onClick={exportPackage}
               disabled={exporting}
             >
               <ExportCapsuleIcon size={18} />
-              {exporting ? "Building package..." : "Export agent package"}
+              {exporting ? "Building package..." : "Export starter package"}
             </button>
-            <a
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-5 py-3.5 font-bold text-blue-100 no-underline transition hover:-translate-y-0.5"
-              href="#builder"
-            >
-              <BuilderGlyphIcon size={18} />
-              Customize builder
-            </a>
           </div>
         </div>
-        <div className={`${panelClass} flex flex-col items-stretch justify-center gap-5 p-7`}>
-          <div
-            className="relative mx-auto mb-2 grid size-[210px] place-items-center rounded-full border border-cyan-300/15 bg-[radial-gradient(circle,rgba(103,232,249,0.24),rgba(124,58,237,0.10)_44%,transparent_68%)] text-sky-100 shadow-[0_0_90px_rgba(103,232,249,0.14),inset_0_0_48px_rgba(103,232,249,0.10)]"
-            aria-hidden="true"
-          >
-            <span className="absolute size-[146px] rounded-full border border-cyan-300/25" />
-            <span className="absolute h-[84px] w-[190px] rotate-[-24deg] rounded-full border border-violet-300/30" />
-            <PackageSealIcon size={34} />
+
+        <div className={`${panelClass} p-4`}>
+          <div className="relative min-h-[330px] overflow-hidden rounded-[1.55rem] border border-cyan-300/10 bg-[radial-gradient(circle_at_50%_22%,rgba(103,232,249,0.14),transparent_42%),linear-gradient(180deg,rgba(0,0,0,1),rgba(0,0,0,0.82))]">
+            <HeroScene />
+            <div className="absolute left-4 top-4 rounded-full border border-cyan-300/20 bg-black/70 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.1em] text-cyan-100 backdrop-blur-md">
+              0G-native export stack
+            </div>
+            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-black/80 p-4 shadow-2xl backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <div className="grid size-10 place-items-center rounded-2xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-100">
+                  <PackageSealIcon size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Generated package</p>
+                  <h2 className="text-lg font-black tracking-[-0.03em] text-white">OpenClaw files, 0G defaults</h2>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="relative z-10 flex items-center gap-2 text-sm font-black text-slate-50">
-            <ProofSparkIcon size={16} />
-            0G-native export stack
+          <div className="mt-4 grid gap-3">
+            <div className="rounded-2xl border border-white/10 bg-[#050505] p-4">
+              <span className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">Provider preset</span>
+              <code className="mt-2 block">{ZERO_G_ROUTER_URL}</code>
+            </div>
+            {heroStats.map((stat) => (
+              <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-[#050505] px-4 py-3" key={stat.label}>
+                <span className="text-sm font-bold text-slate-400">{stat.label}</span>
+                <strong className="text-sm text-white">{stat.value}</strong>
+              </div>
+            ))}
           </div>
-          <div className="relative z-10 grid gap-2 rounded-3xl border border-cyan-300/15 bg-cyan-300/[0.055] p-3.5">
-            <span className="block text-[11px] font-black uppercase tracking-[0.08em] text-slate-400">Provider preset</span>
-            <code>{ZERO_G_ROUTER_URL}</code>
-          </div>
-          <div className="relative z-10 grid grid-cols-2 gap-2.5">
+          <div className="mt-5 flex flex-wrap gap-2">
             {proofSteps.map((step) => (
-              <span className="rounded-2xl border border-white/10 bg-white/[0.045] p-3 text-xs font-extrabold text-indigo-100" key={step}>
+              <span className="rounded-full border border-white/10 bg-[#050505] px-3 py-1.5 text-xs font-bold text-slate-300" key={step}>
                 {step}
               </span>
             ))}
@@ -426,7 +561,7 @@ function App() {
         </div>
       </section>
 
-      <section className="grid items-start gap-4 xl:grid-cols-[280px_minmax(440px,1fr)_450px]">
+      <section className="grid items-start gap-4 xl:grid-cols-[260px_minmax(420px,1fr)_390px]">
         <aside className={`${panelClass} xl:sticky xl:top-4`}>
           <div className={panelTitleClass}>
             <SkillSocketIcon size={18} />
@@ -455,7 +590,7 @@ function App() {
             Agent builder canvas
           </div>
           <div
-            className="relative z-10 min-h-[570px] rounded-3xl border border-dashed border-cyan-300/30 bg-[radial-gradient(circle_at_top_left,rgba(103,232,249,0.10),transparent_34%),linear-gradient(180deg,rgba(103,232,249,0.055),rgba(168,85,247,0.055))] p-2.5"
+            className="relative z-10 min-h-[520px] rounded-3xl border border-dashed border-white/15 bg-black p-2.5"
             onDragOver={(event) => event.preventDefault()}
             onDrop={() => handleDrop(builderBlocks.length)}
           >
@@ -475,7 +610,7 @@ function App() {
                 <div className={`${iconTileClass} size-[34px]`}>
                   <DragHandleIcon size={18} />
                 </div>
-                <div className="inline-flex justify-center rounded-full border border-violet-200/20 bg-gradient-to-br from-violet-500/25 to-cyan-500/10 px-2.5 py-1.5 text-xs font-black uppercase text-violet-100">
+                <div className="inline-flex justify-center rounded-full border border-cyan-300/15 bg-cyan-300/10 px-2.5 py-1.5 text-xs font-black uppercase text-cyan-100">
                   {kindLabels[block.kind]}
                 </div>
                 <div>
@@ -487,7 +622,7 @@ function App() {
           </div>
         </section>
 
-        <section className={`${panelClass} xl:sticky xl:top-4`}>
+        <section className={`${panelClass} xl:sticky xl:top-4`} id="export-preview">
           <div className={panelTitleClass}>
             <PackageSealIcon size={18} />
             Live export preview
@@ -496,8 +631,8 @@ function App() {
             <button
               className={`rounded-full px-3 py-2 transition hover:-translate-y-0.5 ${
                 activeTab === "manifest"
-                  ? "bg-gradient-to-br from-cyan-500/35 to-violet-500/30 text-white shadow-[0_0_22px_rgba(6,182,212,0.14)]"
-                  : "bg-white/[0.06] text-slate-400"
+                  ? "bg-cyan-300 text-slate-950"
+                  : "bg-[#050505] text-slate-400"
               }`}
               onClick={() => setActiveTab("manifest")}
             >
@@ -506,8 +641,8 @@ function App() {
             <button
               className={`rounded-full px-3 py-2 transition hover:-translate-y-0.5 ${
                 activeTab === "agent"
-                  ? "bg-gradient-to-br from-cyan-500/35 to-violet-500/30 text-white shadow-[0_0_22px_rgba(6,182,212,0.14)]"
-                  : "bg-white/[0.06] text-slate-400"
+                  ? "bg-cyan-300 text-slate-950"
+                  : "bg-[#050505] text-slate-400"
               }`}
               onClick={() => setActiveTab("agent")}
             >
@@ -516,21 +651,21 @@ function App() {
             <button
               className={`rounded-full px-3 py-2 transition hover:-translate-y-0.5 ${
                 activeTab === "storage"
-                  ? "bg-gradient-to-br from-cyan-500/35 to-violet-500/30 text-white shadow-[0_0_22px_rgba(6,182,212,0.14)]"
-                  : "bg-white/[0.06] text-slate-400"
+                  ? "bg-cyan-300 text-slate-950"
+                  : "bg-[#050505] text-slate-400"
               }`}
               onClick={() => setActiveTab("storage")}
             >
               0G Storage
             </button>
           </div>
-          <pre className="relative z-10 m-0 max-h-[512px] min-h-[512px] overflow-auto rounded-3xl border border-cyan-300/15 bg-slate-950/80 p-4 text-xs text-cyan-100">
+          <pre className="relative z-10 m-0 max-h-[512px] min-h-[512px] overflow-auto rounded-3xl border border-white/10 bg-black p-4 text-xs text-cyan-100">
             {JSON.stringify(preview, null, 2)}
           </pre>
         </section>
       </section>
 
-      <section className="mt-4 grid gap-4 lg:grid-cols-3">
+      <section className="mt-4 grid gap-4 lg:grid-cols-3" id="config">
         <section className={panelClass}>
           <div className={panelTitleClass}>
             <SoulSigilIcon size={18} />
