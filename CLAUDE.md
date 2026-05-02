@@ -14,14 +14,17 @@ Package manager is **bun** (`packageManager: bun@1.3.13`).
 
 ```bash
 bun install
-bun run dev        # vite dev server
-bun run build      # tsc -b && vite build
-bun run typecheck  # tsc -b
-bun run lint       # tsc -b --pretty false (lint == typecheck; there is no eslint)
-bun run preview    # preview built assets
+bun run dev          # vite dev server
+bun run build        # tsc -b && vite build
+bun run typecheck    # tsc -b
+bun run lint         # oxlint
+bun run lint:fix     # oxlint --fix
+bun run format       # oxfmt (writes)
+bun run format:check # oxfmt --check
+bun run preview      # preview built assets
 ```
 
-There is no test suite. "Lint" is just the TypeScript build — treat type errors as lint errors.
+There is no test suite. Linting is `oxlint`; formatting is `oxfmt`. Run typecheck separately — it's not part of `lint`.
 
 ## Architecture
 
@@ -62,11 +65,11 @@ Generated agents always declare an OpenAI-compatible provider pointed at `https:
 - TypeScript strict; the build command runs `tsc -b` against project references (`tsconfig.app.json` for app, `tsconfig.node.json` for build tooling).
 - No router, no state library — `App.tsx` owns all state via `useState`.
 - Imports use relative paths (no path aliases configured).
-- Don't introduce a backend, server-side rendering, or persistence — the product is intentionally client-only and the export *is* the output.
+- Don't introduce a backend, server-side rendering, or persistence — the product is intentionally client-only and the export _is_ the output.
 
 ## Environment
 
-`.env.example` lists placeholders consumed by the *generated* agent runtime, not by the builder app itself:
+`.env.example` lists placeholders consumed by the _generated_ agent runtime, not by the builder app itself:
 
 - `OG_API_KEY` — 0G Compute router key
 - `OG_STORAGE_PRIVATE_KEY` — wallet for 0G Storage uploads
