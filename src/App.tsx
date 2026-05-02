@@ -1,4 +1,11 @@
-import { type DragEvent as ReactDragEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type DragEvent as ReactDragEvent,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Background,
   BackgroundVariant,
@@ -26,7 +33,15 @@ import {
 } from "./agentPackage";
 import { agentTemplates } from "./agentTemplates";
 import { skillPacks } from "./skillPacks";
-import type { AgentDraft, AgentTemplate, BlockKind, BuilderBlock, SkillDraft, SkillPack, WorkflowStep } from "./types";
+import type {
+  AgentDraft,
+  AgentTemplate,
+  BlockKind,
+  BuilderBlock,
+  SkillDraft,
+  SkillPack,
+  WorkflowStep,
+} from "./types";
 
 const palette: BuilderBlock[] = [
   {
@@ -81,7 +96,14 @@ type NucleoIconName =
   | "window";
 
 function NucleoIcon({ name, className = "size-6" }: { name: NucleoIconName; className?: string }) {
-  return <img alt="" aria-hidden="true" className={`${className} object-contain`} src={`/nucleo-glass/${name}.svg`} />;
+  return (
+    <img
+      alt=""
+      aria-hidden="true"
+      className={`${className} object-contain`}
+      src={`/nucleo-glass/${name}.svg`}
+    />
+  );
 }
 
 function BrandMark({ className = "size-10" }: { className?: string }) {
@@ -125,7 +147,8 @@ const panelClass =
 const panelTitleClass = "relative z-10 mb-4 flex items-center gap-2.5 font-semibold text-[#fafafa]";
 const inputClass =
   "w-full rounded-2xl border border-white/10 bg-black px-3 py-2.5 text-[#fafafa] outline-none transition placeholder:text-zinc-500 focus:border-white/45 focus:ring-4 focus:ring-white/8";
-const labelClass = "mono-font relative z-10 mb-3 grid gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400";
+const labelClass =
+  "mono-font relative z-10 mb-3 grid gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400";
 const glassRowClass =
   "relative z-10 border border-white/10 bg-[linear-gradient(180deg,rgba(10,10,10,0.92),rgba(0,0,0,0.92))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-white/25 hover:bg-[#0b0b0b]";
 const iconTileClass =
@@ -135,12 +158,9 @@ const buttonIconClass = `${iconTileClass} size-7 rounded-full text-current shado
 const ctaIconClass = "grid size-6 shrink-0 place-items-center";
 const buttonDepthClass =
   "shadow-[0_6px_0_rgba(255,255,255,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(255,255,255,0.08)] active:translate-y-1 active:shadow-[0_2px_0_rgba(255,255,255,0.08)]";
-const primaryButtonClass =
-  "border border-white bg-[#fafafa] text-black hover:bg-white";
-const heroSecondaryButtonClass =
-  "border border-white/70 bg-[#fafafa] text-black hover:bg-white";
-const secondaryButtonClass =
-  "border border-white/15 bg-black text-[#fafafa] hover:border-white/40";
+const primaryButtonClass = "border border-white bg-[#fafafa] text-black hover:bg-white";
+const heroSecondaryButtonClass = "border border-white/70 bg-[#fafafa] text-black hover:bg-white";
+const secondaryButtonClass = "border border-white/15 bg-black text-[#fafafa] hover:border-white/40";
 const chipClass =
   "mono-font rounded-full border border-white/12 bg-white/[0.055] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-100";
 const flowEdgeStroke = "rgba(250, 250, 250, 0.58)";
@@ -188,7 +208,11 @@ function createFlowNode(block: BuilderBlock, index: number): BuilderNode {
   };
 }
 
-function createPackFlowNode(pack: SkillPack, index: number, position?: { x: number; y: number }): BuilderNode {
+function createPackFlowNode(
+  pack: SkillPack,
+  index: number,
+  position?: { x: number; y: number },
+): BuilderNode {
   return {
     id: `pack-${pack.id}`,
     type: "builderBlock",
@@ -359,9 +383,26 @@ function HeroScene() {
         const sourceVertex = projected[source];
         const targetVertex = projected[target];
         const offset = index * 6;
-        tesseractPositions.set([sourceVertex.x, sourceVertex.y, sourceVertex.z, targetVertex.x, targetVertex.y, targetVertex.z], offset);
+        tesseractPositions.set(
+          [
+            sourceVertex.x,
+            sourceVertex.y,
+            sourceVertex.z,
+            targetVertex.x,
+            targetVertex.y,
+            targetVertex.z,
+          ],
+          offset,
+        );
         shadowPositions.set(
-          [sourceVertex.x + 0.08, sourceVertex.y - 0.08, sourceVertex.z - 0.1, targetVertex.x + 0.08, targetVertex.y - 0.08, targetVertex.z - 0.1],
+          [
+            sourceVertex.x + 0.08,
+            sourceVertex.y - 0.08,
+            sourceVertex.z - 0.1,
+            targetVertex.x + 0.08,
+            targetVertex.y - 0.08,
+            targetVertex.z - 0.1,
+          ],
           offset,
         );
       });
@@ -421,14 +462,16 @@ function HeroScene() {
 function BuilderFlowNode({ data }: { data: BuilderNodeData }) {
   return (
     <div className={`${glassRowClass} w-[230px] rounded-[1.25rem] p-3.5`}>
-      <Handle className="!size-3 !border !border-white/80 !bg-white" position={Position.Top} type="target" />
+      <Handle
+        className="!size-3 !border !border-white/80 !bg-white"
+        position={Position.Top}
+        type="target"
+      />
       <div className="grid grid-cols-[36px_1fr] gap-3">
         <div className={`${iconTileClass} size-9`}>{kindIcons[data.kind]}</div>
         <div>
           <div className="mb-1 flex flex-wrap items-center gap-1.5">
-            <span className={chipClass}>
-              {kindLabels[data.kind]}
-            </span>
+            <span className={chipClass}>{kindLabels[data.kind]}</span>
             {data.count ? (
               <span className="inline-flex rounded-full border border-white/12 bg-white/[0.06] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-200">
                 {data.count} skills
@@ -436,11 +479,21 @@ function BuilderFlowNode({ data }: { data: BuilderNodeData }) {
             ) : null}
           </div>
           <h3 className="mb-1 text-lg leading-none text-[#fafafa]">{data.title}</h3>
-          <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">{data.summary}</p>
-          {data.category ? <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-200">{data.category}</p> : null}
+          <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">
+            {data.summary}
+          </p>
+          {data.category ? (
+            <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-200">
+              {data.category}
+            </p>
+          ) : null}
         </div>
       </div>
-      <Handle className="!size-3 !border !border-white/80 !bg-white" position={Position.Bottom} type="source" />
+      <Handle
+        className="!size-3 !border !border-white/80 !bg-white"
+        position={Position.Bottom}
+        type="source"
+      />
     </div>
   );
 }
@@ -481,7 +534,8 @@ function BuilderFlowCanvas({
 
   function handleDrop(event: ReactDragEvent<HTMLDivElement>) {
     event.preventDefault();
-    const droppedBlockId = event.dataTransfer.getData("application/x-tessra-block") || draggedBlockId;
+    const droppedBlockId =
+      event.dataTransfer.getData("application/x-tessra-block") || draggedBlockId;
     const droppedPackId = event.dataTransfer.getData("application/x-tessra-pack") || draggedPackId;
     const paletteBlock = palette.find((block) => block.id === droppedBlockId);
     const position = screenToFlowPosition({
@@ -528,7 +582,12 @@ function BuilderFlowCanvas({
         onNodesChange={onNodesChange}
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="rgba(255, 255, 255, 0.16)" gap={24} size={1} variant={BackgroundVariant.Dots} />
+        <Background
+          color="rgba(255, 255, 255, 0.16)"
+          gap={24}
+          size={1}
+          variant={BackgroundVariant.Dots}
+        />
       </ReactFlow>
       <div className="absolute bottom-4 left-4 z-20 flex flex-col items-center gap-2 rounded-full border border-white/12 bg-black/80 p-1.5 shadow-[0_7px_0_rgba(255,255,255,0.04)] backdrop-blur-md">
         <button
@@ -565,7 +624,10 @@ function BuilderFlowCanvas({
 
 function App() {
   const [agent, setAgent] = useState<AgentDraft>(starterAgent);
-  const initialNodes = useMemo(() => palette.map((block, index) => createFlowNode(createCanvasBlock(block), index)), []);
+  const initialNodes = useMemo(
+    () => palette.map((block, index) => createFlowNode(createCanvasBlock(block), index)),
+    [],
+  );
   const initialEdges = useMemo(() => createFlowEdges(initialNodes), [initialNodes]);
   const [nodes, setNodes, onNodesChange] = useNodesState<BuilderNode>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<BuilderEdge>(initialEdges);
@@ -579,7 +641,13 @@ function App() {
   const agentConfig = useMemo(() => createAgentConfig(agent), [agent]);
   const installedPackIds = useMemo(
     () =>
-      Array.from(new Set(agent.skills.map((skill) => skill.packId).filter((packId): packId is string => Boolean(packId)))),
+      Array.from(
+        new Set(
+          agent.skills
+            .map((skill) => skill.packId)
+            .filter((packId): packId is string => Boolean(packId)),
+        ),
+      ),
     [agent.skills],
   );
   const canvasSkills = useMemo(() => manifest.skills.length, [manifest.skills.length]);
@@ -589,7 +657,13 @@ function App() {
     if (!query) return skillPacks;
 
     return skillPacks.filter((pack) =>
-      [pack.name, pack.category, pack.summary, pack.recommendedFor, ...pack.skills.map((skill) => `${skill.name} ${skill.description}`)]
+      [
+        pack.name,
+        pack.category,
+        pack.summary,
+        pack.recommendedFor,
+        ...pack.skills.map((skill) => `${skill.name} ${skill.description}`),
+      ]
         .join(" ")
         .toLowerCase()
         .includes(query),
@@ -674,7 +748,8 @@ function App() {
     });
     setEdges((currentEdges) => {
       const source = findBuilderNodeId(nodes, "skill") ?? nodes.at(-1)?.id;
-      if (!source || currentEdges.some((edge) => edge.target === `pack-${pack.id}`)) return currentEdges;
+      if (!source || currentEdges.some((edge) => edge.target === `pack-${pack.id}`))
+        return currentEdges;
       return currentEdges.concat(createFlowEdge(source, `pack-${pack.id}`));
     });
   }
@@ -686,7 +761,10 @@ function App() {
       const skillsToAdd = createSkillsFromPacks(visiblePackIds, current.skills);
 
       for (const pack of filteredSkillPacks) {
-        if (!current.memory.includes(pack.name) && skillsToAdd.some((skill) => skill.packId === pack.id)) {
+        if (
+          !current.memory.includes(pack.name) &&
+          skillsToAdd.some((skill) => skill.packId === pack.id)
+        ) {
           memoryNotes.push(`- Skill pack installed: ${pack.name} (${pack.category}).`);
         }
       }
@@ -747,7 +825,10 @@ function App() {
         .filter(Boolean)
         .join("\n")}\n`,
       skills: baseSkills.concat(templateSkills),
-      workflow: template.workflow.map((step) => ({ ...step, id: `${slugify(step.title) || "step"}-${crypto.randomUUID()}` })),
+      workflow: template.workflow.map((step) => ({
+        ...step,
+        id: `${slugify(step.title) || "step"}-${crypto.randomUUID()}`,
+      })),
       storage: {
         packageUri: `0g://package/${templateSlug}/{rootHash}`,
         memoryUri: `0g://memory/${templateSlug}/MEMORY.md`,
@@ -767,7 +848,9 @@ function App() {
       const source = findBuilderNodeId(nodes, "skill");
       const baseEdges = currentEdges.filter((edge) => !edge.target.startsWith("pack-"));
       if (!source) return baseEdges;
-      return baseEdges.concat(template.skillPackIds.map((packId) => createFlowEdge(source, `pack-${packId}`)));
+      return baseEdges.concat(
+        template.skillPackIds.map((packId) => createFlowEdge(source, `pack-${packId}`)),
+      );
     });
   }
 
@@ -875,12 +958,20 @@ function App() {
       <nav className="flex items-center justify-between rounded-full border border-white/10 bg-black/80 px-4 py-3 shadow-[0_10px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
         <div className="flex items-center gap-4">
           <BrandMark className="size-12" />
-          <span className="text-base font-semibold tracking-[-0.03em] text-[#fafafa] sm:text-lg">Tessra</span>
+          <span className="text-base font-semibold tracking-[-0.03em] text-[#fafafa] sm:text-lg">
+            Tessra
+          </span>
         </div>
         <div className="hidden items-center gap-7 text-sm font-semibold text-zinc-500 sm:flex">
-          <a className="transition hover:text-white" href="#builder">Builder</a>
-          <a className="transition hover:text-white" href="#config">Config</a>
-          <a className="transition hover:text-white" href="#export-preview">Export</a>
+          <a className="transition hover:text-white" href="#builder">
+            Builder
+          </a>
+          <a className="transition hover:text-white" href="#config">
+            Config
+          </a>
+          <a className="transition hover:text-white" href="#export-preview">
+            Export
+          </a>
         </div>
       </nav>
 
@@ -890,7 +981,8 @@ function App() {
             Design agents that are ready to run.
           </h1>
           <p className="mt-6 max-w-2xl text-base font-medium leading-7 tracking-[-0.025em] text-zinc-300 sm:text-lg">
-            Compose persona, model, memory, skills, and runbook on one canvas. Export a clean runtime package with compute, storage, and workflow files wired in.
+            Compose persona, model, memory, skills, and runbook on one canvas. Export a clean
+            runtime package with compute, storage, and workflow files wired in.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
@@ -934,16 +1026,15 @@ function App() {
             <article className={`${glassRowClass} grid gap-3 rounded-2xl p-4`} key={template.id}>
               <div>
                 <h3 className="m-0 text-2xl leading-none text-[#fafafa]">{template.name}</h3>
-                <p className="mt-2 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">{template.description}</p>
+                <p className="mt-2 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">
+                  {template.description}
+                </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 {template.skillPackIds.map((packId) => {
                   const pack = skillPacks.find((candidate) => candidate.id === packId);
                   return pack ? (
-                    <span
-                      className={chipClass}
-                      key={packId}
-                    >
+                    <span className={chipClass} key={packId}>
                       {pack.name}
                     </span>
                   ) : null;
@@ -984,7 +1075,9 @@ function App() {
               ].map(([label, value]) => (
                 <div className="border-r border-white/10 px-3 py-2 last:border-r-0" key={label}>
                   <div className="text-base font-semibold text-[#fafafa]">{value}</div>
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{label}</div>
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">
+                    {label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -1006,16 +1099,37 @@ function App() {
           </ReactFlowProvider>
           <div className="relative z-10 mt-4 grid gap-3 md:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-black p-3">
-              <p className="mono-font text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Current agent</p>
-              <p className="mt-1 truncate text-sm font-semibold text-[#fafafa]" title="The exported agent package name.">{agent.name}</p>
+              <p className="mono-font text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">
+                Current agent
+              </p>
+              <p
+                className="mt-1 truncate text-sm font-semibold text-[#fafafa]"
+                title="The exported agent package name."
+              >
+                {agent.name}
+              </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-black p-3">
-              <p className="mono-font text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Template packs</p>
-              <p className="mt-1 text-sm font-semibold text-[#fafafa]" title="Unique prebuilt skill packs currently installed.">{templateCount} loaded</p>
+              <p className="mono-font text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">
+                Template packs
+              </p>
+              <p
+                className="mt-1 text-sm font-semibold text-[#fafafa]"
+                title="Unique prebuilt skill packs currently installed."
+              >
+                {templateCount} loaded
+              </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-black p-3">
-              <p className="mono-font text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Export target</p>
-              <p className="mt-1 truncate text-sm font-semibold text-[#fafafa]" title="0G Storage package URI template written into manifest.0g.json.">{agent.storage.packageUri}</p>
+              <p className="mono-font text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">
+                Export target
+              </p>
+              <p
+                className="mt-1 truncate text-sm font-semibold text-[#fafafa]"
+                title="0G Storage package URI template written into manifest.0g.json."
+              >
+                {agent.storage.packageUri}
+              </p>
             </div>
           </div>
         </section>
@@ -1045,7 +1159,9 @@ function App() {
                   <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
                   <div>
                     <h3 className="mb-1 text-lg leading-none text-[#fafafa]">{block.title}</h3>
-                    <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">{block.summary}</p>
+                    <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">
+                      {block.summary}
+                    </p>
                   </div>
                 </article>
               ))}
@@ -1053,7 +1169,10 @@ function App() {
           </aside>
 
           <section className={`${panelClass} flex min-h-0 flex-col`} id="export-preview">
-            <div className={panelTitleClass} title="Inspect the exact files and metadata that will be written into the exported package.">
+            <div
+              className={panelTitleClass}
+              title="Inspect the exact files and metadata that will be written into the exported package."
+            >
               <span className={panelIconClass}>
                 <NucleoIcon className="size-6" name="cube" />
               </span>
@@ -1062,9 +1181,7 @@ function App() {
             <div className="relative z-10 mb-3 flex flex-wrap gap-2">
               <button
                 className={`${buttonDepthClass} rounded-full px-3 py-2 ${
-                  activeTab === "manifest"
-                    ? "bg-white text-black"
-                    : "bg-black text-zinc-500"
+                  activeTab === "manifest" ? "bg-white text-black" : "bg-black text-zinc-500"
                 }`}
                 onClick={() => setActiveTab("manifest")}
                 title="Show manifest.0g.json provider, storage, skill, and runbook metadata."
@@ -1073,9 +1190,7 @@ function App() {
               </button>
               <button
                 className={`${buttonDepthClass} rounded-full px-3 py-2 ${
-                  activeTab === "agent"
-                    ? "bg-white text-black"
-                    : "bg-black text-zinc-500"
+                  activeTab === "agent" ? "bg-white text-black" : "bg-black text-zinc-500"
                 }`}
                 onClick={() => setActiveTab("agent")}
                 title="Show the portable agent runtime configuration."
@@ -1084,9 +1199,7 @@ function App() {
               </button>
               <button
                 className={`${buttonDepthClass} rounded-full px-3 py-2 ${
-                  activeTab === "storage"
-                    ? "bg-white text-black"
-                    : "bg-black text-zinc-500"
+                  activeTab === "storage" ? "bg-white text-black" : "bg-black text-zinc-500"
                 }`}
                 onClick={() => setActiveTab("storage")}
                 title="Show the 0G Storage package, memory, and log URI targets."
@@ -1111,15 +1224,30 @@ function App() {
           </div>
           <label className={labelClass}>
             Agent name
-            <input className={inputClass} title="Used as the package and manifest agent name." value={agent.name} onChange={(event) => updateAgent({ name: event.target.value })} />
+            <input
+              className={inputClass}
+              title="Used as the package and manifest agent name."
+              value={agent.name}
+              onChange={(event) => updateAgent({ name: event.target.value })}
+            />
           </label>
           <label className={labelClass}>
             Description
-            <input className={inputClass} value={agent.description} onChange={(event) => updateAgent({ description: event.target.value })} />
+            <input
+              className={inputClass}
+              value={agent.description}
+              onChange={(event) => updateAgent({ description: event.target.value })}
+            />
           </label>
           <label className={labelClass}>
             SOUL.md
-            <textarea className={inputClass} title="Persona, tone, goals, and operating principles exported to SOUL.md." value={agent.soul} onChange={(event) => updateAgent({ soul: event.target.value })} rows={6} />
+            <textarea
+              className={inputClass}
+              title="Persona, tone, goals, and operating principles exported to SOUL.md."
+              value={agent.soul}
+              onChange={(event) => updateAgent({ soul: event.target.value })}
+              rows={6}
+            />
           </label>
         </section>
 
@@ -1132,15 +1260,29 @@ function App() {
           </div>
           <label className={labelClass}>
             Provider name
-            <input className={inputClass} value={agent.model.providerName} onChange={(event) => updateModel({ providerName: event.target.value })} />
+            <input
+              className={inputClass}
+              value={agent.model.providerName}
+              onChange={(event) => updateModel({ providerName: event.target.value })}
+            />
           </label>
           <label className={labelClass}>
             API base
-            <input className={inputClass} title="OpenAI-compatible 0G Compute router URL." value={agent.model.apiBase} onChange={(event) => updateModel({ apiBase: event.target.value })} />
+            <input
+              className={inputClass}
+              title="OpenAI-compatible 0G Compute router URL."
+              value={agent.model.apiBase}
+              onChange={(event) => updateModel({ apiBase: event.target.value })}
+            />
           </label>
           <label className={labelClass}>
             Model
-            <select className={inputClass} title="Model id written into agent.json and manifest.0g.json." value={agent.model.modelId} onChange={(event) => updateModel({ modelId: event.target.value })}>
+            <select
+              className={inputClass}
+              title="Model id written into agent.json and manifest.0g.json."
+              value={agent.model.modelId}
+              onChange={(event) => updateModel({ modelId: event.target.value })}
+            >
               <option value="openai/gpt-oss-20b">openai/gpt-oss-20b</option>
               <option value="qwen/qwen-2.5-7b-instruct">qwen/qwen-2.5-7b-instruct</option>
               <option value="google/gemma-3-27b-it">google/gemma-3-27b-it</option>
@@ -1149,7 +1291,12 @@ function App() {
           </label>
           <label className={labelClass}>
             API key env
-            <input className={inputClass} title="Environment variable name the exported agent reads for provider auth." value={agent.model.apiKeyEnv} onChange={(event) => updateModel({ apiKeyEnv: event.target.value })} />
+            <input
+              className={inputClass}
+              title="Environment variable name the exported agent reads for provider auth."
+              value={agent.model.apiKeyEnv}
+              onChange={(event) => updateModel({ apiKeyEnv: event.target.value })}
+            />
           </label>
         </section>
 
@@ -1162,19 +1309,38 @@ function App() {
           </div>
           <label className={labelClass}>
             MEMORY.md
-            <textarea className={inputClass} title="Long-term memory content exported to MEMORY.md." value={agent.memory} onChange={(event) => updateAgent({ memory: event.target.value })} rows={8} />
+            <textarea
+              className={inputClass}
+              title="Long-term memory content exported to MEMORY.md."
+              value={agent.memory}
+              onChange={(event) => updateAgent({ memory: event.target.value })}
+              rows={8}
+            />
           </label>
           <label className={labelClass}>
             Package URI template
-            <input className={inputClass} title="0G Storage URI template for the exported package root." value={agent.storage.packageUri} onChange={(event) => updateStorage({ packageUri: event.target.value })} />
+            <input
+              className={inputClass}
+              title="0G Storage URI template for the exported package root."
+              value={agent.storage.packageUri}
+              onChange={(event) => updateStorage({ packageUri: event.target.value })}
+            />
           </label>
           <label className={labelClass}>
             Memory URI template
-            <input className={inputClass} value={agent.storage.memoryUri} onChange={(event) => updateStorage({ memoryUri: event.target.value })} />
+            <input
+              className={inputClass}
+              value={agent.storage.memoryUri}
+              onChange={(event) => updateStorage({ memoryUri: event.target.value })}
+            />
           </label>
           <label className={labelClass}>
             Log URI template
-            <input className={inputClass} value={agent.storage.logUri} onChange={(event) => updateStorage({ logUri: event.target.value })} />
+            <input
+              className={inputClass}
+              value={agent.storage.logUri}
+              onChange={(event) => updateStorage({ logUri: event.target.value })}
+            />
           </label>
         </section>
       </section>
@@ -1199,7 +1365,9 @@ function App() {
           </div>
           <p className="relative z-10 mb-4 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">
             Curated packs from VoltAgent&apos;s OpenClaw catalog. Exported as standard
-            <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">SKILL.md</code>
+            <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">
+              SKILL.md
+            </code>
             folders.
           </p>
           <input
@@ -1211,7 +1379,9 @@ function App() {
           <div className="relative z-10 grid content-start gap-3.5 overflow-y-auto pr-1.5 xl:flex-1">
             {filteredSkillPacks.map((pack) => {
               const installed = hasSkillPack(pack.id);
-              const installedCount = pack.skills.filter((skill) => agent.skills.some((agentSkill) => agentSkill.name === skill.name)).length;
+              const installedCount = pack.skills.filter((skill) =>
+                agent.skills.some((agentSkill) => agentSkill.name === skill.name),
+              ).length;
               return (
                 <article
                   className={`${glassRowClass} grid cursor-grab gap-3 rounded-2xl p-3.5`}
@@ -1227,18 +1397,28 @@ function App() {
                         <h3 className="m-0 text-xl leading-none text-[#fafafa]">{pack.name}</h3>
                         <span className={chipClass}>{pack.category}</span>
                       </div>
-                      <p className="m-0 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">{pack.summary}</p>
-                      <p className="mt-2 text-xs font-medium tracking-[-0.015em] text-zinc-500">Best for {pack.recommendedFor}</p>
+                      <p className="m-0 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">
+                        {pack.summary}
+                      </p>
+                      <p className="mt-2 text-xs font-medium tracking-[-0.015em] text-zinc-500">
+                        Best for {pack.recommendedFor}
+                      </p>
                     </div>
                     <button
                       className={`${buttonDepthClass} shrink-0 rounded-full border border-white/12 px-3 py-2 text-xs font-semibold ${
                         installed ? "bg-white text-black" : "bg-black text-[#fafafa]"
                       }`}
                       onClick={() => addSkillPackToCanvas(pack.id)}
-                      title={installed ? `${installedCount} of ${pack.skills.length} skills already added.` : `Add ${pack.skills.length} skills from ${pack.name}.`}
+                      title={
+                        installed
+                          ? `${installedCount} of ${pack.skills.length} skills already added.`
+                          : `Add ${pack.skills.length} skills from ${pack.name}.`
+                      }
                       type="button"
                     >
-                      {installed ? `${installedCount}/${pack.skills.length} added` : `Drop / add ${pack.skills.length}`}
+                      {installed
+                        ? `${installedCount}/${pack.skills.length} added`
+                        : `Drop / add ${pack.skills.length}`}
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -1290,7 +1470,10 @@ function App() {
             </div>
             <div className="relative z-10 grid flex-1 content-start gap-3.5 overflow-y-auto pr-1.5">
               {agent.skills.map((skill) => (
-                <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_auto]`} key={skill.id}>
+                <article
+                  className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_auto]`}
+                  key={skill.id}
+                >
                   <input
                     className={inputClass}
                     value={skill.name}
@@ -1355,7 +1538,9 @@ function App() {
             </div>
             <p className="relative z-10 mb-4 text-sm font-medium leading-5 tracking-[-0.02em] text-zinc-400">
               Runbook steps define the exact execution order. Exported as
-              <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">workflow.json</code>
+              <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">
+                workflow.json
+              </code>
               for runtime replay.
             </p>
             <div className="relative z-10 grid flex-1 content-start gap-3.5 overflow-y-auto pr-1.5">
@@ -1366,12 +1551,19 @@ function App() {
                   title="This row becomes one ordered workflow.json runbook step."
                 >
                   <span className={`${iconTileClass} size-[34px]`}>{index + 1}</span>
-                  <input className={inputClass} title="Short runbook step name." value={step.title} onChange={(event) => updateWorkflowStep(step.id, { title: event.target.value })} />
+                  <input
+                    className={inputClass}
+                    title="Short runbook step name."
+                    value={step.title}
+                    onChange={(event) => updateWorkflowStep(step.id, { title: event.target.value })}
+                  />
                   <textarea
                     className={inputClass}
                     title="Instruction the agent follows during this runbook step."
                     value={step.instruction}
-                    onChange={(event) => updateWorkflowStep(step.id, { instruction: event.target.value })}
+                    onChange={(event) =>
+                      updateWorkflowStep(step.id, { instruction: event.target.value })
+                    }
                     rows={2}
                   />
                   <button
@@ -1390,7 +1582,9 @@ function App() {
       <footer className="overflow-hidden rounded-[2rem] border border-white/10 bg-black px-5 py-6 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
         <div>
           <div>
-            <p className="mono-font mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">Agent infrastructure by Tessra</p>
+            <p className="mono-font mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">
+              Agent infrastructure by Tessra
+            </p>
             <h2 className="display-font text-[clamp(48px,12vw,150px)] leading-[0.78] tracking-[-0.01em] text-[#fafafa]">
               Tessra
             </h2>

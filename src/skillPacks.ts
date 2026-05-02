@@ -13,7 +13,8 @@ export const skillPacks: SkillPack[] = [
     skills: [
       {
         name: "academic-deep-research",
-        description: "Transparent, rigorous research with traceable source collection and synthesis.",
+        description:
+          "Transparent, rigorous research with traceable source collection and synthesis.",
         sourceUrl: "https://clawskills.sh/skills/kesslerio-academic-deep-research",
       },
       {
@@ -63,12 +64,14 @@ export const skillPacks: SkillPack[] = [
     skills: [
       {
         name: "actionbook",
-        description: "Interact with websites through browser automation, scraping, screenshots, and forms.",
+        description:
+          "Interact with websites through browser automation, scraping, screenshots, and forms.",
         sourceUrl: "https://clawskills.sh/skills/adcentury-actionbook",
       },
       {
         name: "agentic-browser",
-        description: "Browser automation for AI agents using a dedicated inference-backed browser flow.",
+        description:
+          "Browser automation for AI agents using a dedicated inference-backed browser flow.",
         sourceUrl: "https://clawskills.sh/skills/xyny89-agentic-browser-0-1-2",
       },
       {
@@ -88,17 +91,20 @@ export const skillPacks: SkillPack[] = [
     skills: [
       {
         name: "agent-team-orchestration",
-        description: "Orchestrate multi-agent teams with roles, task lifecycles, handoffs, and reviews.",
+        description:
+          "Orchestrate multi-agent teams with roles, task lifecycles, handoffs, and reviews.",
         sourceUrl: "https://clawskills.sh/skills/arminnaimi-agent-team-orchestration",
       },
       {
         name: "arc-skill-gitops",
-        description: "Automated deployment, rollback, and version management for agent workflows and skills.",
+        description:
+          "Automated deployment, rollback, and version management for agent workflows and skills.",
         sourceUrl: "https://clawskills.sh/skills/trypto1019-arc-skill-gitops",
       },
       {
         name: "azure-devops",
-        description: "List projects, repositories, and branches; create PRs; manage work items; check builds.",
+        description:
+          "List projects, repositories, and branches; create PRs; manage work items; check builds.",
         sourceUrl: "https://clawskills.sh/skills/pals-software-azure-devops",
       },
     ],
@@ -138,12 +144,14 @@ export const skillPacks: SkillPack[] = [
     skills: [
       {
         name: "biz-reporter",
-        description: "Automated business intelligence reports from analytics, search, and revenue data.",
+        description:
+          "Automated business intelligence reports from analytics, search, and revenue data.",
         sourceUrl: "https://clawskills.sh/skills/ariktulcha-biz-reporter",
       },
       {
         name: "amazon-product-api-skill",
-        description: "Extract structured product listings including titles, ASINs, prices, and ratings.",
+        description:
+          "Extract structured product listings including titles, ASINs, prices, and ratings.",
         sourceUrl: "https://clawskills.sh/skills/phheng-amazon-product-api-skill",
       },
       {
@@ -163,7 +171,8 @@ export const skillPacks: SkillPack[] = [
     skills: [
       {
         name: "0g-compute",
-        description: "Use cheap, TEE-verified AI models from the 0G Compute Network as OpenClaw providers.",
+        description:
+          "Use cheap, TEE-verified AI models from the 0G Compute Network as OpenClaw providers.",
         sourceUrl: "https://clawskills.sh/skills/in-liberty420-0g-compute",
       },
       {
@@ -203,7 +212,8 @@ export const skillPacks: SkillPack[] = [
       },
       {
         name: "agent-autopilot",
-        description: "Self-driving workflow with heartbeat execution, reports, and long-term memory.",
+        description:
+          "Self-driving workflow with heartbeat execution, reports, and long-term memory.",
         sourceUrl: "https://clawskills.sh/skills/edoserbia-agent-autopilot",
       },
       {

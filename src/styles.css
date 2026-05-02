@@ -13,7 +13,14 @@
 @layer base {
   :root {
     color-scheme: dark;
-    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family:
+      "Geist",
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
     background: #000;
     color: #fafafa;
     font-synthesis: none;
@@ -50,15 +57,13 @@
     border: 1px solid rgba(250, 250, 250, 0.18);
     border-radius: 999px;
     background:
-      linear-gradient(180deg, rgba(250, 250, 250, 0.72), rgba(250, 250, 250, 0.3)),
-      #18181b;
+      linear-gradient(180deg, rgba(250, 250, 250, 0.72), rgba(250, 250, 250, 0.3)), #18181b;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
   }
 
   *::-webkit-scrollbar-thumb:hover {
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(250, 250, 250, 0.42)),
-      #27272a;
+      linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(250, 250, 250, 0.42)), #27272a;
   }
 
   h1,
@@ -73,7 +78,14 @@
   input,
   textarea,
   select {
-    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family:
+      "Geist",
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
   }
 
   button {
@@ -110,7 +122,14 @@
   }
 
   .react-flow__node {
-    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family:
+      "Geist",
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
   }
 
   .display-font {
@@ -119,7 +138,14 @@
   }
 
   .body-font {
-    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family:
+      "Geist",
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
   }
 
   .mono-font {
