@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import type { AgentDraft, AgentManifest } from "./types";
+import type { AgentDraft, AgentManifest, SkillDraft } from "./types";
 
 export const ZERO_G_ROUTER_URL = "https://router-api.0g.ai/v1";
 
@@ -62,7 +62,7 @@ export const starterAgent: AgentDraft = {
 };
 
 export function createManifest(agent: AgentDraft): AgentManifest {
-  const enabledSkills = agent.skills.filter((skill) => skill.enabled);
+  const enabledSkills = createSkillExportEntries(agent.skills);
 
   return {
     schema: "clawbuilder.0g.agent.v1",
@@ -85,10 +85,10 @@ export function createManifest(agent: AgentDraft): AgentManifest {
       ],
     },
     files: ["agent.json", "SOUL.md", "MEMORY.md", "workflow.json"],
-    skills: enabledSkills.map((skill) => ({
+    skills: enabledSkills.map(({ skill, path }) => ({
       name: skill.name,
       description: skill.description,
-      path: `skills/${skill.name}/SKILL.md`,
+      path,
     })),
     workflow: agent.workflow,
     storage: {
@@ -138,9 +138,39 @@ export function skillMarkdown(skillName: string, description: string): string {
   return `---\nname: ${skillName}\ndescription: ${description}\n---\n\n# ${skillName}\n\n${description}\n`;
 }
 
+function normalizeSkillPathSegment(value: string, fallback: string): string {
+  const normalized = value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 48);
+
+  return normalized || fallback;
+}
+
+function createSkillExportEntries(skills: SkillDraft[]) {
+  const usedSegments = new Set<string>();
+
+  return skills
+    .filter((skill) => skill.enabled)
+    .map((skill) => {
+      const baseSegment = normalizeSkillPathSegment(skill.name, `skill-${normalizeSkillPathSegment(skill.id, "custom")}`);
+      let pathSegment = baseSegment;
+      let suffix = 2;
+
+      while (usedSegments.has(pathSegment)) {
+        pathSegment = `${baseSegment}-${suffix}`;
+        suffix += 1;
+      }
+
+      usedSegments.add(pathSegment);
+      return { skill, path: `skills/${pathSegment}/SKILL.md` };
+    });
+}
+
 export async function buildAgentZip(agent: AgentDraft): Promise<Blob> {
   const zip = new JSZip();
-  const enabledSkills = agent.skills.filter((skill) => skill.enabled);
+  const enabledSkills = createSkillExportEntries(agent.skills);
 
   zip.file("agent.json", JSON.stringify(createAgentConfig(agent), null, 2));
   zip.file("SOUL.md", `# Soul\n\n${agent.soul}\n`);
@@ -152,8 +182,8 @@ export async function buildAgentZip(agent: AgentDraft): Promise<Blob> {
     `# ${agent.name}\n\n${agent.description}\n\n## Run\n\nSet \`${agent.model.apiKeyEnv}\`, then point any OpenAI-compatible agent runtime at \`${agent.model.apiBase}\` with model \`${agent.model.modelId}\`.\n`,
   );
 
-  for (const skill of enabledSkills) {
-    zip.file(`skills/${skill.name}/SKILL.md`, skillMarkdown(skill.name, skill.description));
+  for (const { skill, path } of enabledSkills) {
+    zip.file(path, skillMarkdown(skill.name, skill.description));
   }
 
   return zip.generateAsync({ type: "blob" });

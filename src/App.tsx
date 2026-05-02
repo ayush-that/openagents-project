@@ -810,7 +810,7 @@ function App() {
                 <input
                   className={inputClass}
                   value={skill.name}
-                  onChange={(event) => updateSkill(skill.id, { name: slugify(event.target.value) })}
+                  onChange={(event) => updateSkill(skill.id, { name: event.target.value })}
                 />
                 <input
                   className={inputClass}
