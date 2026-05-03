@@ -257,20 +257,20 @@ function createSkillsFromPacks(packIds: string[], existingSkills: SkillDraft[] =
 const tesseractVertices = [
   [-1, -1, -1, -1],
   [1, -1, -1, -1],
-  [1, 1, -1, -1],
   [-1, 1, -1, -1],
+  [1, 1, -1, -1],
   [-1, -1, 1, -1],
   [1, -1, 1, -1],
-  [1, 1, 1, -1],
   [-1, 1, 1, -1],
+  [1, 1, 1, -1],
   [-1, -1, -1, 1],
   [1, -1, -1, 1],
-  [1, 1, -1, 1],
   [-1, 1, -1, 1],
+  [1, 1, -1, 1],
   [-1, -1, 1, 1],
   [1, -1, 1, 1],
-  [1, 1, 1, 1],
   [-1, 1, 1, 1],
+  [1, 1, 1, 1],
 ] as const;
 
 const tesseractEdges = Array.from({ length: tesseractVertices.length }, (_, index) =>
