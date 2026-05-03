@@ -85,7 +85,7 @@ function NucleoIcon({ name, className = "size-6" }: { name: NucleoIconName; clas
 }
 
 function BrandMark({ className = "size-10" }: { className?: string }) {
-  return <img alt="ClawBuilder 0G logo" className={`${className} object-contain`} src={logoSrc} />;
+  return <img alt="Axiom logo" className={`${className} object-contain`} src={logoSrc} />;
 }
 
 const kindIcons: Record<CanvasNodeKind, ReactNode> = {
@@ -279,8 +279,8 @@ function HeroScene() {
     const mountElement: HTMLDivElement = currentMount;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-    camera.position.set(0, 0.08, 8.2);
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+    camera.position.set(0, 0.08, 9.8);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -294,6 +294,7 @@ function HeroScene() {
       tesseractGeometry,
       new THREE.LineBasicMaterial({ color: 0xfafafa, transparent: true, opacity: 0.78 }),
     );
+    tesseract.position.x = -0.42;
     scene.add(tesseract);
 
     const shadowGeometry = new THREE.BufferGeometry();
@@ -303,7 +304,8 @@ function HeroScene() {
       shadowGeometry,
       new THREE.LineBasicMaterial({ color: 0x71717a, transparent: true, opacity: 0.24 }),
     );
-    shadow.scale.setScalar(1.08);
+    shadow.position.x = -0.42;
+    shadow.scale.setScalar(1.06);
     scene.add(shadow);
 
     const vertexGeometry = new THREE.BufferGeometry();
@@ -313,6 +315,7 @@ function HeroScene() {
       vertexGeometry,
       new THREE.PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.92 }),
     );
+    vertices.position.x = -0.42;
     scene.add(vertices);
 
     const pointsGeometry = new THREE.BufferGeometry();
@@ -347,7 +350,7 @@ function HeroScene() {
       z = zwZ;
       w = zwW;
       const depth = 2.8 / (3.8 - w);
-      return new THREE.Vector3(x * depth * 1.12, y * depth * 1.12, z * depth * 1.12);
+      return new THREE.Vector3(x * depth * 0.94, y * depth * 0.94, z * depth * 0.94);
     }
 
     function updateTesseract(angle: number) {
@@ -844,7 +847,7 @@ function App() {
     setExporting(true);
     try {
       const blob = await buildAgentZip(agent);
-      downloadBlob(blob, `${slugify(agent.name) || "clawbuilder-0g-agent"}.zip`);
+      downloadBlob(blob, `${slugify(agent.name) || "axiom-agent"}.zip`);
     } finally {
       setExporting(false);
     }
@@ -872,7 +875,7 @@ function App() {
       <nav className="flex items-center justify-between rounded-full border border-white/10 bg-black/80 px-4 py-3 shadow-[0_10px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
         <div className="flex items-center gap-4">
           <BrandMark className="size-12" />
-          <span className="text-base font-semibold tracking-[-0.03em] text-[#fafafa] sm:text-lg">ClawBuilder 0G</span>
+          <span className="text-base font-semibold tracking-[-0.03em] text-[#fafafa] sm:text-lg">Axiom</span>
         </div>
         <div className="hidden items-center gap-7 text-sm font-semibold text-zinc-500 sm:flex">
           <a className="transition hover:text-white" href="#builder">Builder</a>
@@ -885,7 +888,7 @@ function App() {
         <div className="py-8">
           <div className="mono-font mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-200">
             <span className="size-2 rounded-full bg-white" />
-            ClawBuilder 0G · agent foundry
+            Axiom · 0G agent foundry
           </div>
           <h1 className="display-font max-w-4xl text-[clamp(44px,7.4vw,92px)] leading-[0.9] text-[#fafafa]">
             Build 0G agents without runtime work.
@@ -1392,14 +1395,14 @@ function App() {
       <footer className="overflow-hidden rounded-[2rem] border border-white/10 bg-black px-5 py-6 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
         <div>
           <div>
-            <p className="mono-font mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">A product by ClawBuilder</p>
+            <p className="mono-font mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">Agent infrastructure by Axiom</p>
             <h2 className="display-font text-[clamp(48px,12vw,150px)] leading-[0.78] tracking-[-0.01em] text-[#fafafa]">
-              ClawBuilder 0G
+              Axiom
             </h2>
           </div>
         </div>
         <div className="mono-font mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
-          <span>© 2026 ClawBuilder 0G</span>
+          <span>© 2026 Axiom</span>
           <span>No-code agents · OpenClaw export · 0G ready</span>
         </div>
       </footer>
