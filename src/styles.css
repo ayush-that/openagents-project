@@ -14,8 +14,8 @@
   :root {
     color-scheme: dark;
     font-family: Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #000;
-    color: #f7f7fb;
+    background: #020611;
+    color: #f4fbff;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -25,7 +25,10 @@
     min-width: 320px;
     min-height: 100vh;
     overflow-x: hidden;
-    background: #000;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(103, 232, 249, 0.18), transparent 30rem),
+      radial-gradient(circle at 88% 10%, rgba(167, 139, 250, 0.16), transparent 34rem),
+      linear-gradient(180deg, #020611 0%, #00040b 42%, #03020a 100%);
   }
 
   h1,
@@ -43,25 +46,25 @@
   code {
     width: 100%;
     overflow-wrap: anywhere;
-    border: 1px solid rgba(103, 232, 249, 0.16);
+    border: 1px solid rgba(207, 250, 254, 0.16);
     border-radius: 0.9rem;
-    background: rgba(4, 10, 24, 0.82);
+    background: rgba(2, 7, 19, 0.9);
     padding: 0.6rem 0.75rem;
-    color: #cffafe;
+    color: #ecfeff;
   }
 
   .react-flow {
-    --xy-background-color: #000;
+    --xy-background-color: #020713;
     --xy-node-background-color-default: transparent;
     --xy-node-border-default: 0;
-    --xy-edge-stroke-default: rgba(103, 232, 249, 0.45);
+    --xy-edge-stroke-default: rgba(125, 245, 255, 0.5);
     --xy-edge-stroke-width-default: 1.5;
-    --xy-controls-button-background-color-default: #000;
-    --xy-controls-button-background-color-hover-default: #050505;
-    --xy-controls-button-color-default: #cffafe;
+    --xy-controls-button-background-color-default: #020713;
+    --xy-controls-button-background-color-hover-default: #071525;
+    --xy-controls-button-color-default: #ecfeff;
     --xy-controls-button-color-hover-default: #fff;
-    --xy-controls-button-border-color-default: rgba(255, 255, 255, 0.1);
-    --xy-minimap-background-color-default: rgba(0, 0, 0, 0.86);
+    --xy-controls-button-border-color-default: rgba(207, 250, 254, 0.14);
+    --xy-minimap-background-color-default: rgba(2, 7, 19, 0.9);
   }
 
   .react-flow__node {

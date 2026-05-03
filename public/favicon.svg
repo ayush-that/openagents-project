@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="g" cx="38%" cy="30%" r="72%">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset=".38" stop-color="#67e8f9"/>
+      <stop offset=".78" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#111827"/>
+    </radialGradient>
+    <linearGradient id="e" x1="8" x2="56" y1="8" y2="58">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset=".48" stop-color="#67e8f9"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#020713"/>
+  <circle cx="32" cy="32" r="16" fill="url(#g)"/>
+  <path d="M19 15c8 1 14 6 18 13-7-2-13-1-18 4-2-5-3-11 0-17Z" fill="#67e8f9" opacity=".76" stroke="url(#e)" stroke-width="1.7"/>
+  <path d="M15 27c8-1 16 2 22 7-7 1-13 5-16 11-5-5-7-11-6-18Z" fill="#67e8f9" opacity=".64" stroke="url(#e)" stroke-width="1.7"/>
+  <path d="M22 49c3-8 10-13 18-15-2 7 0 13 5 18-7 2-15 1-23-3Z" fill="#67e8f9" opacity=".58" stroke="url(#e)" stroke-width="1.7"/>
+  <path d="M40 14c7 4 11 11 12 19-5-5-12-7-18-5 1-6 3-11 6-14Z" fill="#a78bfa" opacity=".58" stroke="url(#e)" stroke-width="1.7"/>
+</svg>
