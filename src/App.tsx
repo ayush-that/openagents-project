@@ -134,7 +134,7 @@ const panelClass =
 const panelTitleClass = "relative z-10 mb-4 flex items-center gap-2.5 font-semibold text-[#fafafa]";
 const inputClass =
   "w-full rounded-2xl border border-white/10 bg-black px-3 py-2.5 text-[#fafafa] outline-none transition placeholder:text-zinc-500 focus:border-white/45 focus:ring-4 focus:ring-white/8";
-const labelClass = "relative z-10 mb-3 grid gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400";
+const labelClass = "mono-font relative z-10 mb-3 grid gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400";
 const glassRowClass =
   "relative z-10 border border-white/10 bg-[linear-gradient(180deg,rgba(10,10,10,0.92),rgba(0,0,0,0.92))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-white/25 hover:bg-[#0b0b0b]";
 const iconTileClass =
@@ -151,7 +151,7 @@ const heroSecondaryButtonClass =
 const secondaryButtonClass =
   "border border-white/15 bg-black text-[#fafafa] hover:border-white/40";
 const chipClass =
-  "rounded-full border border-white/12 bg-white/[0.055] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-100";
+  "mono-font rounded-full border border-white/12 bg-white/[0.055] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-100";
 
 function slugify(value: string) {
   return value
@@ -252,6 +252,36 @@ function createSkillsFromPacks(packIds: string[], existingSkills: SkillDraft[] =
   return skills;
 }
 
+const tesseractVertices = [
+  [-1, -1, -1, -1],
+  [1, -1, -1, -1],
+  [1, 1, -1, -1],
+  [-1, 1, -1, -1],
+  [-1, -1, 1, -1],
+  [1, -1, 1, -1],
+  [1, 1, 1, -1],
+  [-1, 1, 1, -1],
+  [-1, -1, -1, 1],
+  [1, -1, -1, 1],
+  [1, 1, -1, 1],
+  [-1, 1, -1, 1],
+  [-1, -1, 1, 1],
+  [1, -1, 1, 1],
+  [1, 1, 1, 1],
+  [-1, 1, 1, 1],
+] as const;
+
+const tesseractEdges = Array.from({ length: tesseractVertices.length }, (_, index) =>
+  [1, 2, 4, 8]
+    .map((bit) => [index, index ^ bit] as const)
+    .filter(([source, target]) => source < target),
+).flat();
+
+const asciiMark = String.raw`CB0G::AGENT
+┌─SOUL─────┐
+│ MODEL 0G │──SKILL
+└─MEMORY───┘`;
+
 function HeroScene() {
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -262,52 +292,45 @@ function HeroScene() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.set(0, 0.1, 7);
+    camera.position.set(0, 0.08, 6.5);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     mountElement.append(renderer.domElement);
 
-    const group = new THREE.Group();
-    scene.add(group);
-
-    const core = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(1.25, 1),
-      new THREE.MeshStandardMaterial({
-        color: 0x173042,
-        emissive: 0x22d3ee,
-        emissiveIntensity: 0.34,
-        metalness: 0.46,
-        roughness: 0.2,
-      }),
+    const tesseractGeometry = new THREE.BufferGeometry();
+    const tesseractPositions = new Float32Array(tesseractEdges.length * 2 * 3);
+    tesseractGeometry.setAttribute("position", new THREE.BufferAttribute(tesseractPositions, 3));
+    const tesseract = new THREE.LineSegments(
+      tesseractGeometry,
+      new THREE.LineBasicMaterial({ color: 0xfafafa, transparent: true, opacity: 0.78 }),
     );
-    group.add(core);
+    scene.add(tesseract);
 
-    const shell = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(1.72, 1),
-      new THREE.MeshBasicMaterial({ color: 0x7df5ff, transparent: true, opacity: 0.12, wireframe: true }),
+    const shadowGeometry = new THREE.BufferGeometry();
+    const shadowPositions = new Float32Array(tesseractEdges.length * 2 * 3);
+    shadowGeometry.setAttribute("position", new THREE.BufferAttribute(shadowPositions, 3));
+    const shadow = new THREE.LineSegments(
+      shadowGeometry,
+      new THREE.LineBasicMaterial({ color: 0x71717a, transparent: true, opacity: 0.24 }),
     );
-    group.add(shell);
+    shadow.scale.setScalar(1.14);
+    scene.add(shadow);
 
-    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xa78bfa, transparent: true, opacity: 0.42 });
-    const ringGeometries: THREE.TorusGeometry[] = [];
-    for (const [index, rotation] of [
-      [0, 0],
-      [Math.PI / 2.7, Math.PI / 5],
-      [-Math.PI / 3.2, Math.PI / 1.8],
-    ].entries()) {
-      const ringGeometry = new THREE.TorusGeometry(2.2 + index * 0.18, 0.01, 12, 120);
-      ringGeometries.push(ringGeometry);
-      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-      ring.rotation.set(rotation[0], rotation[1], index * 0.42);
-      group.add(ring);
-    }
+    const vertexGeometry = new THREE.BufferGeometry();
+    const vertexPositions = new Float32Array(tesseractVertices.length * 3);
+    vertexGeometry.setAttribute("position", new THREE.BufferAttribute(vertexPositions, 3));
+    const vertices = new THREE.Points(
+      vertexGeometry,
+      new THREE.PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.92 }),
+    );
+    scene.add(vertices);
 
     const pointsGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(140 * 3);
-    for (let i = 0; i < 140; i += 1) {
-      const radius = 2.8 + Math.random() * 1.7;
+    const positions = new Float32Array(96 * 3);
+    for (let i = 0; i < 96; i += 1) {
+      const radius = 3 + Math.random() * 1.4;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
@@ -317,17 +340,47 @@ function HeroScene() {
     pointsGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     const particles = new THREE.Points(
       pointsGeometry,
-      new THREE.PointsMaterial({ color: 0xcffafe, size: 0.026, transparent: true, opacity: 0.7 }),
+      new THREE.PointsMaterial({ color: 0xffffff, size: 0.018, transparent: true, opacity: 0.48 }),
     );
-    group.add(particles);
+    scene.add(particles);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 1.4));
-    const cyanLight = new THREE.PointLight(0x7df5ff, 20, 12);
-    cyanLight.position.set(3, 2, 4);
-    scene.add(cyanLight);
-    const violetLight = new THREE.PointLight(0xa78bfa, 16, 12);
-    violetLight.position.set(-3, -2, 3);
-    scene.add(violetLight);
+    function rotate4d(vertex: readonly number[], angleA: number, angleB: number) {
+      let [x, y, z, w] = vertex;
+      const cosA = Math.cos(angleA);
+      const sinA = Math.sin(angleA);
+      const xyX = x * cosA - y * sinA;
+      const xyY = x * sinA + y * cosA;
+      x = xyX;
+      y = xyY;
+      const cosB = Math.cos(angleB);
+      const sinB = Math.sin(angleB);
+      const zwZ = z * cosB - w * sinB;
+      const zwW = z * sinB + w * cosB;
+      z = zwZ;
+      w = zwW;
+      const depth = 2.8 / (3.8 - w);
+      return new THREE.Vector3(x * depth * 1.42, y * depth * 1.42, z * depth * 1.42);
+    }
+
+    function updateTesseract(angle: number) {
+      const projected = tesseractVertices.map((vertex) => rotate4d(vertex, angle, angle * 0.72));
+      tesseractEdges.forEach(([source, target], index) => {
+        const sourceVertex = projected[source];
+        const targetVertex = projected[target];
+        const offset = index * 6;
+        tesseractPositions.set([sourceVertex.x, sourceVertex.y, sourceVertex.z, targetVertex.x, targetVertex.y, targetVertex.z], offset);
+        shadowPositions.set(
+          [sourceVertex.x + 0.08, sourceVertex.y - 0.08, sourceVertex.z - 0.1, targetVertex.x + 0.08, targetVertex.y - 0.08, targetVertex.z - 0.1],
+          offset,
+        );
+      });
+      projected.forEach((vertex, index) => {
+        vertexPositions.set([vertex.x, vertex.y, vertex.z], index * 3);
+      });
+      tesseractGeometry.attributes.position.needsUpdate = true;
+      shadowGeometry.attributes.position.needsUpdate = true;
+      vertexGeometry.attributes.position.needsUpdate = true;
+    }
 
     let frame = 0;
     let animationId = 0;
@@ -341,9 +394,10 @@ function HeroScene() {
 
     function animate() {
       frame += 0.01;
-      group.rotation.y = frame * 0.55;
-      group.rotation.x = Math.sin(frame * 0.7) * 0.18;
-      shell.rotation.y = -frame * 0.85;
+      updateTesseract(frame * 0.95);
+      tesseract.rotation.y = Math.sin(frame * 0.42) * 0.22;
+      shadow.rotation.copy(tesseract.rotation);
+      vertices.rotation.copy(tesseract.rotation);
       particles.rotation.y = frame * 0.16;
       renderer.render(scene, camera);
       animationId = window.requestAnimationFrame(animate);
@@ -359,12 +413,12 @@ function HeroScene() {
       observer.disconnect();
       renderer.dispose();
       pointsGeometry.dispose();
-      ringGeometries.forEach((geometry) => geometry.dispose());
-      core.geometry.dispose();
-      shell.geometry.dispose();
-      core.material.dispose();
-      shell.material.dispose();
-      ringMaterial.dispose();
+      tesseractGeometry.dispose();
+      shadowGeometry.dispose();
+      vertexGeometry.dispose();
+      tesseract.material.dispose();
+      shadow.material.dispose();
+      vertices.material.dispose();
       particles.material.dispose();
       mountElement.removeChild(renderer.domElement);
     };
@@ -841,7 +895,7 @@ function App() {
 
       <section className="mb-10 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
         <div className="py-8">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-200">
+          <div className="mono-font mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-200">
             <span className="size-2 rounded-full bg-white" />
             ClawBuilder 0G · agent foundry
           </div>
@@ -880,7 +934,7 @@ function App() {
         <div className={`${panelClass} p-4`}>
           <div className="relative min-h-[330px] overflow-hidden rounded-[1.55rem] border border-white/10 bg-[radial-gradient(circle,rgba(255,255,255,0.10)_1px,transparent_1.2px),linear-gradient(180deg,#050505,#000)] bg-[size:18px_18px,auto]">
             <HeroScene />
-            <div className="absolute left-4 top-4 rounded-full border border-white/12 bg-black/72 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-200 backdrop-blur-md">
+            <div className="mono-font absolute left-4 top-4 rounded-full border border-white/12 bg-black/72 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-200 backdrop-blur-md">
               0G-native export stack
             </div>
             <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/12 bg-black/82 p-4 shadow-[0_12px_0_rgba(255,255,255,0.035)] backdrop-blur-md">
@@ -889,7 +943,7 @@ function App() {
                   <NucleoIcon className="size-7" name="cube" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Generated package</p>
+                  <p className="mono-font text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Generated package</p>
                   <h2 className="display-font text-2xl leading-none text-[#fafafa]">OpenClaw files. 0G defaults.</h2>
                 </div>
               </div>
@@ -897,7 +951,7 @@ function App() {
           </div>
           <div className="mt-4 grid gap-3">
             <div className="rounded-2xl border border-white/10 bg-black p-4">
-              <span className="text-xs font-semibold uppercase tracking-[0.1em] text-zinc-500">Provider preset</span>
+              <span className="mono-font text-xs font-semibold uppercase tracking-[0.1em] text-zinc-500">Provider preset</span>
               <code className="mt-2 block">{ZERO_G_ROUTER_URL}</code>
             </div>
             {heroStats.map((stat) => (
@@ -1001,15 +1055,15 @@ function App() {
           </ReactFlowProvider>
           <div className="relative z-10 mt-4 grid gap-3 md:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-black p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Current agent</p>
+              <p className="mono-font text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Current agent</p>
               <p className="mt-1 truncate text-sm font-semibold text-[#fafafa]" title="The exported agent package name.">{agent.name}</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-black p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Template packs</p>
+              <p className="mono-font text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Template packs</p>
               <p className="mt-1 text-sm font-semibold text-[#fafafa]" title="Unique prebuilt skill packs currently installed.">{templateCount} loaded</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-black p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Export target</p>
+              <p className="mono-font text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Export target</p>
               <p className="mt-1 truncate text-sm font-semibold text-[#fafafa]" title="0G Storage package URI template written into manifest.0g.json.">{agent.storage.packageUri}</p>
             </div>
           </div>
@@ -1087,7 +1141,7 @@ function App() {
                 0G Storage
               </button>
             </div>
-            <pre className="relative z-10 m-0 max-h-[350px] min-h-[350px] overflow-auto rounded-3xl border border-white/10 bg-black p-4 text-xs text-zinc-100">
+            <pre className="mono-font relative z-10 m-0 max-h-[350px] min-h-[350px] overflow-auto rounded-3xl border border-white/10 bg-black p-4 text-xs text-zinc-100">
               {JSON.stringify(preview, null, 2)}
             </pre>
           </section>
@@ -1201,7 +1255,7 @@ function App() {
             placeholder="Search packs, categories, skills..."
             value={skillPackQuery}
           />
-          <div className="relative z-10 grid content-start gap-2.5 overflow-y-auto pr-1 xl:flex-1 [scrollbar-color:rgba(255,255,255,0.38)_rgba(255,255,255,0.06)]">
+          <div className="relative z-10 grid content-start gap-2.5 overflow-y-auto pr-1 xl:flex-1">
             {filteredSkillPacks.map((pack) => {
               const installed = hasSkillPack(pack.id);
               const installedCount = pack.skills.filter((skill) => agent.skills.some((agentSkill) => agentSkill.name === skill.name)).length;
@@ -1236,7 +1290,7 @@ function App() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <a
-                      className="rounded-full border border-white/12 bg-black px-2.5 py-1 text-[11px] font-medium text-zinc-100 transition hover:border-white/35"
+                      className="mono-font rounded-full border border-white/12 bg-black px-2.5 py-1 text-[11px] font-medium text-zinc-100 transition hover:border-white/35"
                       href={pack.source}
                       rel="noreferrer"
                       target="_blank"
@@ -1245,7 +1299,7 @@ function App() {
                     </a>
                     {pack.skills.map((skill) => (
                       <a
-                        className="rounded-full border border-white/12 bg-black px-2.5 py-1 text-[11px] font-medium text-zinc-300 transition hover:border-white/35 hover:text-white"
+                        className="mono-font rounded-full border border-white/12 bg-black px-2.5 py-1 text-[11px] font-medium text-zinc-300 transition hover:border-white/35 hover:text-white"
                         href={skill.sourceUrl}
                         key={skill.name}
                         rel="noreferrer"
@@ -1280,7 +1334,7 @@ function App() {
               Add
             </button>
           </div>
-          <div className="relative z-10 grid content-start gap-2.5 overflow-y-auto pr-1 xl:flex-1 [scrollbar-color:rgba(255,255,255,0.38)_rgba(255,255,255,0.06)]">
+          <div className="relative z-10 grid content-start gap-2.5 overflow-y-auto pr-1 xl:flex-1">
             {agent.skills.map((skill) => (
               <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_auto]`} key={skill.id}>
                 <input
@@ -1303,7 +1357,7 @@ function App() {
                     {skill.category}
                   </a>
                 ) : null}
-                <label className="m-0 flex items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400">
+                <label className="mono-font m-0 flex items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.08em] text-zinc-400">
                   <input
                     className="min-h-0 w-auto accent-white"
                     type="checkbox"
@@ -1314,7 +1368,7 @@ function App() {
                 </label>
                 <button
                   aria-label={`Remove ${skill.name}`}
-                  className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-400 transition hover:border-red-200/35 hover:text-red-100"
+                  className="mono-font rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-400 transition hover:border-red-200/35 hover:text-red-100"
                   onClick={() => removeSkill(skill.id)}
                   title={`Remove ${skill.name}`}
                   type="button"
@@ -1378,6 +1432,23 @@ function App() {
           </div>
         </section>
       </section>
+      <footer className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-black px-5 py-6 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
+        <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <p className="mono-font mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">A product by ClawBuilder</p>
+            <h2 className="display-font text-[clamp(48px,12vw,150px)] leading-[0.78] tracking-[-0.01em] text-[#fafafa]">
+              ClawBuilder 0G
+            </h2>
+          </div>
+          <pre className="mono-font m-0 w-full max-w-[320px] whitespace-pre rounded-3xl border border-white/10 bg-white/[0.035] p-4 text-[11px] leading-5 text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] md:text-right">
+            {asciiMark}
+          </pre>
+        </div>
+        <div className="mono-font mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
+          <span>© 2026 ClawBuilder 0G</span>
+          <span>No-code agents · OpenClaw export · 0G ready</span>
+        </div>
+      </footer>
     </main>
   );
 }
