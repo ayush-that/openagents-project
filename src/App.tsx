@@ -1009,7 +1009,7 @@ function App() {
           </div>
         </div>
 
-        <div className="relative min-h-[340px] overflow-hidden sm:min-h-[380px]">
+        <div className="relative hidden min-h-[340px] overflow-hidden sm:min-h-[380px] lg:block">
           <HeroScene />
         </div>
       </section>
