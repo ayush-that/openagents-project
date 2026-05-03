@@ -1,10 +1,10 @@
-# Axiom
+# Tessra
 
 Drag-and-drop no-code builder for portable OpenClaw/FastClaw-style agents that use **0G Compute** as the OpenAI-compatible inference layer and **0G Storage** as the package, memory, and run-log layer.
 
 ## Why this exists
 
-0G-backed agents should be easy to design, inspect, and move between runtimes. Axiom is reusable product tooling for generating 0G-native agent packages:
+0G-backed agents should be easy to design, inspect, and move between runtimes. Tessra is reusable product tooling for generating 0G-native agent packages:
 
 - drag/drop builder canvas for persona, model, memory, skills, and workflows
 - 0G Compute provider preset at `https://router-api.0g.ai/v1`
@@ -17,7 +17,7 @@ Drag-and-drop no-code builder for portable OpenClaw/FastClaw-style agents that u
 
 Target track: **0G — Best Agent Framework, Tooling & Core Extensions**.
 
-Axiom targets the framework/tooling problem: a no-code visual agent builder that turns persona, model, memory, skills, and runbooks into portable OpenClaw/FastClaw-style packages with 0G Compute and 0G Storage defaults. It is positioned as agent infrastructure other builders can use, not as a single demo agent with 0G added afterward.
+Tessra targets the framework/tooling problem: a no-code visual agent builder that turns persona, model, memory, skills, and runbooks into portable OpenClaw/FastClaw-style packages with 0G Compute and 0G Storage defaults. It is positioned as agent infrastructure other builders can use, not as a single demo agent with 0G added afterward.
 
 ## 0G integration points
 

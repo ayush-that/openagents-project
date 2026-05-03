@@ -2,7 +2,7 @@
 
 ## Locked direction
 
-Build **Axiom**, a no-code/low-code framework tool for generating portable OpenClaw/FastClaw-style agents.
+Build **Tessra**, a no-code/low-code framework tool for generating portable OpenClaw/FastClaw-style agents.
 
 ## Base decision
 
@@ -31,7 +31,7 @@ GoClaw is useful as a compatibility reference, but its no-code UI and agent CRUD
 
 ## Demo script
 
-1. Open Axiom.
+1. Open Tessra.
 2. Drag persona/model/memory/skill/workflow blocks into the canvas.
 3. Show 0G Compute router preset.
 4. Customize `SOUL.md` and `MEMORY.md`.

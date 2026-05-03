@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
-  <title id="title">Axiom logo</title>
-  <desc id="desc">Glass claw mark wrapped around a luminous 0G compute core.</desc>
+  <title id="title">Tessra logo</title>
+  <desc id="desc">Glass tesseract mark wrapped around a luminous 0G compute core.</desc>
   <defs>
     <radialGradient id="coreGlow" cx="38%" cy="30%" r="72%">
       <stop offset="0" stop-color="#fff" stop-opacity=".96"/>
