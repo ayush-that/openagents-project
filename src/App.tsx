@@ -58,8 +58,8 @@ const palette: BuilderBlock[] = [
   {
     id: "palette-workflow",
     kind: "workflow",
-    title: "Workflow step",
-    summary: "A no-code instruction stage in the agent runbook.",
+    title: "Runbook step",
+    summary: "Ordered instructions the exported agent follows every run.",
   },
 ];
 
@@ -104,7 +104,7 @@ const kindLabels: Record<CanvasNodeKind, string> = {
   model: "0G Model",
   memory: "Memory",
   skill: "Skill",
-  workflow: "Workflow",
+  workflow: "Runbook",
   skillPack: "Pack",
 };
 
@@ -146,9 +146,11 @@ const ctaIconClass = "grid size-6 shrink-0 place-items-center rounded-full";
 const buttonDepthClass =
   "shadow-[0_6px_0_rgba(0,0,0,0.72)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(0,0,0,0.72)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,0.72)]";
 const primaryButtonClass =
-  "border border-cyan-100/70 bg-[linear-gradient(135deg,#dffcff,#72f1ff_48%,#a78bfa)] text-[#03121d] hover:brightness-110";
+  "border border-white/80 bg-[linear-gradient(135deg,#f6ffff,#7df7ff_50%,#c7bbff)] text-[#02101a] hover:brightness-110";
+const heroSecondaryButtonClass =
+  "border border-cyan-100/70 bg-[linear-gradient(135deg,#f8fdff,#dffcff_52%,#d8d1ff)] text-[#02101a] hover:brightness-105";
 const secondaryButtonClass =
-  "border border-cyan-100/14 bg-[linear-gradient(145deg,rgba(10,27,38,0.94),rgba(5,10,24,0.96)_60%,rgba(34,20,59,0.86))] text-[#f2fbff] hover:border-cyan-200/40";
+  "border border-cyan-100/28 bg-[linear-gradient(145deg,rgba(18,45,59,0.96),rgba(6,17,32,0.98)_58%,rgba(40,25,70,0.92))] text-[#f8fdff] hover:border-cyan-200/60";
 const chipClass =
   "rounded-full border border-cyan-100/16 bg-cyan-200/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-50";
 
@@ -484,7 +486,7 @@ function BuilderFlowCanvas({
       >
         <Background color="rgba(103, 232, 249, 0.2)" gap={24} size={1} variant={BackgroundVariant.Dots} />
         <MiniMap
-          className="!border !border-cyan-100/12 !bg-[#030814]/90"
+          className="!h-24 !w-32 !rounded-2xl !border !border-cyan-100/12 !bg-[#030814]/90"
           maskColor="rgba(0, 0, 0, 0.5)"
           nodeColor="rgba(103, 232, 249, 0.5)"
           nodeStrokeColor="rgba(255, 255, 255, 0.25)"
@@ -497,6 +499,7 @@ function BuilderFlowCanvas({
           aria-label="Zoom in"
           className="grid size-9 place-items-center rounded-full border border-cyan-100/12 bg-white/[0.05] hover:border-cyan-200/40"
           onClick={() => void zoomIn()}
+          title="Zoom into the agent canvas."
           type="button"
         >
           <NucleoIcon className="size-6" name="circle-copy-plus" />
@@ -505,6 +508,7 @@ function BuilderFlowCanvas({
           aria-label="Zoom out"
           className="grid size-9 place-items-center rounded-full border border-cyan-100/12 bg-white/[0.05] hover:border-cyan-200/40"
           onClick={() => void zoomOut()}
+          title="Zoom out to see more of the agent graph."
           type="button"
         >
           <NucleoIcon className="size-6" name="tab-close" />
@@ -513,6 +517,7 @@ function BuilderFlowCanvas({
           aria-label="Fit view"
           className="grid size-9 place-items-center rounded-full border border-cyan-100/12 bg-white/[0.05] hover:border-cyan-200/40"
           onClick={() => void fitView({ padding: 0.18 })}
+          title="Fit every block and pack into view."
           type="button"
         >
           <NucleoIcon className="size-6" name="window" />
@@ -833,9 +838,7 @@ function App() {
 
       <nav className="mb-10 flex items-center justify-between rounded-full border border-cyan-100/14 bg-[#020713]/78 px-4 py-3 shadow-[0_12px_0_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
         <div className="flex items-center gap-4">
-          <div className={`${iconTileClass} size-12 rounded-full`}>
-            <BrandMark className="size-9" />
-          </div>
+          <BrandMark className="size-12" />
           <span className="text-base font-black tracking-[-0.02em] text-[#f8fdff] sm:text-lg">ClawBuilder 0G</span>
         </div>
         <div className="hidden items-center gap-7 text-sm font-extrabold text-[#b8d3e2] sm:flex">
@@ -856,24 +859,26 @@ function App() {
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[#b9d2df]">
             A focused visual builder for OpenClaw/FastClaw-style agent packages. Configure persona,
-            model, memory, skills, and workflow, then export a ready-to-run 0G package.
+            model, memory, skills, and runbook, then export a ready-to-run 0G package.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
               className={`${buttonDepthClass} ${primaryButtonClass} inline-flex items-center justify-center gap-2.5 rounded-full px-5 py-2.5 text-sm font-black`}
               href="#builder"
+              title="Jump to the drag-and-drop builder canvas."
             >
-              <span className={`${ctaIconClass} bg-white/45`}>
+              <span className={`${ctaIconClass} border border-[#02101a]/12 bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]`}>
                 <NucleoIcon className="size-5" name="sparkle" />
               </span>
               Open builder
             </a>
             <button
-              className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2.5 rounded-full px-5 py-2.5 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-70`}
+              className={`${buttonDepthClass} ${heroSecondaryButtonClass} inline-flex items-center justify-center gap-2.5 rounded-full px-5 py-2.5 text-sm font-black disabled:cursor-not-allowed disabled:opacity-70`}
               onClick={exportPackage}
               disabled={exporting}
+              title="Download the current agent as an OpenClaw-style 0G package zip."
             >
-              <span className={`${ctaIconClass} border border-cyan-100/18 bg-cyan-200/10`}>
+              <span className={`${ctaIconClass} border border-[#02101a]/12 bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]`}>
                 <NucleoIcon className="size-5" name="circle-arrow-down" />
               </span>
               {exporting ? "Building package..." : "Export starter package"}
@@ -951,6 +956,7 @@ function App() {
               <button
                 className={`${buttonDepthClass} ${secondaryButtonClass} mt-auto rounded-full px-3 py-2 text-sm font-black`}
                 onClick={() => applyAgentTemplate(template)}
+                title={`Load ${template.name} with its recommended packs, memory, and runbook.`}
                 type="button"
               >
                 Load template
@@ -969,7 +975,9 @@ function App() {
               </span>
               <span>
                 Combo builder canvas
-                <span className="mt-1 block text-xs font-semibold text-[#8fb4c8]">Drop packs onto the graph to assemble the agent&apos;s capability stack.</span>
+                <span className="mt-1 block text-xs font-semibold text-[#8fb4c8]">
+                  Drop packs onto the graph; runbook nodes define the ordered steps the agent follows.
+                </span>
               </span>
             </span>
             <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-cyan-100/12 bg-[#020713]/88 text-center">
@@ -1003,15 +1011,15 @@ function App() {
           <div className="relative z-10 mt-4 grid gap-3 md:grid-cols-3">
             <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-3">
               <p className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Current agent</p>
-              <p className="mt-1 truncate text-sm font-black text-[#f8fdff]">{agent.name}</p>
+              <p className="mt-1 truncate text-sm font-black text-[#f8fdff]" title="The exported agent package name.">{agent.name}</p>
             </div>
             <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-3">
               <p className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Template packs</p>
-              <p className="mt-1 text-sm font-black text-[#f8fdff]">{templateCount} loaded</p>
+              <p className="mt-1 text-sm font-black text-[#f8fdff]" title="Unique prebuilt skill packs currently installed.">{templateCount} loaded</p>
             </div>
             <div className="rounded-2xl border border-cyan-100/12 bg-[#020713]/88 p-3">
               <p className="text-[10px] font-black uppercase tracking-[0.1em] text-[#8fb4c8]">Export target</p>
-              <p className="mt-1 truncate text-sm font-black text-[#f8fdff]">{agent.storage.packageUri}</p>
+              <p className="mt-1 truncate text-sm font-black text-[#f8fdff]" title="0G Storage package URI template written into manifest.0g.json.">{agent.storage.packageUri}</p>
             </div>
           </div>
         </section>
@@ -1031,6 +1039,11 @@ function App() {
                 key={block.id}
                 onDragStart={(event) => handleDragStart(event, block.id)}
                 onDragEnd={() => setDraggedBlockId(null)}
+                title={
+                  block.kind === "workflow"
+                    ? "Runbook steps are ordered instructions the exported agent follows during each run."
+                    : `Drag ${block.title} onto the canvas.`
+                }
               >
                 <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
                 <div>
@@ -1042,7 +1055,7 @@ function App() {
           </aside>
 
           <section className={panelClass} id="export-preview">
-            <div className={panelTitleClass}>
+            <div className={panelTitleClass} title="Inspect the exact files and metadata that will be written into the exported package.">
               <span className={panelIconClass}>
                 <NucleoIcon className="size-6" name="cube" />
               </span>
@@ -1056,6 +1069,7 @@ function App() {
                     : "bg-[#020713]/88 text-[#abc7d8]"
                 }`}
                 onClick={() => setActiveTab("manifest")}
+                title="Show manifest.0g.json provider, storage, skill, and runbook metadata."
               >
                 manifest.0g.json
               </button>
@@ -1066,6 +1080,7 @@ function App() {
                     : "bg-[#020713]/88 text-[#abc7d8]"
                 }`}
                 onClick={() => setActiveTab("agent")}
+                title="Show the portable agent runtime configuration."
               >
                 agent.json
               </button>
@@ -1076,6 +1091,7 @@ function App() {
                     : "bg-[#020713]/88 text-[#abc7d8]"
                 }`}
                 onClick={() => setActiveTab("storage")}
+                title="Show the 0G Storage package, memory, and log URI targets."
               >
                 0G Storage
               </button>
@@ -1097,7 +1113,7 @@ function App() {
           </div>
           <label className={labelClass}>
             Agent name
-            <input className={inputClass} value={agent.name} onChange={(event) => updateAgent({ name: event.target.value })} />
+            <input className={inputClass} title="Used as the package and manifest agent name." value={agent.name} onChange={(event) => updateAgent({ name: event.target.value })} />
           </label>
           <label className={labelClass}>
             Description
@@ -1105,7 +1121,7 @@ function App() {
           </label>
           <label className={labelClass}>
             SOUL.md
-            <textarea className={inputClass} value={agent.soul} onChange={(event) => updateAgent({ soul: event.target.value })} rows={6} />
+            <textarea className={inputClass} title="Persona, tone, goals, and operating principles exported to SOUL.md." value={agent.soul} onChange={(event) => updateAgent({ soul: event.target.value })} rows={6} />
           </label>
         </section>
 
@@ -1122,11 +1138,11 @@ function App() {
           </label>
           <label className={labelClass}>
             API base
-            <input className={inputClass} value={agent.model.apiBase} onChange={(event) => updateModel({ apiBase: event.target.value })} />
+            <input className={inputClass} title="OpenAI-compatible 0G Compute router URL." value={agent.model.apiBase} onChange={(event) => updateModel({ apiBase: event.target.value })} />
           </label>
           <label className={labelClass}>
             Model
-            <select className={inputClass} value={agent.model.modelId} onChange={(event) => updateModel({ modelId: event.target.value })}>
+            <select className={inputClass} title="Model id written into agent.json and manifest.0g.json." value={agent.model.modelId} onChange={(event) => updateModel({ modelId: event.target.value })}>
               <option value="openai/gpt-oss-20b">openai/gpt-oss-20b</option>
               <option value="qwen/qwen-2.5-7b-instruct">qwen/qwen-2.5-7b-instruct</option>
               <option value="google/gemma-3-27b-it">google/gemma-3-27b-it</option>
@@ -1135,7 +1151,7 @@ function App() {
           </label>
           <label className={labelClass}>
             API key env
-            <input className={inputClass} value={agent.model.apiKeyEnv} onChange={(event) => updateModel({ apiKeyEnv: event.target.value })} />
+            <input className={inputClass} title="Environment variable name the exported agent reads for provider auth." value={agent.model.apiKeyEnv} onChange={(event) => updateModel({ apiKeyEnv: event.target.value })} />
           </label>
         </section>
 
@@ -1148,11 +1164,11 @@ function App() {
           </div>
           <label className={labelClass}>
             MEMORY.md
-            <textarea className={inputClass} value={agent.memory} onChange={(event) => updateAgent({ memory: event.target.value })} rows={8} />
+            <textarea className={inputClass} title="Long-term memory content exported to MEMORY.md." value={agent.memory} onChange={(event) => updateAgent({ memory: event.target.value })} rows={8} />
           </label>
           <label className={labelClass}>
             Package URI template
-            <input className={inputClass} value={agent.storage.packageUri} onChange={(event) => updateStorage({ packageUri: event.target.value })} />
+            <input className={inputClass} title="0G Storage URI template for the exported package root." value={agent.storage.packageUri} onChange={(event) => updateStorage({ packageUri: event.target.value })} />
           </label>
           <label className={labelClass}>
             Memory URI template
@@ -1165,8 +1181,8 @@ function App() {
         </section>
       </section>
 
-      <section className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(560px,1.1fr)]">
-        <section className={panelClass}>
+      <section className="mt-4 grid items-start gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(560px,1.1fr)]">
+        <section className={`${panelClass} flex h-[760px] flex-col`}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
@@ -1177,6 +1193,7 @@ function App() {
             <button
               className={`${buttonDepthClass} ${secondaryButtonClass} rounded-full px-3 py-2 text-xs font-black`}
               onClick={addAllVisibleSkillPacksToCanvas}
+              title="Add every currently visible skill pack to the canvas and export manifest."
               type="button"
             >
               Add shown
@@ -1193,7 +1210,7 @@ function App() {
             placeholder="Search packs, categories, skills..."
             value={skillPackQuery}
           />
-          <div className="relative z-10 grid max-h-[560px] gap-2.5 overflow-y-auto pr-1 [scrollbar-color:rgba(103,232,249,0.45)_rgba(255,255,255,0.06)]">
+          <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1 [scrollbar-color:rgba(103,232,249,0.45)_rgba(255,255,255,0.06)]">
             {filteredSkillPacks.map((pack) => {
               const installed = hasSkillPack(pack.id);
               const installedCount = pack.skills.filter((skill) => agent.skills.some((agentSkill) => agentSkill.name === skill.name)).length;
@@ -1204,6 +1221,7 @@ function App() {
                   key={pack.id}
                   onDragStart={(event) => handlePackDragStart(event, pack.id)}
                   onDragEnd={() => setDraggedPackId(null)}
+                  title={`Drag ${pack.name} onto the canvas or use the add button.`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -1219,6 +1237,7 @@ function App() {
                         installed ? "bg-cyan-200 text-[#03121d]" : "bg-[#020713]/88 text-[#f8fdff]"
                       }`}
                       onClick={() => addSkillPackToCanvas(pack.id)}
+                      title={installed ? `${installedCount} of ${pack.skills.length} skills already added.` : `Add ${pack.skills.length} skills from ${pack.name}.`}
                       type="button"
                     >
                       {installed ? `${installedCount}/${pack.skills.length} added` : `Drop / add ${pack.skills.length}`}
@@ -1251,7 +1270,7 @@ function App() {
           </div>
         </section>
 
-        <section className={panelClass}>
+        <section className={`${panelClass} flex h-[760px] flex-col`}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
@@ -1259,14 +1278,18 @@ function App() {
               </span>
               Skills
             </span>
-            <button className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`} onClick={addSkill}>
+            <button
+              className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`}
+              onClick={addSkill}
+              title="Add one custom SKILL.md capability to the exported package."
+            >
               <span className={buttonIconClass}>
                 <NucleoIcon className="size-5" name="circle-copy-plus" />
               </span>
               Add
             </button>
           </div>
-          <div className="relative z-10 grid gap-2.5">
+          <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1 [scrollbar-color:rgba(103,232,249,0.45)_rgba(255,255,255,0.06)]">
             {agent.skills.map((skill) => (
               <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_36px]`} key={skill.id}>
                 <input
@@ -1316,22 +1339,36 @@ function App() {
               <span className={panelIconClass}>
                 <NucleoIcon className="size-6" name="tasks" />
               </span>
-              Workflow
+              Runbook
             </span>
-            <button className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`} onClick={addWorkflowStep}>
+            <button
+              className={`${buttonDepthClass} ${secondaryButtonClass} inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-extrabold`}
+              onClick={addWorkflowStep}
+              title="Add one ordered execution step to workflow.json."
+            >
               <span className={buttonIconClass}>
                 <NucleoIcon className="size-5" name="circle-copy-plus" />
               </span>
               Add
             </button>
           </div>
+          <p className="relative z-10 mb-4 text-sm leading-6 text-[#abc7d8]">
+            Runbook steps are the agent&apos;s ordered execution plan, exported as
+            <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-cyan-50">workflow.json</code>
+            so runtimes know what to do first, next, and last.
+          </p>
           <div className="relative z-10 grid gap-2.5">
             {agent.workflow.map((step, index) => (
-              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[34px_160px_1fr_36px]`} key={step.id}>
+              <article
+                className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[34px_160px_1fr_36px]`}
+                key={step.id}
+                title="This row becomes one ordered workflow.json runbook step."
+              >
                 <span className={`${iconTileClass} size-[34px]`}>{index + 1}</span>
-                <input className={inputClass} value={step.title} onChange={(event) => updateWorkflowStep(step.id, { title: event.target.value })} />
+                <input className={inputClass} title="Short runbook step name." value={step.title} onChange={(event) => updateWorkflowStep(step.id, { title: event.target.value })} />
                 <textarea
                   className={inputClass}
+                  title="Instruction the agent follows during this runbook step."
                   value={step.instruction}
                   onChange={(event) => updateWorkflowStep(step.id, { instruction: event.target.value })}
                   rows={2}
