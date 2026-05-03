@@ -1156,18 +1156,18 @@ function App() {
               <span className={panelIconClass}>
                 <NucleoIcon className="size-6" name="grid" />
               </span>
-              Prebuilt skill packs
+              Skill packs
             </span>
             <button
               className={`${buttonDepthClass} rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-xs font-black text-white`}
               onClick={addAllVisibleSkillPacksToCanvas}
               type="button"
             >
-              Add visible to canvas
+              Add shown
             </button>
           </div>
           <p className="relative z-10 mb-4 text-sm leading-6 text-slate-400">
-            Curated from VoltAgent&apos;s awesome-openclaw-skills categories and exported as normal OpenClaw-compatible
+            Curated OpenClaw-compatible packs from VoltAgent&apos;s skill catalog, exported as normal
             <code className="mx-1 rounded bg-white/5 px-1.5 py-0.5 text-cyan-100">SKILL.md</code>
             folders.
           </p>
@@ -1177,7 +1177,7 @@ function App() {
             placeholder="Search packs, categories, skills..."
             value={skillPackQuery}
           />
-          <div className="relative z-10 grid gap-2.5">
+          <div className="relative z-10 grid max-h-[560px] gap-2.5 overflow-y-auto pr-1 [scrollbar-color:rgba(103,232,249,0.45)_rgba(255,255,255,0.06)]">
             {filteredSkillPacks.map((pack) => {
               const installed = hasSkillPack(pack.id);
               const installedCount = pack.skills.filter((skill) => agent.skills.some((agentSkill) => agentSkill.name === skill.name)).length;
