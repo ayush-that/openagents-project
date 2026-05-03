@@ -294,7 +294,7 @@ function HeroScene() {
       tesseractGeometry,
       new THREE.LineBasicMaterial({ color: 0xfafafa, transparent: true, opacity: 0.78 }),
     );
-    tesseract.position.x = -0.42;
+    tesseract.position.set(-1.18, 0.76, 0);
     scene.add(tesseract);
 
     const shadowGeometry = new THREE.BufferGeometry();
@@ -304,7 +304,7 @@ function HeroScene() {
       shadowGeometry,
       new THREE.LineBasicMaterial({ color: 0x71717a, transparent: true, opacity: 0.24 }),
     );
-    shadow.position.x = -0.42;
+    shadow.position.set(-1.18, 0.76, 0);
     shadow.scale.setScalar(1.06);
     scene.add(shadow);
 
@@ -315,7 +315,7 @@ function HeroScene() {
       vertexGeometry,
       new THREE.PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.92 }),
     );
-    vertices.position.x = -0.42;
+    vertices.position.set(-1.18, 0.76, 0);
     scene.add(vertices);
 
     const pointsGeometry = new THREE.BufferGeometry();
