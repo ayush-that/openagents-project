@@ -12,8 +12,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/geist": "^5.2.8",
     "@fontsource/instrument-serif": "^5.2.8",
-    "@fontsource/manrope": "^5.2.8",
     "@vitejs/plugin-react": "^5.0.4",
     "@xyflow/react": "^12.10.2",
     "jszip": "^3.10.1",
