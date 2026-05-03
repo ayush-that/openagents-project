@@ -40,7 +40,9 @@ import {
   downloadBlob,
   starterAgent,
 } from "./agentPackage";
-import type { AgentDraft, BlockKind, BuilderBlock, SkillDraft, WorkflowStep } from "./types";
+import { agentTemplates } from "./agentTemplates";
+import { skillPacks } from "./skillPacks";
+import type { AgentDraft, AgentTemplate, BlockKind, BuilderBlock, SkillDraft, SkillPack, WorkflowStep } from "./types";
 
 const palette: BuilderBlock[] = [
   {
@@ -75,23 +77,35 @@ const palette: BuilderBlock[] = [
   },
 ];
 
-const kindIcons: Record<BlockKind, ReactNode> = {
+type CanvasNodeKind = BlockKind | "skillPack";
+
+const kindIcons: Record<CanvasNodeKind, ReactNode> = {
   soul: <UserCircleIcon className="size-[18px]" />,
   model: <CpuChipIcon className="size-[18px]" />,
   memory: <CircleStackIcon className="size-[18px]" />,
   skill: <WrenchScrewdriverIcon className="size-[18px]" />,
   workflow: <QueueListIcon className="size-[18px]" />,
+  skillPack: <Squares2X2Icon className="size-[18px]" />,
 };
 
-const kindLabels: Record<BlockKind, string> = {
+const kindLabels: Record<CanvasNodeKind, string> = {
   soul: "Persona",
   model: "0G Model",
   memory: "Memory",
   skill: "Skill",
   workflow: "Workflow",
+  skillPack: "Pack",
 };
 
-type BuilderNodeData = BuilderBlock & Record<string, unknown>;
+type BuilderNodeData = {
+  id: string;
+  kind: CanvasNodeKind;
+  title: string;
+  summary: string;
+  category?: string;
+  count?: number;
+  packId?: string;
+} & Record<string, unknown>;
 type BuilderNode = Node<BuilderNodeData, "builderBlock">;
 type BuilderEdge = Edge;
 
@@ -139,12 +153,33 @@ function createBuilderNodeData(block: BuilderBlock): BuilderNodeData {
   };
 }
 
+function createPackNodeData(pack: SkillPack): BuilderNodeData {
+  return {
+    id: `pack-${pack.id}`,
+    kind: "skillPack",
+    title: pack.name,
+    summary: pack.summary,
+    category: pack.category,
+    count: pack.skills.length,
+    packId: pack.id,
+  };
+}
+
 function createFlowNode(block: BuilderBlock, index: number): BuilderNode {
   return {
     id: block.id,
     type: "builderBlock",
     position: { x: 72 + (index % 2) * 280, y: 40 + index * 132 },
     data: createBuilderNodeData(block),
+  };
+}
+
+function createPackFlowNode(pack: SkillPack, index: number, position?: { x: number; y: number }): BuilderNode {
+  return {
+    id: `pack-${pack.id}`,
+    type: "builderBlock",
+    position: position ?? { x: 330 + (index % 2) * 270, y: 330 + Math.floor(index / 2) * 132 },
+    data: createPackNodeData(pack),
   };
 }
 
@@ -158,8 +193,42 @@ function createFlowEdge(source: string, target: string): BuilderEdge {
   };
 }
 
+function findBuilderNodeId(nodeList: BuilderNode[], kind: CanvasNodeKind) {
+  return nodeList.find((node) => node.data.kind === kind)?.id;
+}
+
 function createFlowEdges(nodes: BuilderNode[]): BuilderEdge[] {
   return nodes.slice(0, -1).map((node, index) => createFlowEdge(node.id, nodes[index + 1].id));
+}
+
+function createSkillId(skillName: string) {
+  return `${slugify(skillName) || "skill"}-${crypto.randomUUID()}`;
+}
+
+function createSkillsFromPacks(packIds: string[], existingSkills: SkillDraft[] = []): SkillDraft[] {
+  const existingNames = new Set(existingSkills.map((skill) => skill.name));
+  const skills: SkillDraft[] = [];
+
+  for (const packId of packIds) {
+    const pack = skillPacks.find((candidate) => candidate.id === packId);
+    if (!pack) continue;
+
+    for (const skill of pack.skills) {
+      if (existingNames.has(skill.name)) continue;
+      existingNames.add(skill.name);
+      skills.push({
+        id: createSkillId(skill.name),
+        name: skill.name,
+        description: skill.description,
+        enabled: true,
+        category: pack.category,
+        sourceUrl: skill.sourceUrl,
+        packId: pack.id,
+      });
+    }
+  }
+
+  return skills;
 }
 
 function HeroScene() {
@@ -290,11 +359,19 @@ function BuilderFlowNode({ data }: { data: BuilderNodeData }) {
       <div className="grid grid-cols-[36px_1fr] gap-3">
         <div className={`${iconTileClass} size-9`}>{kindIcons[data.kind]}</div>
         <div>
-          <div className="mb-1 inline-flex rounded-full border border-cyan-300/15 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100">
+          <div className="mb-1 flex flex-wrap items-center gap-1.5">
+            <span className="inline-flex rounded-full border border-cyan-300/15 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100">
             {kindLabels[data.kind]}
+            </span>
+            {data.count ? (
+              <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-slate-300">
+                {data.count} skills
+              </span>
+            ) : null}
           </div>
           <h3 className="mb-1 text-sm font-black text-white">{data.title}</h3>
           <p className="m-0 text-xs leading-5 text-slate-400">{data.summary}</p>
+          {data.category ? <p className="mt-2 text-[10px] font-black uppercase tracking-[0.1em] text-cyan-200">{data.category}</p> : null}
         </div>
       </div>
       <Handle className="!size-3 !border !border-cyan-200/70 !bg-cyan-300" position={Position.Bottom} type="source" />
@@ -313,8 +390,11 @@ type BuilderFlowCanvasProps = {
   onEdgesChange: OnEdgesChange<BuilderEdge>;
   onConnect: (connection: Connection) => void;
   onPaletteDrop: (block: BuilderBlock, position: { x: number; y: number }) => void;
+  onPackDrop: (packId: string, position: { x: number; y: number }) => void;
   draggedBlockId: string | null;
   setDraggedBlockId: (value: string | null) => void;
+  draggedPackId: string | null;
+  setDraggedPackId: (value: string | null) => void;
 };
 
 function BuilderFlowCanvas({
@@ -324,8 +404,11 @@ function BuilderFlowCanvas({
   onEdgesChange,
   onConnect,
   onPaletteDrop,
+  onPackDrop,
   draggedBlockId,
   setDraggedBlockId,
+  draggedPackId,
+  setDraggedPackId,
 }: BuilderFlowCanvasProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { screenToFlowPosition } = useReactFlow();
@@ -333,21 +416,28 @@ function BuilderFlowCanvas({
   function handleDrop(event: ReactDragEvent<HTMLDivElement>) {
     event.preventDefault();
     const droppedBlockId = event.dataTransfer.getData("application/x-clawbuilder-block") || draggedBlockId;
+    const droppedPackId = event.dataTransfer.getData("application/x-clawbuilder-pack") || draggedPackId;
     const paletteBlock = palette.find((block) => block.id === droppedBlockId);
+    const position = screenToFlowPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
+
+    if (droppedPackId) {
+      onPackDrop(droppedPackId, position);
+      setDraggedPackId(null);
+      setDraggedBlockId(null);
+      return;
+    }
+
     if (!paletteBlock) return;
 
-    onPaletteDrop(
-      paletteBlock,
-      screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      }),
-    );
+    onPaletteDrop(paletteBlock, position);
     setDraggedBlockId(null);
   }
 
   return (
-    <div className="relative z-10 h-[560px] overflow-hidden rounded-3xl border border-dashed border-white/15 bg-black" ref={wrapperRef}>
+    <div className="relative z-10 h-[680px] overflow-hidden rounded-3xl border border-dashed border-white/15 bg-black" ref={wrapperRef}>
       <ReactFlow
         colorMode="dark"
         connectionLineStyle={{ stroke: "rgba(103, 232, 249, 0.7)", strokeWidth: 1.5 }}
@@ -391,11 +481,31 @@ function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState<BuilderNode>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<BuilderEdge>(initialEdges);
   const [draggedBlockId, setDraggedBlockId] = useState<string | null>(null);
+  const [draggedPackId, setDraggedPackId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"manifest" | "agent" | "storage">("manifest");
+  const [skillPackQuery, setSkillPackQuery] = useState("");
   const [exporting, setExporting] = useState(false);
 
   const manifest = useMemo(() => createManifest(agent), [agent]);
   const agentConfig = useMemo(() => createAgentConfig(agent), [agent]);
+  const installedPackIds = useMemo(
+    () =>
+      Array.from(new Set(agent.skills.map((skill) => skill.packId).filter((packId): packId is string => Boolean(packId)))),
+    [agent.skills],
+  );
+  const canvasSkills = useMemo(() => manifest.skills.length, [manifest.skills.length]);
+  const templateCount = installedPackIds.length;
+  const filteredSkillPacks = useMemo(() => {
+    const query = skillPackQuery.trim().toLowerCase();
+    if (!query) return skillPacks;
+
+    return skillPacks.filter((pack) =>
+      [pack.name, pack.category, pack.summary, pack.recommendedFor, ...pack.skills.map((skill) => `${skill.name} ${skill.description}`)]
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [skillPackQuery]);
 
   function updateAgent(patch: Partial<AgentDraft>) {
     setAgent((current) => ({ ...current, ...patch }));
@@ -415,7 +525,7 @@ function App() {
       skills: [
         ...current.skills,
         {
-          id: crypto.randomUUID(),
+          id: createSkillId("custom-skill"),
           name: "custom-skill",
           description: "Describe the agent capability this skill should add.",
           enabled: true,
@@ -436,6 +546,140 @@ function App() {
       ...current,
       skills: current.skills.filter((skill) => skill.id !== id),
     }));
+  }
+
+  function hasSkillPack(packId: string) {
+    return agent.skills.some((skill) => skill.packId === packId);
+  }
+
+  function addSkillPack(packId: string) {
+    const pack = skillPacks.find((candidate) => candidate.id === packId);
+    if (!pack) return;
+
+    setAgent((current) => {
+      const skillsToAdd = createSkillsFromPacks([pack.id], current.skills);
+
+      if (skillsToAdd.length === 0) return current;
+
+      return {
+        ...current,
+        skills: current.skills.concat(skillsToAdd),
+        memory: current.memory.includes(pack.name)
+          ? current.memory
+          : `${current.memory.trimEnd()}\n- Skill pack installed: ${pack.name} (${pack.category}).\n`,
+      };
+    });
+  }
+
+  function addSkillPackToCanvas(packId: string, position?: { x: number; y: number }) {
+    const pack = skillPacks.find((candidate) => candidate.id === packId);
+    if (!pack) return;
+
+    addSkillPack(pack.id);
+    setNodes((currentNodes) => {
+      if (currentNodes.some((node) => node.id === `pack-${pack.id}`)) return currentNodes;
+
+      const packNodes = currentNodes.filter((node) => node.data.kind === "skillPack").length;
+      const node = createPackFlowNode(pack, packNodes, position);
+      return currentNodes.concat(node);
+    });
+    setEdges((currentEdges) => {
+      const source = findBuilderNodeId(nodes, "skill") ?? nodes.at(-1)?.id;
+      if (!source || currentEdges.some((edge) => edge.target === `pack-${pack.id}`)) return currentEdges;
+      return currentEdges.concat(createFlowEdge(source, `pack-${pack.id}`));
+    });
+  }
+
+  function addAllVisibleSkillPacks() {
+    setAgent((current) => {
+      const visiblePackIds = filteredSkillPacks.map((pack) => pack.id);
+      const memoryNotes: string[] = [];
+      const skillsToAdd = createSkillsFromPacks(visiblePackIds, current.skills);
+
+      for (const pack of filteredSkillPacks) {
+        if (!current.memory.includes(pack.name) && skillsToAdd.some((skill) => skill.packId === pack.id)) {
+          memoryNotes.push(`- Skill pack installed: ${pack.name} (${pack.category}).`);
+        }
+      }
+
+      if (skillsToAdd.length === 0) return current;
+
+      const notes = memoryNotes.length > 0 ? `\n${memoryNotes.join("\n")}\n` : "";
+      return {
+        ...current,
+        skills: current.skills.concat(skillsToAdd),
+        memory: `${current.memory.trimEnd()}${notes}`,
+      };
+    });
+  }
+
+  function addAllVisibleSkillPacksToCanvas() {
+    addAllVisibleSkillPacks();
+    setNodes((currentNodes) => {
+      const existingIds = new Set(currentNodes.map((node) => node.id));
+      const packNodes = currentNodes.filter((node) => node.data.kind === "skillPack").length;
+      const nodesToAdd = filteredSkillPacks
+        .filter((pack) => !existingIds.has(`pack-${pack.id}`))
+        .map((pack, index) => createPackFlowNode(pack, packNodes + index));
+
+      return currentNodes.concat(nodesToAdd);
+    });
+    setEdges((currentEdges) => {
+      const source = findBuilderNodeId(nodes, "skill");
+      if (!source) return currentEdges;
+
+      const existingTargets = new Set(currentEdges.map((edge) => edge.target));
+      return currentEdges.concat(
+        filteredSkillPacks
+          .filter((pack) => !existingTargets.has(`pack-${pack.id}`))
+          .map((pack) => createFlowEdge(source, `pack-${pack.id}`)),
+      );
+    });
+  }
+
+  function applyAgentTemplate(template: AgentTemplate) {
+    const baseSkills = starterAgent.skills.map((skill) => ({
+      ...skill,
+      id: createSkillId(skill.name),
+    }));
+    const templateSkills = createSkillsFromPacks(template.skillPackIds, baseSkills);
+
+    const templateSlug = slugify(template.name) || "agent";
+    setAgent({
+      ...starterAgent,
+      name: template.name,
+      description: template.description,
+      soul: template.soul,
+      memory: `${template.memory.trimEnd()}\n${template.skillPackIds
+        .map((packId) => {
+          const pack = skillPacks.find((candidate) => candidate.id === packId);
+          return pack ? `- Template pack: ${pack.name} (${pack.category}).` : "";
+        })
+        .filter(Boolean)
+        .join("\n")}\n`,
+      skills: baseSkills.concat(templateSkills),
+      workflow: template.workflow.map((step) => ({ ...step, id: `${slugify(step.title) || "step"}-${crypto.randomUUID()}` })),
+      storage: {
+        packageUri: `0g://package/${templateSlug}/{rootHash}`,
+        memoryUri: `0g://memory/${templateSlug}/MEMORY.md`,
+        logUri: `0g://logs/${templateSlug}/{sessionId}.jsonl`,
+      },
+    });
+    setNodes((currentNodes) => {
+      const baseNodes = currentNodes.filter((node) => node.data.kind !== "skillPack");
+      return baseNodes.concat(
+        template.skillPackIds
+          .map((packId) => skillPacks.find((candidate) => candidate.id === packId))
+          .filter((pack): pack is SkillPack => Boolean(pack))
+          .map((pack, index) => createPackFlowNode(pack, index)),
+      );
+    });
+    setEdges((currentEdges) => {
+      const source = findBuilderNodeId(nodes, "skill");
+      if (!source) return currentEdges;
+      const baseEdges = currentEdges.filter((edge) => !edge.target.startsWith("pack-"));
+      return baseEdges.concat(template.skillPackIds.map((packId) => createFlowEdge(source, `pack-${packId}`)));
+    });
   }
 
   function addWorkflowStep() {
@@ -472,6 +716,12 @@ function App() {
     setDraggedBlockId(blockId);
   }
 
+  function handlePackDragStart(event: ReactDragEvent<HTMLElement>, packId: string) {
+    event.dataTransfer.setData("application/x-clawbuilder-pack", packId);
+    event.dataTransfer.effectAllowed = "copy";
+    setDraggedPackId(packId);
+  }
+
   function addFlowBlock(block: BuilderBlock, position: { x: number; y: number }) {
     const canvasBlock = createCanvasBlock(block);
     const previousNode = nodes.at(-1);
@@ -486,6 +736,9 @@ function App() {
     if (previousNode) {
       setEdges((currentEdges) => currentEdges.concat(createFlowEdge(previousNode.id, node.id)));
     }
+
+    if (block.kind === "skill") addSkill();
+    if (block.kind === "workflow") addWorkflowStep();
   }
 
   function handleConnect(connection: Connection) {
@@ -619,94 +872,169 @@ function App() {
         </div>
       </section>
 
-      <section className="grid items-start gap-4 xl:grid-cols-[260px_minmax(420px,1fr)_390px]">
-        <aside className={`${panelClass} xl:sticky xl:top-4`}>
-          <div className={panelTitleClass}>
-            <span className={panelIconClass}>
-              <Squares2X2Icon className="size-[18px]" />
-            </span>
-            Drag blocks
-          </div>
-          {palette.map((block) => (
-            <article
-              className={`${glassRowClass} mt-2.5 grid cursor-grab grid-cols-[40px_1fr] gap-3 rounded-[1.25rem] p-3.5 first:mt-0`}
-              draggable
-              key={block.id}
-              onDragStart={(event) => handleDragStart(event, block.id)}
-              onDragEnd={() => setDraggedBlockId(null)}
-            >
-              <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
+      <section className={`${panelClass} mb-4`} id="templates">
+        <div className={panelTitleClass}>
+          <span className={panelIconClass}>
+            <CubeTransparentIcon className="size-[18px]" />
+          </span>
+          One-click agent templates
+        </div>
+        <div className="relative z-10 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {agentTemplates.map((template) => (
+            <article className={`${glassRowClass} grid gap-3 rounded-2xl p-4`} key={template.id}>
               <div>
-                <h3 className="mb-1 text-sm font-black text-white">{block.title}</h3>
-                <p className="m-0 text-xs leading-5 text-slate-400">{block.summary}</p>
+                <h3 className="m-0 text-lg font-black tracking-[-0.03em] text-white">{template.name}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">{template.description}</p>
               </div>
+              <div className="flex flex-wrap gap-2">
+                {template.skillPackIds.map((packId) => {
+                  const pack = skillPacks.find((candidate) => candidate.id === packId);
+                  return pack ? (
+                    <span
+                      className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100"
+                      key={packId}
+                    >
+                      {pack.name}
+                    </span>
+                  ) : null;
+                })}
+              </div>
+              <button
+                className={`${buttonDepthClass} mt-auto rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-black text-white`}
+                onClick={() => applyAgentTemplate(template)}
+                type="button"
+              >
+                Load template
+              </button>
             </article>
           ))}
-        </aside>
+        </div>
+      </section>
 
-        <section className={panelClass} id="builder">
-          <div className={panelTitleClass}>
-            <span className={panelIconClass}>
-              <SparklesIcon className="size-[18px]" />
+      <section className="grid items-start gap-4 xl:grid-cols-[minmax(560px,1fr)_360px]">
+        <section className={`${panelClass} min-h-[760px]`} id="builder">
+          <div className={`${panelTitleClass} items-start justify-between`}>
+            <span className="flex items-center gap-2.5">
+              <span className={panelIconClass}>
+                <SparklesIcon className="size-[18px]" />
+              </span>
+              <span>
+                Combo builder canvas
+                <span className="mt-1 block text-xs font-semibold text-slate-500">Drop packs onto the graph to assemble the agent&apos;s capability stack.</span>
+              </span>
             </span>
-            React Flow agent canvas
+            <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-[#050505] text-center">
+              {[
+                ["packs", installedPackIds.length],
+                ["skills", canvasSkills],
+                ["steps", agent.workflow.length],
+              ].map(([label, value]) => (
+                <div className="border-r border-white/10 px-3 py-2 last:border-r-0" key={label}>
+                  <div className="text-base font-black text-white">{value}</div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500">{label}</div>
+                </div>
+              ))}
+            </div>
           </div>
           <ReactFlowProvider>
             <BuilderFlowCanvas
               draggedBlockId={draggedBlockId}
+              draggedPackId={draggedPackId}
               edges={edges}
               nodes={nodes}
               onConnect={handleConnect}
               onEdgesChange={onEdgesChange}
               onNodesChange={onNodesChange}
+              onPackDrop={addSkillPackToCanvas}
               onPaletteDrop={addFlowBlock}
               setDraggedBlockId={setDraggedBlockId}
+              setDraggedPackId={setDraggedPackId}
             />
           </ReactFlowProvider>
+          <div className="relative z-10 mt-4 grid gap-3 md:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-[#050505] p-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500">Current agent</p>
+              <p className="mt-1 truncate text-sm font-black text-white">{agent.name}</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-[#050505] p-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500">Template packs</p>
+              <p className="mt-1 text-sm font-black text-white">{templateCount} loaded</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-[#050505] p-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500">Export target</p>
+              <p className="mt-1 truncate text-sm font-black text-white">{agent.storage.packageUri}</p>
+            </div>
+          </div>
         </section>
 
-        <section className={`${panelClass} xl:sticky xl:top-4`} id="export-preview">
-          <div className={panelTitleClass}>
-            <span className={panelIconClass}>
-              <CubeTransparentIcon className="size-[18px]" />
-            </span>
-            Live export preview
-          </div>
-          <div className="relative z-10 mb-3 flex gap-2">
-            <button
-              className={`${buttonDepthClass} rounded-full px-3 py-2 ${
-                activeTab === "manifest"
-                  ? "bg-cyan-300 text-slate-950"
-                  : "bg-[#050505] text-slate-400"
-              }`}
-              onClick={() => setActiveTab("manifest")}
-            >
-              manifest.0g.json
-            </button>
-            <button
-              className={`${buttonDepthClass} rounded-full px-3 py-2 ${
-                activeTab === "agent"
-                  ? "bg-cyan-300 text-slate-950"
-                  : "bg-[#050505] text-slate-400"
-              }`}
-              onClick={() => setActiveTab("agent")}
-            >
-              agent.json
-            </button>
-            <button
-              className={`${buttonDepthClass} rounded-full px-3 py-2 ${
-                activeTab === "storage"
-                  ? "bg-cyan-300 text-slate-950"
-                  : "bg-[#050505] text-slate-400"
-              }`}
-              onClick={() => setActiveTab("storage")}
-            >
-              0G Storage
-            </button>
-          </div>
-          <pre className="relative z-10 m-0 max-h-[512px] min-h-[512px] overflow-auto rounded-3xl border border-white/10 bg-black p-4 text-xs text-cyan-100">
-            {JSON.stringify(preview, null, 2)}
-          </pre>
+        <section className="grid gap-4 xl:sticky xl:top-4">
+          <aside className={panelClass}>
+            <div className={panelTitleClass}>
+              <span className={panelIconClass}>
+                <Squares2X2Icon className="size-[18px]" />
+              </span>
+              Base blocks
+            </div>
+            {palette.map((block) => (
+              <article
+                className={`${glassRowClass} mt-2.5 grid cursor-grab grid-cols-[40px_1fr] gap-3 rounded-[1.25rem] p-3 first:mt-0`}
+                draggable
+                key={block.id}
+                onDragStart={(event) => handleDragStart(event, block.id)}
+                onDragEnd={() => setDraggedBlockId(null)}
+              >
+                <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
+                <div>
+                  <h3 className="mb-1 text-sm font-black text-white">{block.title}</h3>
+                  <p className="m-0 text-xs leading-5 text-slate-400">{block.summary}</p>
+                </div>
+              </article>
+            ))}
+          </aside>
+
+          <section className={panelClass} id="export-preview">
+            <div className={panelTitleClass}>
+              <span className={panelIconClass}>
+                <CubeTransparentIcon className="size-[18px]" />
+              </span>
+              Live export preview
+            </div>
+            <div className="relative z-10 mb-3 flex flex-wrap gap-2">
+              <button
+                className={`${buttonDepthClass} rounded-full px-3 py-2 ${
+                  activeTab === "manifest"
+                    ? "bg-cyan-300 text-slate-950"
+                    : "bg-[#050505] text-slate-400"
+                }`}
+                onClick={() => setActiveTab("manifest")}
+              >
+                manifest.0g.json
+              </button>
+              <button
+                className={`${buttonDepthClass} rounded-full px-3 py-2 ${
+                  activeTab === "agent"
+                    ? "bg-cyan-300 text-slate-950"
+                    : "bg-[#050505] text-slate-400"
+                }`}
+                onClick={() => setActiveTab("agent")}
+              >
+                agent.json
+              </button>
+              <button
+                className={`${buttonDepthClass} rounded-full px-3 py-2 ${
+                  activeTab === "storage"
+                    ? "bg-cyan-300 text-slate-950"
+                    : "bg-[#050505] text-slate-400"
+                }`}
+                onClick={() => setActiveTab("storage")}
+              >
+                0G Storage
+              </button>
+            </div>
+            <pre className="relative z-10 m-0 max-h-[350px] min-h-[350px] overflow-auto rounded-3xl border border-white/10 bg-black p-4 text-xs text-cyan-100">
+              {JSON.stringify(preview, null, 2)}
+            </pre>
+          </section>
         </section>
       </section>
 
@@ -788,7 +1116,94 @@ function App() {
         </section>
       </section>
 
-      <section className="mt-4 grid gap-4 lg:grid-cols-2">
+      <section className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(560px,1.1fr)]">
+        <section className={panelClass}>
+          <div className={`${panelTitleClass} justify-between`}>
+            <span className="flex items-center gap-2.5">
+              <span className={panelIconClass}>
+                <Squares2X2Icon className="size-[18px]" />
+              </span>
+              Prebuilt skill packs
+            </span>
+            <button
+              className={`${buttonDepthClass} rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-xs font-black text-white`}
+              onClick={addAllVisibleSkillPacksToCanvas}
+              type="button"
+            >
+              Add visible to canvas
+            </button>
+          </div>
+          <p className="relative z-10 mb-4 text-sm leading-6 text-slate-400">
+            Curated from VoltAgent&apos;s awesome-openclaw-skills categories and exported as normal OpenClaw-compatible
+            <code className="mx-1 rounded bg-white/5 px-1.5 py-0.5 text-cyan-100">SKILL.md</code>
+            folders.
+          </p>
+          <input
+            className={`${inputClass} relative z-10 mb-3`}
+            onChange={(event) => setSkillPackQuery(event.target.value)}
+            placeholder="Search packs, categories, skills..."
+            value={skillPackQuery}
+          />
+          <div className="relative z-10 grid gap-2.5">
+            {filteredSkillPacks.map((pack) => {
+              const installed = hasSkillPack(pack.id);
+              const installedCount = pack.skills.filter((skill) => agent.skills.some((agentSkill) => agentSkill.name === skill.name)).length;
+              return (
+                <article
+                  className={`${glassRowClass} grid cursor-grab gap-3 rounded-2xl p-3.5`}
+                  draggable
+                  key={pack.id}
+                  onDragStart={(event) => handlePackDragStart(event, pack.id)}
+                  onDragEnd={() => setDraggedPackId(null)}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="mb-2 flex flex-wrap items-center gap-2">
+                        <h3 className="m-0 text-base font-black text-white">{pack.name}</h3>
+                        <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100">
+                          {pack.category}
+                        </span>
+                      </div>
+                      <p className="m-0 text-sm leading-6 text-slate-400">{pack.summary}</p>
+                      <p className="mt-2 text-xs font-bold text-slate-500">Best for: {pack.recommendedFor}</p>
+                    </div>
+                    <button
+                      className={`${buttonDepthClass} shrink-0 rounded-full border border-white/10 px-3 py-2 text-xs font-black ${
+                        installed ? "bg-cyan-300 text-slate-950" : "bg-[#050505] text-white"
+                      }`}
+                      onClick={() => addSkillPackToCanvas(pack.id)}
+                      type="button"
+                    >
+                      {installed ? `${installedCount}/${pack.skills.length} added` : `Drop / add ${pack.skills.length}`}
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      className="rounded-full border border-white/10 bg-[#050505] px-2.5 py-1 text-[11px] font-bold text-cyan-100 transition hover:border-cyan-300/30"
+                      href={pack.source}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      source category
+                    </a>
+                    {pack.skills.map((skill) => (
+                      <a
+                        className="rounded-full border border-white/10 bg-black px-2.5 py-1 text-[11px] font-bold text-slate-300 transition hover:border-cyan-300/30 hover:text-cyan-100"
+                        href={skill.sourceUrl}
+                        key={skill.name}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        {skill.name}
+                      </a>
+                    ))}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
         <section className={panelClass}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
@@ -806,7 +1221,7 @@ function App() {
           </div>
           <div className="relative z-10 grid gap-2.5">
             {agent.skills.map((skill) => (
-              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_36px]`} key={skill.id}>
+              <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_36px]`} key={skill.id}>
                 <input
                   className={inputClass}
                   value={skill.name}
@@ -817,6 +1232,16 @@ function App() {
                   value={skill.description}
                   onChange={(event) => updateSkill(skill.id, { description: event.target.value })}
                 />
+                {skill.category ? (
+                  <a
+                    className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.08em] text-cyan-100 transition hover:border-cyan-200/50"
+                    href={skill.sourceUrl}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {skill.category}
+                  </a>
+                ) : null}
                 <label className="m-0 flex items-center gap-2 whitespace-nowrap text-xs font-black uppercase tracking-[0.08em] text-slate-400">
                   <input
                     className="min-h-0 w-auto accent-cyan-300"

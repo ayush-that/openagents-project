@@ -9,6 +9,7 @@ Drag-and-drop no-code builder for portable OpenClaw/FastClaw-style agents that u
 - drag/drop builder canvas for persona, model, memory, skills, and workflows
 - 0G Compute provider preset at `https://router-api.0g.ai/v1`
 - OpenClaw/FastClaw-style exports: `SOUL.md`, `MEMORY.md`, `SKILL.md`, `agent.json`
+- prebuilt skill packs curated from [`VoltAgent/awesome-openclaw-skills`](https://github.com/VoltAgent/awesome-openclaw-skills)
 - `manifest.0g.json` that maps packages, memory snapshots, and run logs to 0G Storage
 - downloadable agent zip that can be adapted by FastClaw, GoClaw, or OpenClaw-style runtimes
 
@@ -40,6 +41,37 @@ The exported `manifest.0g.json` declares:
 - log URI: `0g://logs/{agentId}/{sessionId}.jsonl`
 
 The included `0g-storage-memory` skill describes how to package files and upload via `@0gfoundation/0g-ts-sdk`.
+
+## Prebuilt skill packs
+
+The builder ships curated packs that can be added before export:
+
+| Pack | Source category | Includes |
+| --- | --- | --- |
+| Research Intel | Search & Research | `academic-deep-research`, `arxiv-search-collector`, `airadar` |
+| Agent Security | Security & Skill Trust | `aegis-shield`, `arc-trust-verifier`, `agentic-security-audit` |
+| Web Operator | Browser & Automation | `actionbook`, `agentic-browser`, `agent-analytics` |
+| GitOps Builder | Git & GitHub | `agent-team-orchestration`, `arc-skill-gitops`, `azure-devops` |
+| Cloud Deploy | DevOps & Cloud | `agentscale`, `arc-agent-lifecycle`, `gotify` |
+| Data Analytics | Data & Analytics | `biz-reporter`, `amazon-product-api-skill`, `aeo-analytics-free` |
+| 0G Native Runtime | Coding Agents & IDEs | `0g-compute`, `agent-config`, `agent-context`, `agent-cost-monitor`, `agent-audit-trail` |
+| Autonomous Ops | Productivity & Tasks | `adaptive-reasoning`, `agent-autopilot`, `agent-task-manager`, `async-task`, `autonomous-execution` |
+| Agent UI Control | Coding Agents & IDEs | `agent-chat-ux-v1-4-0`, `agent-dashboard`, `agent-topology-visualizer`, `figma` |
+| Memory Knowledge | Notes & PKM | `2nd-brain`, `airweave`, `markdown-converter`, `markdown-formatter` |
+| Comms Scheduler | Communication | `calendar-scheduling`, `clippy`, `gmail-last5`, `ai-daily-briefing` |
+
+Each exported `SKILL.md` includes source metadata so users can inspect the upstream ClawHub page before wiring real credentials or tool permissions.
+
+## One-click templates
+
+Templates load a complete agent profile, workflow, storage URI pattern, and bundled skill packs:
+
+| Template | Purpose | Packs |
+| --- | --- | --- |
+| 0G Research Scout | market, paper, competitor, and technical-doc research | Research Intel, Memory Knowledge, 0G Native Runtime |
+| Secure Web Operator | browser automation with prompt-injection screening | Web Operator, Agent Security, 0G Native Runtime |
+| Founder Autopilot | async personal ops, briefs, reminders, and execution loops | Autonomous Ops, Comms Scheduler, Memory Knowledge, 0G Native Runtime |
+| Shipyard Engineer | software delivery, PRs, deploys, audits, and release notes | GitOps Builder, Cloud Deploy, Agent Security, Agent UI Control, 0G Native Runtime |
 
 ## Run locally
 
@@ -83,6 +115,7 @@ skills/
   0g-compute/SKILL.md
   0g-storage-memory/SKILL.md
   evidence-summarizer/SKILL.md
+  ...selected skill-pack SKILL.md files
 ```
 
 ## Architecture
