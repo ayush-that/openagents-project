@@ -1,21 +1,7 @@
 import { type DragEvent as ReactDragEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ArrowDownTrayIcon,
-  CircleStackIcon,
-  CpuChipIcon,
-  CubeTransparentIcon,
-  PlusIcon,
-  QueueListIcon,
-  SparklesIcon,
-  Squares2X2Icon,
-  TrashIcon,
-  UserCircleIcon,
-  WrenchScrewdriverIcon,
-} from "@heroicons/react/24/outline";
-import {
   Background,
   BackgroundVariant,
-  Controls,
   Handle,
   MiniMap,
   Position,
@@ -78,14 +64,35 @@ const palette: BuilderBlock[] = [
 ];
 
 type CanvasNodeKind = BlockKind | "skillPack";
+type NucleoIconName =
+  | "app-stack"
+  | "circle-arrow-down"
+  | "circle-copy-plus"
+  | "cloud-bolt"
+  | "cloud-download"
+  | "cube"
+  | "gear"
+  | "grid"
+  | "hammer"
+  | "layers"
+  | "magic-wand-sparkle"
+  | "sparkle"
+  | "tab-close"
+  | "tasks"
+  | "user"
+  | "window";
+
+function NucleoIcon({ name, className = "size-6" }: { name: NucleoIconName; className?: string }) {
+  return <img alt="" aria-hidden="true" className={`${className} object-contain`} src={`/nucleo-glass/${name}.svg`} />;
+}
 
 const kindIcons: Record<CanvasNodeKind, ReactNode> = {
-  soul: <UserCircleIcon className="size-[18px]" />,
-  model: <CpuChipIcon className="size-[18px]" />,
-  memory: <CircleStackIcon className="size-[18px]" />,
-  skill: <WrenchScrewdriverIcon className="size-[18px]" />,
-  workflow: <QueueListIcon className="size-[18px]" />,
-  skillPack: <Squares2X2Icon className="size-[18px]" />,
+  soul: <NucleoIcon className="size-[22px]" name="user" />,
+  model: <NucleoIcon className="size-[22px]" name="gear" />,
+  memory: <NucleoIcon className="size-[22px]" name="layers" />,
+  skill: <NucleoIcon className="size-[22px]" name="hammer" />,
+  workflow: <NucleoIcon className="size-[22px]" name="tasks" />,
+  skillPack: <NucleoIcon className="size-[22px]" name="grid" />,
 };
 
 const kindLabels: Record<CanvasNodeKind, string> = {
@@ -129,6 +136,7 @@ const iconTileClass =
   "grid place-items-center rounded-2xl border border-white/15 bg-[linear-gradient(145deg,rgba(255,255,255,0.16),rgba(103,232,249,0.07)_45%,rgba(255,255,255,0.03))] text-cyan-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.22),inset_0_-14px_24px_rgba(103,232,249,0.05),0_10px_18px_rgba(0,0,0,0.42)] backdrop-blur-md";
 const panelIconClass = `${iconTileClass} size-9 shrink-0`;
 const buttonIconClass = `${iconTileClass} size-7 rounded-full text-current shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_5px_0_rgba(0,0,0,0.36)]`;
+const ctaIconClass = "grid size-6 shrink-0 place-items-center rounded-full";
 const buttonDepthClass =
   "shadow-[0_6px_0_rgba(0,0,0,0.72)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(0,0,0,0.72)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,0.72)]";
 
@@ -411,7 +419,7 @@ function BuilderFlowCanvas({
   setDraggedPackId,
 }: BuilderFlowCanvasProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const { screenToFlowPosition } = useReactFlow();
+  const { fitView, screenToFlowPosition, zoomIn, zoomOut } = useReactFlow();
 
   function handleDrop(event: ReactDragEvent<HTMLDivElement>) {
     event.preventDefault();
@@ -468,8 +476,33 @@ function BuilderFlowCanvas({
           pannable
           zoomable
         />
-        <Controls className="!border !border-white/10 !bg-black/80 !shadow-[0_8px_0_rgba(0,0,0,0.55)] [&_button]:!border-white/10 [&_button]:!bg-black [&_button]:!text-cyan-100" />
       </ReactFlow>
+      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 rounded-full border border-white/10 bg-black/75 p-1.5 shadow-[0_7px_0_rgba(0,0,0,0.58)] backdrop-blur-md">
+        <button
+          aria-label="Zoom in"
+          className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:border-cyan-300/40"
+          onClick={() => void zoomIn()}
+          type="button"
+        >
+          <NucleoIcon className="size-6" name="circle-copy-plus" />
+        </button>
+        <button
+          aria-label="Zoom out"
+          className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:border-cyan-300/40"
+          onClick={() => void zoomOut()}
+          type="button"
+        >
+          <NucleoIcon className="size-6" name="tab-close" />
+        </button>
+        <button
+          aria-label="Fit view"
+          className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:border-cyan-300/40"
+          onClick={() => void fitView({ padding: 0.18 })}
+          type="button"
+        >
+          <NucleoIcon className="size-6" name="window" />
+        </button>
+      </div>
     </div>
   );
 }
@@ -626,8 +659,8 @@ function App() {
     });
     setEdges((currentEdges) => {
       const source = findBuilderNodeId(nodes, "skill");
-      if (!source) return currentEdges;
 
+      if (!source) return currentEdges;
       const existingTargets = new Set(currentEdges.map((edge) => edge.target));
       return currentEdges.concat(
         filteredSkillPacks
@@ -676,8 +709,8 @@ function App() {
     });
     setEdges((currentEdges) => {
       const source = findBuilderNodeId(nodes, "skill");
-      if (!source) return currentEdges;
       const baseEdges = currentEdges.filter((edge) => !edge.target.startsWith("pack-"));
+      if (!source) return baseEdges;
       return baseEdges.concat(template.skillPackIds.map((packId) => createFlowEdge(source, `pack-${packId}`)));
     });
   }
@@ -783,13 +816,13 @@ function App() {
       <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[520px] bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.12),transparent_34rem)]" />
 
       <nav className="mb-10 flex items-center justify-between rounded-full border border-white/10 bg-black px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className={`${iconTileClass} size-9 rounded-full`}>
-            <SparklesIcon className="size-[18px]" />
+        <div className="flex items-center gap-4">
+          <div className={`${iconTileClass} size-11 rounded-full`}>
+            <NucleoIcon className="size-7" name="sparkle" />
           </div>
-          <span className="text-sm font-black tracking-[-0.02em]">ClawBuilder 0G</span>
+          <span className="text-base font-black tracking-[-0.02em] sm:text-lg">ClawBuilder 0G</span>
         </div>
-        <div className="hidden items-center gap-5 text-xs font-bold text-slate-400 sm:flex">
+        <div className="hidden items-center gap-7 text-sm font-extrabold text-slate-400 sm:flex">
           <a className="transition hover:text-white" href="#builder">Builder</a>
           <a className="transition hover:text-white" href="#config">Config</a>
           <a className="transition hover:text-white" href="#export-preview">Export</a>
@@ -811,21 +844,21 @@ function App() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-              className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-black text-slate-950 hover:bg-cyan-200`}
+              className={`${buttonDepthClass} inline-flex items-center justify-center gap-2.5 rounded-full border border-cyan-200/60 bg-cyan-300 px-5 py-2.5 text-sm font-black text-slate-950 hover:bg-cyan-200`}
               href="#builder"
             >
-              <span className={buttonIconClass}>
-                <SparklesIcon className="size-[14px]" />
+              <span className={`${ctaIconClass} bg-cyan-100/55`}>
+                <NucleoIcon className="size-5" name="sparkle" />
               </span>
               Open builder
             </a>
             <button
-              className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-5 py-3 text-sm font-bold text-slate-100 hover:border-cyan-300/40 disabled:cursor-not-allowed disabled:opacity-70`}
+              className={`${buttonDepthClass} inline-flex items-center justify-center gap-2.5 rounded-full border border-white/12 bg-[#040404] px-5 py-2.5 text-sm font-extrabold text-slate-100 hover:border-cyan-300/40 disabled:cursor-not-allowed disabled:opacity-70`}
               onClick={exportPackage}
               disabled={exporting}
             >
-              <span className={buttonIconClass}>
-                <ArrowDownTrayIcon className="size-[14px]" />
+              <span className={`${ctaIconClass} border border-cyan-200/20 bg-cyan-300/10`}>
+                <NucleoIcon className="size-5" name="circle-arrow-down" />
               </span>
               {exporting ? "Building package..." : "Export starter package"}
             </button>
@@ -841,7 +874,7 @@ function App() {
             <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/10 bg-black/80 p-4 shadow-[0_18px_0_rgba(0,0,0,0.55)] backdrop-blur-md">
               <div className="flex items-center gap-3">
                 <div className={`${iconTileClass} size-10`}>
-                  <CubeTransparentIcon className="size-5" />
+                  <NucleoIcon className="size-7" name="cube" />
                 </div>
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Generated package</p>
@@ -875,7 +908,7 @@ function App() {
       <section className={`${panelClass} mb-4`} id="templates">
         <div className={panelTitleClass}>
           <span className={panelIconClass}>
-            <CubeTransparentIcon className="size-[18px]" />
+            <NucleoIcon className="size-6" name="cube" />
           </span>
           One-click agent templates
         </div>
@@ -916,7 +949,7 @@ function App() {
           <div className={`${panelTitleClass} items-start justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
-                <SparklesIcon className="size-[18px]" />
+                <NucleoIcon className="size-6" name="magic-wand-sparkle" />
               </span>
               <span>
                 Combo builder canvas
@@ -971,7 +1004,7 @@ function App() {
           <aside className={panelClass}>
             <div className={panelTitleClass}>
               <span className={panelIconClass}>
-                <Squares2X2Icon className="size-[18px]" />
+                <NucleoIcon className="size-6" name="grid" />
               </span>
               Base blocks
             </div>
@@ -995,7 +1028,7 @@ function App() {
           <section className={panelClass} id="export-preview">
             <div className={panelTitleClass}>
               <span className={panelIconClass}>
-                <CubeTransparentIcon className="size-[18px]" />
+                <NucleoIcon className="size-6" name="cube" />
               </span>
               Live export preview
             </div>
@@ -1042,7 +1075,7 @@ function App() {
         <section className={panelClass}>
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
-              <UserCircleIcon className="size-[18px]" />
+              <NucleoIcon className="size-6" name="user" />
             </span>
             Identity
           </div>
@@ -1063,7 +1096,7 @@ function App() {
         <section className={panelClass}>
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
-              <CpuChipIcon className="size-[18px]" />
+              <NucleoIcon className="size-6" name="gear" />
             </span>
             0G Compute
           </div>
@@ -1093,7 +1126,7 @@ function App() {
         <section className={panelClass}>
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
-              <CircleStackIcon className="size-[18px]" />
+              <NucleoIcon className="size-6" name="layers" />
             </span>
             0G Storage memory
           </div>
@@ -1121,7 +1154,7 @@ function App() {
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
-                <Squares2X2Icon className="size-[18px]" />
+                <NucleoIcon className="size-6" name="grid" />
               </span>
               Prebuilt skill packs
             </span>
@@ -1208,13 +1241,13 @@ function App() {
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
-                <WrenchScrewdriverIcon className="size-[18px]" />
+                <NucleoIcon className="size-6" name="hammer" />
               </span>
               Skills
             </span>
             <button className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-extrabold text-white`} onClick={addSkill}>
               <span className={buttonIconClass}>
-                <PlusIcon className="size-[13px]" />
+                <NucleoIcon className="size-5" name="circle-copy-plus" />
               </span>
               Add
             </button>
@@ -1256,7 +1289,7 @@ function App() {
                   onClick={() => removeSkill(skill.id)}
                   aria-label={`Remove ${skill.name}`}
                 >
-                  <TrashIcon className="size-4" />
+                  <NucleoIcon className="size-5" name="tab-close" />
                 </button>
               </article>
             ))}
@@ -1267,13 +1300,13 @@ function App() {
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
-                <QueueListIcon className="size-[18px]" />
+                <NucleoIcon className="size-6" name="tasks" />
               </span>
               Workflow
             </span>
             <button className={`${buttonDepthClass} inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-[#050505] px-3 py-2 text-sm font-extrabold text-white`} onClick={addWorkflowStep}>
               <span className={buttonIconClass}>
-                <PlusIcon className="size-[13px]" />
+                <NucleoIcon className="size-5" name="circle-copy-plus" />
               </span>
               Add
             </button>
@@ -1294,7 +1327,7 @@ function App() {
                   onClick={() => removeWorkflowStep(step.id)}
                   aria-label={`Remove ${step.title}`}
                 >
-                  <TrashIcon className="size-4" />
+                  <NucleoIcon className="size-5" name="tab-close" />
                 </button>
               </article>
             ))}
