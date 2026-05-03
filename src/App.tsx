@@ -18,7 +18,6 @@ import {
 } from "@xyflow/react";
 import * as THREE from "three";
 import {
-  ZERO_G_ROUTER_URL,
   buildAgentZip,
   createAgentConfig,
   createManifest,
@@ -866,11 +865,11 @@ function App() {
           };
 
   return (
-    <main className="relative mx-auto w-[min(1180px,calc(100vw-32px))] px-0 py-6 text-[#f4fbff]">
+    <main className="relative mx-auto grid w-[min(1180px,calc(100vw-32px))] gap-10 px-0 py-6 text-[#f4fbff] lg:gap-12">
       <div className="pointer-events-none fixed inset-0 -z-20 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.08),transparent_28rem),linear-gradient(180deg,#000_0%,#030303_45%,#000_100%)]" />
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle,rgba(255,255,255,0.13)_1px,transparent_1.2px)] bg-[size:18px_18px] opacity-30 [mask-image:radial-gradient(circle_at_50%_0%,black,transparent_78%)]" />
 
-      <nav className="mb-10 flex items-center justify-between rounded-full border border-white/10 bg-black/80 px-4 py-3 shadow-[0_10px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
+      <nav className="flex items-center justify-between rounded-full border border-white/10 bg-black/80 px-4 py-3 shadow-[0_10px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
         <div className="flex items-center gap-4">
           <BrandMark className="size-12" />
           <span className="text-base font-semibold tracking-[-0.03em] text-[#fafafa] sm:text-lg">ClawBuilder 0G</span>
@@ -882,7 +881,7 @@ function App() {
         </div>
       </nav>
 
-      <section className="mb-14 grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
+      <section className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
         <div className="py-8">
           <div className="mono-font mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-200">
             <span className="size-2 rounded-full bg-white" />
@@ -920,15 +919,12 @@ function App() {
           </div>
         </div>
 
-        <div className="relative min-h-[380px] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[radial-gradient(circle,rgba(255,255,255,0.10)_1px,transparent_1.2px),linear-gradient(180deg,#050505,#000)] bg-[size:18px_18px,auto] shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
+        <div className="relative min-h-[380px] overflow-visible">
           <HeroScene />
-          <div className="mono-font absolute left-5 top-5 rounded-full border border-white/12 bg-black/72 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-200 backdrop-blur-md">
-            0G-native export stack
-          </div>
         </div>
       </section>
 
-      <section className={`${panelClass} mb-8`} id="templates">
+      <section className={panelClass} id="templates">
         <div className={panelTitleClass}>
           <span className={panelIconClass}>
             <NucleoIcon className="size-6" name="cube" />
@@ -1107,7 +1103,7 @@ function App() {
         </section>
       </section>
 
-      <section className="mt-4 grid gap-4 lg:grid-cols-3" id="config">
+      <section className="grid gap-8 lg:grid-cols-3 xl:gap-10" id="config">
         <section className={panelClass}>
           <div className={panelTitleClass}>
             <span className={panelIconClass}>
@@ -1185,7 +1181,7 @@ function App() {
         </section>
       </section>
 
-      <section className="mt-8 grid items-start gap-8 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:gap-10">
+      <section className="grid items-start gap-8 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:gap-10">
         <section className={`${panelClass} flex flex-col xl:h-[680px] xl:min-h-0`}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
@@ -1393,7 +1389,7 @@ function App() {
           </section>
         </div>
       </section>
-      <footer className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-black px-5 py-6 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
+      <footer className="overflow-hidden rounded-[2rem] border border-white/10 bg-black px-5 py-6 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
         <div>
           <div>
             <p className="mono-font mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">A product by ClawBuilder</p>
