@@ -121,14 +121,6 @@ type BuilderEdge = Edge;
 
 const logoSrc = "/brand/clawbuilder-logo.svg";
 
-const heroStats = [
-  { label: "Router", value: "0G Compute" },
-  { label: "Package", value: "OpenClaw zip" },
-  { label: "Memory", value: "0G Storage" },
-];
-
-const proofSteps = ["SOUL.md", "MEMORY.md", "SKILL.md", "manifest.0g.json"];
-
 const panelClass =
   "relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(12,12,12,0.98),rgba(0,0,0,0.96))] p-5 shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]";
 const panelTitleClass = "relative z-10 mb-4 flex items-center gap-2.5 font-semibold text-[#fafafa]";
@@ -890,7 +882,7 @@ function App() {
         </div>
       </nav>
 
-      <section className="mb-10 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
+      <section className="mb-14 grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
         <div className="py-8">
           <div className="mono-font mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-200">
             <span className="size-2 rounded-full bg-white" />
@@ -928,47 +920,15 @@ function App() {
           </div>
         </div>
 
-        <div className={`${panelClass} p-4`}>
-          <div className="relative min-h-[330px] overflow-hidden rounded-[1.55rem] border border-white/10 bg-[radial-gradient(circle,rgba(255,255,255,0.10)_1px,transparent_1.2px),linear-gradient(180deg,#050505,#000)] bg-[size:18px_18px,auto]">
-            <HeroScene />
-            <div className="mono-font absolute left-4 top-4 rounded-full border border-white/12 bg-black/72 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-200 backdrop-blur-md">
-              0G-native export stack
-            </div>
-            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/12 bg-black/82 p-4 shadow-[0_12px_0_rgba(255,255,255,0.035)] backdrop-blur-md">
-              <div className="flex items-center gap-3">
-                <div className={`${iconTileClass} size-10`}>
-                  <NucleoIcon className="size-7" name="cube" />
-                </div>
-                <div>
-                  <p className="mono-font text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Generated package</p>
-                  <h2 className="display-font text-2xl leading-none text-[#fafafa]">OpenClaw files. 0G defaults.</h2>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 grid gap-3">
-            <div className="rounded-2xl border border-white/10 bg-black p-4">
-              <span className="mono-font text-xs font-semibold uppercase tracking-[0.1em] text-zinc-500">Provider preset</span>
-              <code className="mt-2 block">{ZERO_G_ROUTER_URL}</code>
-            </div>
-            {heroStats.map((stat) => (
-              <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black px-4 py-4" key={stat.label}>
-                <span className="text-base font-medium text-zinc-400">{stat.label}</span>
-                <strong className="text-base font-semibold text-[#fafafa]">{stat.value}</strong>
-              </div>
-            ))}
-          </div>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {proofSteps.map((step) => (
-              <span className="rounded-full border border-white/10 bg-black px-3 py-1.5 text-xs font-medium text-zinc-200" key={step}>
-                {step}
-              </span>
-            ))}
+        <div className="relative min-h-[380px] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[radial-gradient(circle,rgba(255,255,255,0.10)_1px,transparent_1.2px),linear-gradient(180deg,#050505,#000)] bg-[size:18px_18px,auto] shadow-[0_14px_0_rgba(255,255,255,0.035),inset_0_1px_0_rgba(255,255,255,0.08)]">
+          <HeroScene />
+          <div className="mono-font absolute left-5 top-5 rounded-full border border-white/12 bg-black/72 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-200 backdrop-blur-md">
+            0G-native export stack
           </div>
         </div>
       </section>
 
-      <section className={`${panelClass} mb-4`} id="templates">
+      <section className={`${panelClass} mb-8`} id="templates">
         <div className={panelTitleClass}>
           <span className={panelIconClass}>
             <NucleoIcon className="size-6" name="cube" />
@@ -1008,7 +968,7 @@ function App() {
         </div>
       </section>
 
-      <section className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.72fr)]">
+      <section className="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.72fr)] xl:gap-10">
         <section className={`${panelClass} flex flex-col xl:h-[680px] xl:min-h-0`} id="builder">
           <div className={`${panelTitleClass} items-start justify-between`}>
             <span className="flex items-center gap-2.5">
@@ -1066,7 +1026,7 @@ function App() {
           </div>
         </section>
 
-        <section className="grid gap-4 xl:h-[680px] xl:min-h-0 xl:grid-rows-2">
+        <section className="grid gap-6 xl:h-[680px] xl:min-h-0 xl:grid-rows-2">
           <aside className={`${panelClass} flex min-h-0 flex-col`}>
             <div className={panelTitleClass}>
               <span className={panelIconClass}>
@@ -1074,7 +1034,7 @@ function App() {
               </span>
               Base blocks
             </div>
-            <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1">
+            <div className="relative z-10 grid flex-1 content-start gap-3.5 overflow-y-auto pr-1.5">
               {palette.map((block) => (
                 <article
                   className={`${glassRowClass} grid cursor-grab grid-cols-[40px_1fr] gap-3 rounded-[1.25rem] p-3`}
@@ -1225,7 +1185,7 @@ function App() {
         </section>
       </section>
 
-      <section className="mt-4 grid items-start gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+      <section className="mt-8 grid items-start gap-8 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:gap-10">
         <section className={`${panelClass} flex flex-col xl:h-[680px] xl:min-h-0`}>
           <div className={`${panelTitleClass} justify-between`}>
             <span className="flex items-center gap-2.5">
@@ -1254,7 +1214,7 @@ function App() {
             placeholder="Search packs, categories, skills..."
             value={skillPackQuery}
           />
-          <div className="relative z-10 grid content-start gap-2.5 overflow-y-auto pr-1 xl:flex-1">
+          <div className="relative z-10 grid content-start gap-3.5 overflow-y-auto pr-1.5 xl:flex-1">
             {filteredSkillPacks.map((pack) => {
               const installed = hasSkillPack(pack.id);
               const installedCount = pack.skills.filter((skill) => agent.skills.some((agentSkill) => agentSkill.name === skill.name)).length;
@@ -1314,7 +1274,7 @@ function App() {
           </div>
         </section>
 
-        <div className="grid gap-4 xl:h-[680px] xl:min-h-0 xl:grid-rows-2">
+        <div className="grid gap-6 xl:h-[680px] xl:min-h-0 xl:grid-rows-2">
           <section className={`${panelClass} flex min-h-0 flex-col`}>
             <div className={`${panelTitleClass} justify-between`}>
               <span className="flex items-center gap-2.5">
@@ -1334,7 +1294,7 @@ function App() {
                 Add
               </button>
             </div>
-            <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1">
+            <div className="relative z-10 grid flex-1 content-start gap-3.5 overflow-y-auto pr-1.5">
               {agent.skills.map((skill) => (
                 <article className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[180px_1fr_auto_auto_auto]`} key={skill.id}>
                   <input
@@ -1404,7 +1364,7 @@ function App() {
               <code className="mx-1 rounded bg-white/[0.06] px-1.5 py-0.5 text-zinc-100">workflow.json</code>
               for runtime replay.
             </p>
-            <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1">
+            <div className="relative z-10 grid flex-1 content-start gap-3.5 overflow-y-auto pr-1.5">
               {agent.workflow.map((step, index) => (
                 <article
                   className={`${glassRowClass} grid items-center gap-2.5 rounded-2xl p-3 md:grid-cols-[34px_160px_1fr_36px]`}
