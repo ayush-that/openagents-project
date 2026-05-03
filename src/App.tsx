@@ -510,7 +510,7 @@ function BuilderFlowCanvas({
 
   return (
     <div
-      className="relative z-10 h-[520px] overflow-hidden rounded-3xl border border-dashed border-white/14 bg-[radial-gradient(circle,rgba(255,255,255,0.10)_1px,transparent_1.2px),linear-gradient(180deg,#050505,#000)] bg-[size:18px_18px,auto]"
+      className="relative z-10 h-[520px] overflow-hidden rounded-3xl border border-dashed border-white/14 bg-[radial-gradient(circle,rgba(255,255,255,0.10)_1px,transparent_1.2px),linear-gradient(180deg,#050505,#000)] bg-[size:18px_18px,auto] xl:h-auto xl:flex-1"
       ref={wrapperRef}
     >
       <ReactFlow
@@ -1008,8 +1008,8 @@ function App() {
         </div>
       </section>
 
-      <section className="grid items-start gap-4 xl:grid-cols-[minmax(560px,1fr)_360px]">
-        <section className={panelClass} id="builder">
+      <section className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.72fr)]">
+        <section className={`${panelClass} flex flex-col xl:h-[680px] xl:min-h-0`} id="builder">
           <div className={`${panelTitleClass} items-start justify-between`}>
             <span className="flex items-center gap-2.5">
               <span className={panelIconClass}>
@@ -1066,37 +1066,39 @@ function App() {
           </div>
         </section>
 
-        <section className="grid gap-4 xl:sticky xl:top-4">
-          <aside className={panelClass}>
+        <section className="grid gap-4 xl:h-[680px] xl:min-h-0 xl:grid-rows-2">
+          <aside className={`${panelClass} flex min-h-0 flex-col`}>
             <div className={panelTitleClass}>
               <span className={panelIconClass}>
                 <NucleoIcon className="size-6" name="grid" />
               </span>
               Base blocks
             </div>
-            {palette.map((block) => (
-              <article
-                className={`${glassRowClass} mt-2.5 grid cursor-grab grid-cols-[40px_1fr] gap-3 rounded-[1.25rem] p-3 first:mt-0`}
-                draggable
-                key={block.id}
-                onDragStart={(event) => handleDragStart(event, block.id)}
-                onDragEnd={() => setDraggedBlockId(null)}
-                title={
-                  block.kind === "workflow"
-                    ? "Runbook steps are ordered instructions the exported agent follows during each run."
-                    : `Drag ${block.title} onto the canvas.`
-                }
-              >
-                <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
-                <div>
-                  <h3 className="mb-1 text-lg leading-none text-[#fafafa]">{block.title}</h3>
-                  <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">{block.summary}</p>
-                </div>
-              </article>
-            ))}
+            <div className="relative z-10 grid flex-1 content-start gap-2.5 overflow-y-auto pr-1">
+              {palette.map((block) => (
+                <article
+                  className={`${glassRowClass} grid cursor-grab grid-cols-[40px_1fr] gap-3 rounded-[1.25rem] p-3`}
+                  draggable
+                  key={block.id}
+                  onDragStart={(event) => handleDragStart(event, block.id)}
+                  onDragEnd={() => setDraggedBlockId(null)}
+                  title={
+                    block.kind === "workflow"
+                      ? "Runbook steps are ordered instructions the exported agent follows during each run."
+                      : `Drag ${block.title} onto the canvas.`
+                  }
+                >
+                  <div className={`${iconTileClass} size-10`}>{kindIcons[block.kind]}</div>
+                  <div>
+                    <h3 className="mb-1 text-lg leading-none text-[#fafafa]">{block.title}</h3>
+                    <p className="m-0 text-xs font-medium leading-4 tracking-[-0.015em] text-zinc-400">{block.summary}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </aside>
 
-          <section className={panelClass} id="export-preview">
+          <section className={`${panelClass} flex min-h-0 flex-col`} id="export-preview">
             <div className={panelTitleClass} title="Inspect the exact files and metadata that will be written into the exported package.">
               <span className={panelIconClass}>
                 <NucleoIcon className="size-6" name="cube" />
@@ -1138,7 +1140,7 @@ function App() {
                 0G Storage
               </button>
             </div>
-            <pre className="mono-font relative z-10 m-0 max-h-[350px] min-h-[350px] overflow-auto rounded-3xl border border-white/10 bg-black p-4 text-xs text-zinc-100">
+            <pre className="mono-font relative z-10 m-0 min-h-[260px] flex-1 overflow-auto rounded-3xl border border-white/10 bg-black p-4 text-xs text-zinc-100 xl:min-h-0">
               {JSON.stringify(preview, null, 2)}
             </pre>
           </section>
