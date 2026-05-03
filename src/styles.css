@@ -1,21 +1,16 @@
 @import "tailwindcss";
-@import "@fontsource/space-grotesk/latin-400.css";
-@import "@fontsource/space-grotesk/latin-500.css";
-@import "@fontsource/space-grotesk/latin-600.css";
-@import "@fontsource/space-grotesk/latin-700.css";
-@import "@fontsource/manrope/latin-400.css";
-@import "@fontsource/manrope/latin-500.css";
-@import "@fontsource/manrope/latin-600.css";
-@import "@fontsource/manrope/latin-700.css";
-@import "@fontsource/manrope/latin-800.css";
+@import "@fontsource/geist-mono/latin-400.css";
+@import "@fontsource/geist-mono/latin-500.css";
+@import "@fontsource/geist-mono/latin-600.css";
+@import "@fontsource/geist-mono/latin-700.css";
 @import "@xyflow/react/dist/style.css";
 
 @layer base {
   :root {
     color-scheme: dark;
-    font-family: Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #020611;
-    color: #f4fbff;
+    font-family: "Geist Mono", ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, "Liberation Mono", monospace;
+    background: #000;
+    color: #fafafa;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -26,9 +21,8 @@
     min-height: 100vh;
     overflow-x: hidden;
     background:
-      radial-gradient(circle at 18% 0%, rgba(103, 232, 249, 0.18), transparent 30rem),
-      radial-gradient(circle at 88% 10%, rgba(167, 139, 250, 0.16), transparent 34rem),
-      linear-gradient(180deg, #020611 0%, #00040b 42%, #03020a 100%);
+      radial-gradient(circle at 50% 0%, rgba(250, 250, 250, 0.07), transparent 28rem),
+      linear-gradient(180deg, #000 0%, #020202 48%, #000 100%);
   }
 
   h1,
@@ -36,7 +30,7 @@
   h3,
   nav,
   button {
-    font-family: "Space Grotesk", Manrope, ui-sans-serif, system-ui, sans-serif;
+    font-family: "Geist Mono", ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, "Liberation Mono", monospace;
   }
 
   button {
@@ -46,28 +40,28 @@
   code {
     width: 100%;
     overflow-wrap: anywhere;
-    border: 1px solid rgba(207, 250, 254, 0.16);
-    border-radius: 0.9rem;
-    background: rgba(2, 7, 19, 0.9);
+    border: 1px solid rgba(250, 250, 250, 0.14);
+    border-radius: 0.75rem;
+    background: rgba(8, 8, 8, 0.92);
     padding: 0.6rem 0.75rem;
-    color: #ecfeff;
+    color: #fafafa;
   }
 
   .react-flow {
-    --xy-background-color: #020713;
+    --xy-background-color: #000;
     --xy-node-background-color-default: transparent;
     --xy-node-border-default: 0;
-    --xy-edge-stroke-default: rgba(125, 245, 255, 0.5);
+    --xy-edge-stroke-default: rgba(250, 250, 250, 0.34);
     --xy-edge-stroke-width-default: 1.5;
-    --xy-controls-button-background-color-default: #020713;
-    --xy-controls-button-background-color-hover-default: #071525;
-    --xy-controls-button-color-default: #ecfeff;
+    --xy-controls-button-background-color-default: #050505;
+    --xy-controls-button-background-color-hover-default: #111;
+    --xy-controls-button-color-default: #fafafa;
     --xy-controls-button-color-hover-default: #fff;
-    --xy-controls-button-border-color-default: rgba(207, 250, 254, 0.14);
-    --xy-minimap-background-color-default: rgba(2, 7, 19, 0.9);
+    --xy-controls-button-border-color-default: rgba(250, 250, 250, 0.16);
+    --xy-minimap-background-color-default: rgba(5, 5, 5, 0.9);
   }
 
   .react-flow__node {
-    font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+    font-family: "Geist Mono", ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, "Liberation Mono", monospace;
   }
 }
