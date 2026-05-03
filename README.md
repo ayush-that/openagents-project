@@ -1,3 +1,5 @@
+<img width="972" height="582" alt="image" src="https://github.com/user-attachments/assets/24586df9-ab0a-487b-a86f-3f65d902dc6c" />
+
 # Tessra
 
 Tessra is a visual workspace for designing portable AI agents. Compose an agent's persona, model config, memory, skills, and runbook on one canvas, then export a runtime-ready package.
